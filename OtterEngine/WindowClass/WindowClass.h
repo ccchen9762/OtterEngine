@@ -1,10 +1,10 @@
 #pragma once
 
-#include "OtterEngine/MinimalWindow.h"
+#include "OtterEngine/Common/MinimalWindows.h"
 
 class WindowClass {
 public:
-	WindowClass(LPCWSTR wndClassName, LPCTSTR wndTitle, UINT32 width, UINT32 height);
+	WindowClass(LPCTSTR wndTitle, UINT32 width, UINT32 height);
 	~WindowClass();
 
 	// prevent copying
@@ -13,8 +13,11 @@ public:
 
 private:
 	static LRESULT WndProc(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam);
+	LRESULT MessageHandler(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam);
 
 private:
+	static WindowClass* s_pWnd;
+
 	HWND m_hWnd;
 	HINSTANCE m_hInstance;
 	LPCWSTR m_wndClassName;

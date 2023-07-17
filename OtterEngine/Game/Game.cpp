@@ -1,7 +1,7 @@
 #include "Game.h"
 
 Game::Game() :
-    m_wndClass(WindowClass(L"D3D11_MAIN", kWndTitle, kRenderWidth, kRenderHeight)) {
+    m_wndClass(WindowClass(kDefWndTitle, kRenderWidth, kRenderHeight)) {
 }
 
 int Game::Start() {

@@ -1,7 +1,7 @@
 #pragma once
 
 #include "OtterEngine/WindowClass/WindowClass.h"
-#include "OtterEngine/Constants.h"
+#include "OtterEngine/Common/Constants.h"
 
 class Game {
 public:
@@ -9,7 +9,7 @@ public:
 	~Game() = default;
 	
 	// prevent copying
-	Game(const Game&) = delete;				
+	Game(const Game&) = delete;
 	Game& operator= (const Game&) = delete;
 
 	int Start();

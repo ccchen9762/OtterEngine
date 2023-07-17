@@ -1,9 +1,14 @@
 #include "WindowClass.h"
 
-WindowClass::WindowClass(LPCWSTR wndClassName, LPCTSTR wndTitle, 
-		UINT32 width, UINT32 height) :
-	m_wndClassName(wndClassName), m_wndTitle(wndTitle),
-	m_width(width), m_height(height), m_hInstance(GetModuleHandle(nullptr)) {
+#include "OtterEngine/Common/Constants.h"
+
+WindowClass* WindowClass::s_pWnd = nullptr;
+
+WindowClass::WindowClass(LPCTSTR wndTitle, UINT32 width, UINT32 height) :
+	m_wndClassName(kDefWndClassName), m_wndTitle(wndTitle),
+	m_width(width), m_height(height), m_hInstance() {
+
+	s_pWnd = this;
 
 	// register window class
 	WNDCLASSEX wcex;
@@ -12,12 +17,12 @@ WindowClass::WindowClass(LPCWSTR wndClassName, LPCTSTR wndTitle,
 	wcex.lpfnWndProc = WndProc;	// pointer to WndPro
 	wcex.cbClsExtra = 0;
 	wcex.cbWndExtra = 0;
-	wcex.hInstance = m_hInstance;
+	wcex.hInstance = GetModuleHandle(nullptr);
 	wcex.hIcon = nullptr;
 	wcex.hCursor = nullptr;
 	wcex.hbrBackground = nullptr;
 	wcex.lpszMenuName = nullptr;
-	wcex.lpszClassName = m_wndClassName;
+	wcex.lpszClassName = kDefWndClassName;
 	wcex.hIconSm = nullptr;
 	RegisterClassEx(&wcex);
 
@@ -44,16 +49,20 @@ WindowClass::~WindowClass() {
 }
 
 LRESULT WindowClass::WndProc(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam) {
-    switch (msg) {
+	return s_pWnd->MessageHandler(hWnd, msg, wParam, lParam);
+}
+
+LRESULT WindowClass::MessageHandler(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam) {
+	switch (msg) {
 	case WM_KEYDOWN:
 		if (wParam == 'F')
 			SetWindowText(hWnd, L"FFFFFF");
 		break;
-    case WM_CLOSE:
-        PostQuitMessage(0);
-        return 0;
-        break;
-    }
+	case WM_CLOSE:
+		PostQuitMessage(0);
+		return 0;	// to prevent DefWindowProc destroy this instance, let destructor does it
+		break;
+	}
 
 	return DefWindowProc(hWnd, msg, wParam, lParam);
 }

@@ -139,7 +139,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="Constants.cpp" />
+    <ClCompile Include="Common\Constants.cpp" />
     <ClCompile Include="Game\Game.cpp" />
     <ClCompile Include="Input\Keyboard.cpp" />
     <ClCompile Include="Input\Mouse.cpp" />
@@ -147,11 +147,11 @@
     <ClCompile Include="WindowClass\WindowClass.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="Constants.h" />
+    <ClInclude Include="Common\Constants.h" />
+    <ClInclude Include="Common\MinimalWindows.h" />
     <ClInclude Include="Game\Game.h" />
     <ClInclude Include="Input\Keyboard.h" />
     <ClInclude Include="Input\Mouse.h" />
-    <ClInclude Include="MinimalWindow.h" />
     <ClInclude Include="WindowClass\WindowClass.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
