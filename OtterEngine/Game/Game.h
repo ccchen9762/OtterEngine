@@ -1,6 +1,6 @@
 #pragma once
 
-#include "OtterEngine/WindowClass/WindowClass.h"
+#include "OtterEngine/WindowClass/Window.h"
 #include "OtterEngine/Common/Constants.h"
 
 class Game {
@@ -15,5 +15,5 @@ public:
 	int Start();
 
 private:
-	WindowClass m_wndClass;
+	Window m_window;
 };

@@ -5,10 +5,10 @@ extern const wchar_t* kDefWndClassName;
 extern const wchar_t* kDefWndTitle;
 
 // buffer limit for message inputs
-extern const int kInputBufferLimit;
+extern const unsigned int kInputBufferLimit;
 
 // final render size
-extern const int kRenderWidth, kRenderHeight;
+extern const unsigned int kRenderWidth, kRenderHeight;
 
 // math
 extern const double kPI;

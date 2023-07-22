@@ -144,7 +144,7 @@
     <ClCompile Include="Input\Keyboard.cpp" />
     <ClCompile Include="Input\Mouse.cpp" />
     <ClCompile Include="Main.cpp" />
-    <ClCompile Include="WindowClass\WindowClass.cpp" />
+    <ClCompile Include="WindowClass\Window.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Common\Constants.h" />
@@ -152,7 +152,7 @@
     <ClInclude Include="Game\Game.h" />
     <ClInclude Include="Input\Keyboard.h" />
     <ClInclude Include="Input\Mouse.h" />
-    <ClInclude Include="WindowClass\WindowClass.h" />
+    <ClInclude Include="WindowClass\Window.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

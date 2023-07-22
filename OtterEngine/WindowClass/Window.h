@@ -1,22 +1,25 @@
 #pragma once
 
 #include "OtterEngine/Common/MinimalWindows.h"
+#include "OtterEngine/Input/Keyboard.h"
+//#include "OtterEngine/Input/Mouse.h"
 
-class WindowClass {
+class Window {
 public:
-	WindowClass(LPCTSTR wndTitle, UINT32 width, UINT32 height);
-	~WindowClass();
+	Window(LPCTSTR wndTitle, UINT32 width, UINT32 height);
+	~Window();
 
 	// prevent copying
-	WindowClass(const WindowClass&) = delete;
-	WindowClass& operator= (const WindowClass&) = delete;
+	Window(const Window&) = delete;
+	Window& operator= (const Window&) = delete;
 
 private:
 	static LRESULT WndProc(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam);
 	LRESULT MessageHandler(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam);
 
 private:
-	static WindowClass* s_pWnd;
+	Keyboard m_keyboard;
+	//Mouse m_mouse;
 
 	HWND m_hWnd;
 	HINSTANCE m_hInstance;
