@@ -28,11 +28,11 @@ int Game::Start() {
             }
 
             while (!m_mainWindow.m_mouse.MouseEventBufferEmpty()) {
-                const Mouse::MouseEvent* mouseEvent = m_mainWindow.m_mouse.ReadFirstEvent();
+                const Mouse::MouseEvent mouseEvent = m_mainWindow.m_mouse.ReadFirstEvent();
 
                 static int test = 0;
-                if (mouseEvent) {
-                    switch (mouseEvent->getEventType()) {
+                if (mouseEvent.getEventType() != Mouse::MouseEvent::Type::Empty) {
+                    switch (mouseEvent.getEventType()) {
                     case Mouse::MouseEvent::Type::Leave:
                         m_mainWindow.setTitle(L"outside");
                         break;
@@ -49,15 +49,13 @@ int Game::Start() {
                         break;
                     }
                     case Mouse::MouseEvent::Type::Move: {
-                        Vector3Int pos = mouseEvent->getPosition();
+                        Vector3Int pos = mouseEvent.getPosition();
                         const std::wstring title = L"X: " + std::to_wstring(pos.m_x) + L", Y: " + std::to_wstring(pos.m_y);
                         m_mainWindow.setTitle(title);
                         break;
                     }
                     }
                 }
-
-                delete mouseEvent;
             }
 
             if (msg.message == WM_QUIT) {
@@ -73,6 +71,8 @@ int Game::Start() {
 }
 
 void Game::Update() {
+    m_mainWindow.m_pGraphics->ClearBuffer(1.0, 1.0, 0.5);
+    m_mainWindow.m_pGraphics->Update();
 }
 
 

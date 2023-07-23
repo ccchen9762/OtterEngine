@@ -4,22 +4,22 @@ Keyboard::KeyEvent::KeyEvent(Type type, unsigned char keyCode) :
 	m_type(type), m_keyCode(keyCode) {
 }
 
-Keyboard::KeyEvent* Keyboard::ReadFirstEvent() {
+Keyboard::KeyEvent Keyboard::ReadFirstEvent() {
 	if (m_keyEventBuffer.size() > 0) {
-		Keyboard::KeyEvent* keyEvent = new Keyboard::KeyEvent(m_keyEventBuffer.front());
+		KeyEvent keyEvent = m_keyEventBuffer.front();
 		m_keyEventBuffer.pop();
 		return keyEvent;
 	}
-	return nullptr;
+	return KeyEvent{ KeyEvent::Type::Empty, 0 };
 }
 
-char* Keyboard::ReadFirstChar() {
+char Keyboard::ReadFirstChar() {
 	if (m_charBuffer.size() > 0) {
-		char* keyEvent = new char(m_charBuffer.front());
+		char keyEvent = m_charBuffer.front();
 		m_charBuffer.pop();
 		return keyEvent;
 	}
-	return nullptr;
+	return 0;
 }
 
 void Keyboard::PopKeyEventBuffer() {

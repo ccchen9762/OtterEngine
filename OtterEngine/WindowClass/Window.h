@@ -1,8 +1,10 @@
 #pragma once
 
 #include "OtterEngine/Common/MinimalWindows.h"
+
 #include "OtterEngine/Input/Keyboard.h"
 #include "OtterEngine/Input/Mouse.h"
+#include "OtterEngine/Graphics/Graphics.h"
 
 class Window {
 public:
@@ -22,13 +24,13 @@ private:
 	LRESULT MessageHandler(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam);
 
 public:
+	Graphics* m_pGraphics; // use pointer to wait for HWND for construction
 	Keyboard m_keyboard;
 	Mouse m_mouse;
 
 private:
 	HWND m_hWnd;
 	HINSTANCE m_hInstance;
-	LPCWSTR m_wndClassName;
 	LPCWSTR m_wndTitle;
 	UINT32 m_width;
 	UINT32 m_height;

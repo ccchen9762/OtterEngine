@@ -4,8 +4,8 @@
 #include "OtterEngine/Common/Utilities.h"
 
 Window::Window(LPCTSTR wndTitle, UINT32 width, UINT32 height) :
-	m_wndClassName(kDefWndClassName), m_wndTitle(wndTitle),
-	m_width(width), m_height(height), m_hInstance() {
+	m_wndTitle(wndTitle), m_width(width), m_height(height), 
+    m_hInstance(GetModuleHandle(nullptr)), m_pGraphics(nullptr) {
 
 	// register window class
     WNDCLASSEX wcex = {};
@@ -33,16 +33,22 @@ Window::Window(LPCTSTR wndTitle, UINT32 width, UINT32 height) :
 
 	// create window instance
 	// last parameter is additional, use it to point to this instance
-	m_hWnd = CreateWindowEx(0, m_wndClassName, m_wndTitle, WS_OVERLAPPEDWINDOW,
+	m_hWnd = CreateWindowEx(0, kDefWndClassName, m_wndTitle, WS_OVERLAPPEDWINDOW,
 		CW_USEDEFAULT, CW_USEDEFAULT,
 		clientSpace.right - clientSpace.left, clientSpace.bottom - clientSpace.top,
 		nullptr, nullptr, GetModuleHandle(nullptr), this);
 
 	ShowWindow(m_hWnd, SW_SHOW);
+
+    m_pGraphics = new Graphics(m_hWnd);
 }
 
 Window::~Window() {
-	UnregisterClass(m_wndClassName, m_hInstance);
+
+    delete m_pGraphics;
+
+	UnregisterClass(kDefWndClassName, m_hInstance);
+
 	DestroyWindow(m_hWnd);
 }
 

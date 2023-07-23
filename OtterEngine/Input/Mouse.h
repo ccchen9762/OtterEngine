@@ -13,6 +13,7 @@ public:
 	struct MouseEvent {
 	public:
 		enum class Type {
+			Empty,
 			Move, Enter, Leave,
 			LButtonDown, LButtonUp,
 			RButtonDown, RButtonUp,
@@ -42,7 +43,7 @@ public:
 
 	bool IsInWindow() const { return m_inWindow; }
 
-	MouseEvent* ReadFirstEvent();
+	MouseEvent ReadFirstEvent();
 
 	bool MouseEventBufferEmpty() const { return m_mouseEventBuffer.empty(); }
 	void PopMouseEventBuffer();

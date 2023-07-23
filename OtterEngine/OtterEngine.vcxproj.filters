@@ -7,6 +7,7 @@
     <ClCompile Include="Input\Keyboard.cpp" />
     <ClCompile Include="Input\Mouse.cpp" />
     <ClCompile Include="Math\Vector3.cpp" />
+    <ClCompile Include="Graphics\Graphics.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="WindowClass\Window.h" />
@@ -17,5 +18,6 @@
     <ClInclude Include="Common\MinimalWindows.h" />
     <ClInclude Include="Math\Vector3.h" />
     <ClInclude Include="Common\Utilities.h" />
+    <ClInclude Include="Graphics\Graphics.h" />
   </ItemGroup>
 </Project>

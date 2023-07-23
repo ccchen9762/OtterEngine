@@ -12,7 +12,7 @@ class Keyboard {
 private:
 	struct KeyEvent {
 	public:
-		enum class Type {KeyDown, KeyUp};
+		enum class Type {Empty, KeyDown, KeyUp};
 
 		KeyEvent(Type type, unsigned char keyCode);
 		~KeyEvent() = default;
@@ -38,8 +38,8 @@ public:
 
 	bool IsKeyPressed(unsigned char keyCode) { return m_keyState[keyCode]; }
 
-	KeyEvent* ReadFirstEvent();
-	char* ReadFirstChar();
+	KeyEvent ReadFirstEvent();
+	char ReadFirstChar();
 
 	// pop buffers until under kInputBufferLimit
 	void PopKeyEventBuffer();
