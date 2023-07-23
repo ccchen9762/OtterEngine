@@ -8,5 +8,6 @@ int WINAPI WinMain(_In_ HINSTANCE hInstance,
     _In_ int nCmdShow) {
 
     Game game;
+
     return game.Start();
 }

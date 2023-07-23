@@ -15,5 +15,9 @@ public:
 	int Start();
 
 private:
-	Window m_window;
+	void Update();
+
+private:
+	Window m_mainWindow;
+	bool m_mainWindowAlive;
 };

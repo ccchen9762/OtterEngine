@@ -1,14 +1,17 @@
 #pragma once
 
+// inline variables can only be used after c++ 17
+// makes variables have only 1 instance over all translation units
+
 // window configs
-extern const wchar_t* kDefWndClassName;
-extern const wchar_t* kDefWndTitle;
+inline const wchar_t* kDefWndClassName = L"D3D11_WNDCLASS";
+inline const wchar_t* kDefWndTitle = L"Otter Engine";
 
 // buffer limit for message inputs
-extern const unsigned int kInputBufferLimit;
+inline const unsigned int kInputBufferLimit = 16u;
 
 // final render size
-extern const unsigned int kRenderWidth, kRenderHeight;
+inline const unsigned int kRenderWidth = 1280u, kRenderHeight = 720u;
 
 // math
-extern const double kPI;
+inline const double kPI = 3.1415926;

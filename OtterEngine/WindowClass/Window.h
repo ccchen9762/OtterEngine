@@ -2,7 +2,7 @@
 
 #include "OtterEngine/Common/MinimalWindows.h"
 #include "OtterEngine/Input/Keyboard.h"
-//#include "OtterEngine/Input/Mouse.h"
+#include "OtterEngine/Input/Mouse.h"
 
 class Window {
 public:
@@ -13,14 +13,19 @@ public:
 	Window(const Window&) = delete;
 	Window& operator= (const Window&) = delete;
 
+	void setTitle(const std::wstring& title) { SetWindowText(m_hWnd, title.c_str()); }
+	void CaptureWindow() { SetCapture(m_hWnd); }
+
 private:
+	static LRESULT DefWndProc(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam);
 	static LRESULT WndProc(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam);
 	LRESULT MessageHandler(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam);
 
-private:
+public:
 	Keyboard m_keyboard;
-	//Mouse m_mouse;
+	Mouse m_mouse;
 
+private:
 	HWND m_hWnd;
 	HINSTANCE m_hInstance;
 	LPCWSTR m_wndClassName;
