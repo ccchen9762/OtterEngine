@@ -1,6 +1,6 @@
 #include "Mouse.h"
 
-#include "OtterEngine/Common/MinimalWindows.h"
+#include "OtterEngine/Common/pch.h"
 
 Mouse::MouseEvent::MouseEvent(Type type, Vector3Int pos) : m_type(type), m_position(pos) {
 }

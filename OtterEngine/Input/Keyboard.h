@@ -3,7 +3,7 @@
 #include <bitset>
 #include <queue>
 
-#include "OtterEngine/Common/Constants.h"
+#include "OtterEngine/Common/constants.h"
 
 class Keyboard {
 

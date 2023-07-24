@@ -2,7 +2,7 @@
 
 #include <queue>
 
-#include "OtterEngine/Common/Constants.h"
+#include "OtterEngine/Common/constants.h"
 #include "OtterEngine/Math/Vector3.h"
 
 class Mouse {

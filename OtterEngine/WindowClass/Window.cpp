@@ -1,7 +1,7 @@
 #include "Window.h"
 
-#include "OtterEngine/Common/Constants.h"
-#include "OtterEngine/Common/Utilities.h"
+#include "OtterEngine/Common/constants.h"
+#include "OtterEngine/Common/utils.h"
 
 Window::Window(LPCTSTR wndTitle, UINT32 width, UINT32 height) :
 	m_wndTitle(wndTitle), m_width(width), m_height(height), 

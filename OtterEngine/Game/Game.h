@@ -1,7 +1,7 @@
 #pragma once
 
 #include "OtterEngine/WindowClass/Window.h"
-#include "OtterEngine/Common/Constants.h"
+#include "OtterEngine/Common/constants.h"
 
 class Game {
 public:

@@ -2,7 +2,7 @@
 
 #include <string>
 
-#include "OtterEngine/Common/Utilities.h"
+#include "OtterEngine/Common/utils.h"
 
 Game::Game() :
     m_mainWindow(Window(kDefWndTitle, kRenderWidth, kRenderHeight)), m_mainWindowAlive(true) {

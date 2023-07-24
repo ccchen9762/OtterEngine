@@ -23,7 +23,7 @@ Graphics::Graphics(HWND hWnd) {
 	swapChainDesc.SwapEffect = DXGI_SWAP_EFFECT_DISCARD;
 	swapChainDesc.Flags = 0;
 
-	D3D11CreateDeviceAndSwapChain(
+	DX::ThrowIfFailed(D3D11CreateDeviceAndSwapChain(
 		nullptr,					// IDXGIAdapter*, pass nullptr to use default
 		D3D_DRIVER_TYPE_HARDWARE,
 		nullptr,					// software rasterizer, pass nullptr for driver type other than software
@@ -36,12 +36,12 @@ Graphics::Graphics(HWND hWnd) {
 		&m_pDevice,
 		nullptr,					// feature level, nullptr if no need to specify 
 		&m_pDeviceContext
-	);
+	));
 
 	ID3D11Texture2D* pBackBuffer;
-	m_pSwapChain->GetBuffer(0, __uuidof(ID3D11Texture2D), (LPVOID*)&pBackBuffer);
+	DX::ThrowIfFailed(m_pSwapChain->GetBuffer(0, __uuidof(ID3D11Texture2D), (LPVOID*)&pBackBuffer));
 	if (pBackBuffer) {
-		m_pDevice->CreateRenderTargetView(pBackBuffer, nullptr, &m_pRenderTarget);
+		DX::ThrowIfFailed(m_pDevice->CreateRenderTargetView(pBackBuffer, nullptr, &m_pRenderTarget));
 		pBackBuffer->Release();
 	}
 }

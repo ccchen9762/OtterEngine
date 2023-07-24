@@ -1,6 +1,6 @@
 #pragma once
 
-#include "OtterEngine/Common/MinimalWindows.h"
+#include "OtterEngine/Common/pch.h"
 #include <d3d11.h> // only declarations, need definitions in dlls 
 
 class Graphics

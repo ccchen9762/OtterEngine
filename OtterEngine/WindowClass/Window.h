@@ -1,6 +1,6 @@
 #pragma once
 
-#include "OtterEngine/Common/MinimalWindows.h"
+#include "OtterEngine/Common/pch.h"
 
 #include "OtterEngine/Input/Keyboard.h"
 #include "OtterEngine/Input/Mouse.h"
