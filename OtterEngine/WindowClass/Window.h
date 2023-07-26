@@ -8,7 +8,7 @@
 
 class Window {
 public:
-	Window(LPCTSTR wndTitle, UINT32 width, UINT32 height);
+	Window(LPCTSTR wndTitle, const unsigned int width, const unsigned int height);
 	~Window();
 
 	// prevent copying
@@ -31,7 +31,7 @@ public:
 private:
 	HWND m_hWnd;
 	HINSTANCE m_hInstance;
-	LPCWSTR m_wndTitle;
-	UINT32 m_width;
-	UINT32 m_height;
+	LPCTSTR m_wndTitle;
+	unsigned int m_width;
+	unsigned int m_height;
 };

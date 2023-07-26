@@ -38,29 +38,16 @@ Graphics::Graphics(HWND hWnd) {
 		&m_pDeviceContext
 	));
 
-	ID3D11Texture2D* pBackBuffer;
+	Microsoft::WRL::ComPtr<ID3D11Texture2D> pBackBuffer;
 	DX::ThrowIfFailed(m_pSwapChain->GetBuffer(0, __uuidof(ID3D11Texture2D), (LPVOID*)&pBackBuffer));
-	if (pBackBuffer) {
-		DX::ThrowIfFailed(m_pDevice->CreateRenderTargetView(pBackBuffer, nullptr, &m_pRenderTarget));
-		pBackBuffer->Release();
-	}
-}
-
-Graphics::~Graphics() {
-	if (m_pRenderTarget)
-		m_pRenderTarget->Release();
-	if (m_pSwapChain)
-		m_pSwapChain->Release();
-	if (m_pDeviceContext)
-		m_pDeviceContext->Release();
-	if (m_pDevice)
-		m_pDevice->Release();
+	if (pBackBuffer)
+		DX::ThrowIfFailed(m_pDevice->CreateRenderTargetView(pBackBuffer.Get(), nullptr, &m_pRenderTarget));
 }
 
 void Graphics::ClearBuffer(float red, float green, float blue) {
 	const float color[4] = {red, green, blue, 1.0f};
 
-	m_pDeviceContext->ClearRenderTargetView(m_pRenderTarget, color);
+	m_pDeviceContext->ClearRenderTargetView(m_pRenderTarget.Get(), color);
 }
 
 void Graphics::Update() {

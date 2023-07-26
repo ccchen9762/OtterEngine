@@ -19,5 +19,7 @@
     <ClInclude Include="Math\Vector3.h" />
     <ClInclude Include="Common\utils.h" />
     <ClInclude Include="Graphics\Graphics.h" />
+    <ClInclude Include="Timer\Timer.h" />
+    <ClInclude Include="Common\Timer.h" />
   </ItemGroup>
 </Project>

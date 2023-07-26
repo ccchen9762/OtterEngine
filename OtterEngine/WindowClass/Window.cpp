@@ -3,7 +3,7 @@
 #include "OtterEngine/Common/constants.h"
 #include "OtterEngine/Common/utils.h"
 
-Window::Window(LPCTSTR wndTitle, UINT32 width, UINT32 height) :
+Window::Window(LPCTSTR wndTitle, unsigned int width, unsigned int height) :
 	m_wndTitle(wndTitle), m_width(width), m_height(height), 
     m_hInstance(GetModuleHandle(nullptr)), m_pGraphics(nullptr) {
 

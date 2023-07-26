@@ -9,6 +9,8 @@
 
 #include <Windows.h>
 
+#include <wrl/client.h>
+
 #include <exception>
 #include <iostream>
 

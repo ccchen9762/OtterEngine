@@ -7,7 +7,7 @@ class Graphics
 {
 public:
 	Graphics(HWND hWnd);
-	~Graphics();
+	~Graphics() = default; // no need to call release for ComPtr
 
 	// prevent copying
 	Graphics(const Graphics&) = delete;
@@ -19,9 +19,11 @@ public:
 private:
 	void PostUpdate();	// things to do after Update()
 
+	void DrawTestTriangle();
+
 private:
-	ID3D11Device* m_pDevice;
-	ID3D11DeviceContext* m_pDeviceContext;
-	IDXGISwapChain* m_pSwapChain;
-	ID3D11RenderTargetView* m_pRenderTarget;
+ 	Microsoft::WRL::ComPtr<ID3D11Device> m_pDevice;
+	Microsoft::WRL::ComPtr<ID3D11DeviceContext> m_pDeviceContext;
+	Microsoft::WRL::ComPtr<IDXGISwapChain> m_pSwapChain;
+	Microsoft::WRL::ComPtr<ID3D11RenderTargetView> m_pRenderTarget;
 };
