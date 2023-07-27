@@ -21,5 +21,10 @@
     <ClInclude Include="Graphics\Graphics.h" />
     <ClInclude Include="Timer\Timer.h" />
     <ClInclude Include="Common\Timer.h" />
+    <ClInclude Include="Common\ReadData.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <FxCompile Include="Shader\PixelShader.hlsl" />
+    <FxCompile Include="Shader\VertexShader.hlsl" />
   </ItemGroup>
 </Project>

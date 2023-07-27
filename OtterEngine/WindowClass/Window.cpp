@@ -40,7 +40,7 @@ Window::Window(LPCTSTR wndTitle, unsigned int width, unsigned int height) :
 
 	ShowWindow(m_hWnd, SW_SHOW);
 
-    m_pGraphics = new Graphics(m_hWnd);
+    m_pGraphics = new Graphics(m_hWnd, width, height);
 }
 
 Window::~Window() {

@@ -6,7 +6,7 @@
 class Graphics
 {
 public:
-	Graphics(HWND hWnd);
+	Graphics(HWND hWnd, unsigned int viewportWidth, unsigned int viewportHeight);
 	~Graphics() = default; // no need to call release for ComPtr
 
 	// prevent copying
@@ -19,11 +19,12 @@ public:
 private:
 	void PostUpdate();	// things to do after Update()
 
-	void DrawTestTriangle();
+	void DrawTriangle();
 
 private:
  	Microsoft::WRL::ComPtr<ID3D11Device> m_pDevice;
 	Microsoft::WRL::ComPtr<ID3D11DeviceContext> m_pDeviceContext;
 	Microsoft::WRL::ComPtr<IDXGISwapChain> m_pSwapChain;
 	Microsoft::WRL::ComPtr<ID3D11RenderTargetView> m_pRenderTarget;
+	D3D11_VIEWPORT viewport;
 };
