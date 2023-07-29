@@ -15,16 +15,19 @@ public:
 
 	void ClearBuffer(float red, float green, float blue);
 	void Update();		// called each frame to update graphics
-
-private:
 	void PostUpdate();	// things to do after Update()
-
-	void DrawTriangle();
+	void CreateRenderResource();
+	void DrawTriangle(double angle);
+	void DrawCube(double angleX, double angleY, double angleZ);
 
 private:
  	Microsoft::WRL::ComPtr<ID3D11Device> m_pDevice;
 	Microsoft::WRL::ComPtr<ID3D11DeviceContext> m_pDeviceContext;
 	Microsoft::WRL::ComPtr<IDXGISwapChain> m_pSwapChain;
-	Microsoft::WRL::ComPtr<ID3D11RenderTargetView> m_pRenderTarget;
-	D3D11_VIEWPORT viewport;
+	Microsoft::WRL::ComPtr<ID3D11RenderTargetView> m_pRenderTargetView;
+	Microsoft::WRL::ComPtr<ID3D11DepthStencilView> m_pDepthStencilView;
+	Microsoft::WRL::ComPtr<ID3D11VertexShader> m_pVertexShader;
+	Microsoft::WRL::ComPtr<ID3D11PixelShader> m_pPixelShader;
+	Microsoft::WRL::ComPtr<ID3D11InputLayout> m_pInputLayout;
+	D3D11_VIEWPORT m_viewport;
 };

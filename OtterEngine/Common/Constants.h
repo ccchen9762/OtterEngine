@@ -12,6 +12,7 @@ inline const unsigned int kInputBufferLimit = 16u;
 
 // final render size
 inline const unsigned int kRenderWidth = 1280u, kRenderHeight = 720u;
+constexpr float kRenderRatio = static_cast<float>(kRenderHeight) / static_cast<float>(kRenderWidth);
 
 // math
 inline const double kPI = 3.1415926;
