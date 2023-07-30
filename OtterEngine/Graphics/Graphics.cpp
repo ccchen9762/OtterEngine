@@ -248,10 +248,10 @@ void Graphics::DrawCube(double angleX, double angleY, double angleZ) {
 	// ==================== create index buffer ====================
 	// indices are 2 bytes by default
 	const unsigned short indices[] = {
-		3, 0, 1,  1, 2, 3, // back
+		0, 1, 2,  2, 3, 0, // back
 		6, 5, 4,  4, 7, 6, // front
 		7, 4, 0,  0, 3, 7, // left
-		6, 5, 1,  1, 2, 6, // right
+		2, 1, 5,  5, 6, 2, // right
 		2, 6, 7,  7, 3, 2, // top
 		4, 5, 1,  1, 0, 4, // bottom
 	};
@@ -277,10 +277,10 @@ void Graphics::DrawCube(double angleX, double angleY, double angleZ) {
 	const ConstantBuffer constantbuffer = {
 		DirectX::XMMatrixTranspose(
 			DirectX::XMMatrixRotationX(angleX) *
-			DirectX::XMMatrixRotationY(angleX) *
+			DirectX::XMMatrixRotationY(angleY) *
 			DirectX::XMMatrixRotationZ(angleZ) *
 			DirectX::XMMatrixTranslation(0.0f,  0.0f, -4.0f) *
-			DirectX::XMMatrixPerspectiveRH(1.0, kRenderRatio, 0.1f, 10.0f)
+			DirectX::XMMatrixPerspectiveRH(1.0, kRenderRatio, 0.1f, 20.0f)
 		)
 	};
 	Microsoft::WRL::ComPtr<ID3D11Buffer> pConstantBuffer;

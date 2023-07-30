@@ -165,6 +165,9 @@
     <ClCompile Include="Input\Mouse.cpp" />
     <ClCompile Include="Main.cpp" />
     <ClCompile Include="Math\Vector3.cpp" />
+    <ClCompile Include="Renderable\Cube.cpp" />
+    <ClCompile Include="Renderable\Renderable.cpp" />
+    <ClCompile Include="Renderable\Triangle.cpp" />
     <ClCompile Include="WindowClass\Window.cpp" />
   </ItemGroup>
   <ItemGroup>
@@ -178,6 +181,9 @@
     <ClInclude Include="Input\Keyboard.h" />
     <ClInclude Include="Input\Mouse.h" />
     <ClInclude Include="Math\Vector3.h" />
+    <ClInclude Include="Renderable\Cube.h" />
+    <ClInclude Include="Renderable\Renderable.h" />
+    <ClInclude Include="Renderable\Triangle.h" />
     <ClInclude Include="Timer\Timer.h" />
     <ClInclude Include="WindowClass\Window.h" />
   </ItemGroup>

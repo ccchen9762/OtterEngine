@@ -1,6 +1,7 @@
 #pragma once
 
 #include "OtterEngine/WindowClass/Window.h"
+#include "OtterEngine/Common/Timer.h"
 #include "OtterEngine/Common/constants.h"
 
 class Game {
@@ -20,4 +21,5 @@ private:
 private:
 	Window m_mainWindow;
 	bool m_mainWindowAlive;
+	Timer m_timer;
 };

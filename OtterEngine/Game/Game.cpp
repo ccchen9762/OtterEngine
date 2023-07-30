@@ -5,7 +5,7 @@
 #include "OtterEngine/Common/utils.h"
 
 Game::Game() :
-    m_mainWindow(Window(kDefWndTitle, kRenderWidth, kRenderHeight)), m_mainWindowAlive(true) {
+    m_mainWindow(Window(kDefWndTitle, kRenderWidth, kRenderHeight)), m_mainWindowAlive(true), m_timer(Timer()) {
 }
 
 int Game::Start() {
@@ -71,10 +71,12 @@ int Game::Start() {
 }
 
 void Game::Update() {
-    m_mainWindow.m_pGraphics->ClearBuffer(1.0, 1.0, 0.5);
+    m_timer.Update();
+
+    m_mainWindow.m_pGraphics->ClearBuffer(0.1f, 0.1f, 0.1f);
     m_mainWindow.m_pGraphics->CreateRenderResource();
     // m_mainWindow.m_pGraphics->DrawTriangle(kPI/4);
-    m_mainWindow.m_pGraphics->DrawCube(kPI / 4, kPI / 8, kPI / 3);
+    m_mainWindow.m_pGraphics->DrawCube(m_timer.GetElapsedTimeSecond(), m_timer.GetElapsedTimeSecond() / 2, 0.0f);
     m_mainWindow.m_pGraphics->PostUpdate();
 }
 
