@@ -5,6 +5,8 @@
 // query performance counter (QPC)
 // API for high-resolution time stamps or measure time intervals
 
+// calculation: performance counters between last frame and this frame / counters per second (frquency)
+
 class Timer {
 public:
     Timer() : m_framesPerSecond(0.0), m_updateInterval(1.0) {

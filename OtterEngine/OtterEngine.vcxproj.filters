@@ -8,9 +8,9 @@
     <ClCompile Include="Input\Mouse.cpp" />
     <ClCompile Include="Math\Vector3.cpp" />
     <ClCompile Include="Graphics\Graphics.cpp" />
-    <ClCompile Include="Renderable\Renderable.cpp" />
     <ClCompile Include="Renderable\Cube.cpp" />
     <ClCompile Include="Renderable\Triangle.cpp" />
+    <ClCompile Include="Common\Randomizer.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="WindowClass\Window.h" />
@@ -28,6 +28,7 @@
     <ClInclude Include="Renderable\Renderable.h" />
     <ClInclude Include="Renderable\Cube.h" />
     <ClInclude Include="Renderable\Triangle.h" />
+    <ClInclude Include="Common\Randomizer.h" />
   </ItemGroup>
   <ItemGroup>
     <FxCompile Include="Shader\PixelShader.hlsl" />
