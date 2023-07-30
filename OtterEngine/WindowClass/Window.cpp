@@ -1,7 +1,12 @@
 #include "Window.h"
 
+#include "OtterEngine/Imgui/imgui.h"
+#include "OtterEngine/Imgui/imgui_impl_win32.h"
+
 #include "OtterEngine/Common/constants.h"
 #include "OtterEngine/Common/utils.h"
+
+extern IMGUI_IMPL_API LRESULT ImGui_ImplWin32_WndProcHandler(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam);
 
 Window::Window(LPCTSTR wndTitle, unsigned int width, unsigned int height) :
 	m_wndTitle(wndTitle), m_width(width), m_height(height), 
@@ -39,12 +44,15 @@ Window::Window(LPCTSTR wndTitle, unsigned int width, unsigned int height) :
 		nullptr, nullptr, GetModuleHandle(nullptr), this);
 
 	ShowWindow(m_hWnd, SW_SHOW);
+    UpdateWindow(m_hWnd);   //necessary
+    
+    ImGui_ImplWin32_Init(m_hWnd);
 
     m_pGraphics = new Graphics(m_hWnd, width, height);
 }
 
 Window::~Window() {
-
+  
     delete m_pGraphics;
 
 	UnregisterClass(kDefWndClassName, m_hInstance);
@@ -76,6 +84,12 @@ LRESULT Window::WndProc(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam) {
 }
 
 LRESULT Window::MessageHandler(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam) {
+
+    // Imgui message handler
+    if (ImGui_ImplWin32_WndProcHandler(hWnd, msg, wParam, lParam))
+        return true;
+
+    // message handler
 	switch (msg) {
     case WM_KILLFOCUS: {
         m_keyboard.ClearKeyState();

@@ -2,6 +2,8 @@
 
 #include <DirectXMath.h>
 
+#include "OtterEngine/Imgui/imgui_impl_dx11.h"
+
 #include "OtterEngine/Math/Vector3.h"
 #include "OtterEngine/Common/ReadData.h"
 #include "OtterEngine/Common/constants.h"
@@ -101,6 +103,8 @@ Graphics::Graphics(HWND hWnd, unsigned int viewportWidth, unsigned int viewportH
 
 	// bind DepthStencilView to RenderTargetView only once
 	m_pDeviceContext->OMSetRenderTargets(1u, m_pRenderTargetView.GetAddressOf(), m_pDepthStencilView.Get());
+
+	ImGui_ImplDX11_Init(m_pDevice.Get(), m_pDeviceContext.Get());
 }
 
 void Graphics::ClearBuffer(float red, float green, float blue) {

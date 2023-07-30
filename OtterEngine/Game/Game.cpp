@@ -2,11 +2,17 @@
 
 #include <string>
 
+#include "OtterEngine/Imgui/imgui.h"
+#include "OtterEngine/Imgui/imgui_impl_win32.h"
+#include "OtterEngine/Imgui/imgui_impl_dx11.h"
+
 #include "OtterEngine/Common/Randomizer.h"
 #include "OtterEngine/Common/utils.h"
 
 Game::Game() :
-    m_mainWindow(Window(kDefWndTitle, kRenderWidth, kRenderHeight)), m_mainWindowAlive(true), m_timer(Timer()) {
+    m_mainWindow(Window(kDefWndTitle, kRenderWidth, kRenderHeight)), m_mainWindowAlive(true), 
+    m_timer(Timer()),
+    m_imguiManager(ImguiManager()) {
 
     Randomizer::Init();
 }
@@ -74,13 +80,17 @@ int Game::Start() {
 }
 
 void Game::Update() {
+
     m_timer.Update();
 
     m_mainWindow.m_pGraphics->ClearBuffer(0.1f, 0.1f, 0.1f);
+    
     m_mainWindow.m_pGraphics->CreateRenderResource();
     // m_mainWindow.m_pGraphics->DrawTriangle(kPI/4);
-    // m_mainWindow.m_pGraphics->DrawCube(m_timer.GetElapsedTimeSecond(), m_timer.GetElapsedTimeSecond() / 2, 0.0f);
-    m_mainWindow.m_pGraphics->DrawCube(Randomizer::GetFloat(kPI), Randomizer::GetFloat(kPI), 0.0f);
+    m_mainWindow.m_pGraphics->DrawCube(m_timer.GetElapsedTimeSecond(), m_timer.GetElapsedTimeSecond() / 2, 0.0f);
+    // m_mainWindow.m_pGraphics->DrawCube(Randomizer::GetFloat(kPI), Randomizer::GetFloat(kPI), 0.0f);
+    m_imguiManager.Update();
+
     m_mainWindow.m_pGraphics->PostUpdate();
 }
 

@@ -14,5 +14,8 @@ inline const unsigned int kInputBufferLimit = 16u;
 inline const unsigned int kRenderWidth = 1280u, kRenderHeight = 720u;
 constexpr float kRenderRatio = static_cast<float>(kRenderHeight) / static_cast<float>(kRenderWidth);
 
+// imgui settings
+inline bool kShowWindow = true, kShowAnotherWindow = true;
+
 // math
 inline const double kPI = 3.1415926;
