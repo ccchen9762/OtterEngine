@@ -4,6 +4,10 @@
 
 #include "OtterEngine/Imgui/imgui_impl_dx11.h"
 
+#include "Resource/VertexShader.h"
+#include "Resource/PixelShader.h"
+#include "Resource/InputLayout.h"
+
 #include "OtterEngine/Math/Vector3.h"
 #include "OtterEngine/Common/ReadData.h"
 #include "OtterEngine/Common/constants.h"
@@ -124,7 +128,7 @@ void Graphics::PostUpdate() {
 void Graphics::CreateRenderResource() {
 	/* Loadand create shaders */
 	// vertex shader
-	std::vector<uint8_t> vertexShaderBlob = DX::ReadData(L"VertexShader.cso");
+	/*std::vector<uint8_t> vertexShaderBlob = DX::ReadData(L"VertexShader.cso");
 	DX::ThrowIfFailed(m_pDevice->CreateVertexShader(vertexShaderBlob.data(), vertexShaderBlob.size(),
 		nullptr, &m_pVertexShader));
 
@@ -140,7 +144,13 @@ void Graphics::CreateRenderResource() {
 		{ "COLOR",		 0, DXGI_FORMAT_R32G32B32A32_FLOAT, 0, 16u, D3D11_INPUT_PER_VERTEX_DATA, 0 }, // semantic takes COLOR instead of COLOR0 ?
 	};
 	DX::ThrowIfFailed(m_pDevice->CreateInputLayout(s_inputElementDesc, sizeof(s_inputElementDesc) / sizeof(D3D11_INPUT_ELEMENT_DESC),
-		vertexShaderBlob.data(), vertexShaderBlob.size(), &m_pInputLayout));
+		vertexShaderBlob.data(), vertexShaderBlob.size(), &m_pInputLayout));*/
+
+	std::unique_ptr<VertexShader> pVertexShader = std::make_unique<VertexShader>(m_pDevice.Get());
+	const std::vector<uint8_t> vertexShaderBlob = pVertexShader->GetVertexShaderBlob();
+	m_graphicsResources.push_back(std::move(pVertexShader));
+	m_graphicsResources.push_back(std::make_unique<PixelShader>(m_pDevice.Get()));
+	m_graphicsResources.push_back(std::make_unique<InputLayout>(m_pDevice.Get(), vertexShaderBlob));
 }
 
 void Graphics::DrawTriangle(double angle) {
@@ -310,9 +320,14 @@ void Graphics::DrawCube(double angleX, double angleY, double angleZ) {
 	m_pDeviceContext->VSSetConstantBuffers(0u, 1u, pConstantBuffer.GetAddressOf());
 
 	// ==================== bind device dependent resource ====================
-	m_pDeviceContext->IASetInputLayout(m_pInputLayout.Get());
-	m_pDeviceContext->VSSetShader(m_pVertexShader.Get(), nullptr, 0);
-	m_pDeviceContext->PSSetShader(m_pPixelShader.Get(), nullptr, 0);
+	//m_pDeviceContext->IASetInputLayout(m_pInputLayout.Get());
+	//m_pDeviceContext->VSSetShader(m_pVertexShader.Get(), nullptr, 0);
+	//m_pDeviceContext->PSSetShader(m_pPixelShader.Get(), nullptr, 0);
+
+	// need to use reference since it's unique
+	for (std::unique_ptr<GraphicsResource>& resource : m_graphicsResources) {
+		resource->Bind(m_pDeviceContext.Get());
+	}
 
 	// ==================== draw call ====================
 	//m_pDeviceContext->Draw(3u, 0u);

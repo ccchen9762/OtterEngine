@@ -19,8 +19,6 @@
 #include <fstream>
 #include <stdexcept>
 #include <system_error>
-#include <vector>
-
 
 namespace DX {
     inline std::vector<uint8_t> ReadData(_In_z_ const wchar_t* name) {

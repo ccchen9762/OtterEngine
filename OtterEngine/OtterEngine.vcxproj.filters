@@ -8,8 +8,6 @@
     <ClCompile Include="Input\Mouse.cpp" />
     <ClCompile Include="Math\Vector3.cpp" />
     <ClCompile Include="Graphics\Graphics.cpp" />
-    <ClCompile Include="Renderable\Cube.cpp" />
-    <ClCompile Include="Renderable\Triangle.cpp" />
     <ClCompile Include="Common\Randomizer.cpp" />
     <ClCompile Include="Imgui\imgui.cpp" />
     <ClCompile Include="Imgui\imgui_impl_dx11.cpp" />
@@ -19,6 +17,12 @@
     <ClCompile Include="Imgui\imgui_demo.cpp" />
     <ClCompile Include="Imgui\imgui_tables.cpp" />
     <ClCompile Include="Imgui\imgui_widgets.cpp" />
+    <ClCompile Include="Graphics\Resource\VertexShader.cpp" />
+    <ClCompile Include="Graphics\Resource\PixelShader.cpp" />
+    <ClCompile Include="Graphics\Resource\InputLayout.cpp" />
+    <ClCompile Include="Renderable\Cube.cpp" />
+    <ClCompile Include="Renderable\Triangle.cpp" />
+    <ClCompile Include="Graphics\Resource\DepthStencil.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="WindowClass\Window.h" />
@@ -33,9 +37,6 @@
     <ClInclude Include="Timer\Timer.h" />
     <ClInclude Include="Common\Timer.h" />
     <ClInclude Include="Common\ReadData.h" />
-    <ClInclude Include="Renderable\Renderable.h" />
-    <ClInclude Include="Renderable\Cube.h" />
-    <ClInclude Include="Renderable\Triangle.h" />
     <ClInclude Include="Common\Randomizer.h" />
     <ClInclude Include="Imgui\imgui.h" />
     <ClInclude Include="Imgui\imgui_impl_dx11.h" />
@@ -44,6 +45,17 @@
     <ClInclude Include="Imgui\imconfig.h" />
     <ClInclude Include="Imgui\ImguiManager.h" />
     <ClInclude Include="Imgui\imstb_textedit.h" />
+    <ClInclude Include="Graphics\Resource\InputLayout.h" />
+    <ClInclude Include="Graphics\Resource\VertexShader.h" />
+    <ClInclude Include="Graphics\Resource\PixelShader.h" />
+    <ClInclude Include="Graphics\Resource\GraphicsResource.h" />
+    <ClInclude Include="Renderable\Cube.h" />
+    <ClInclude Include="Renderable\Renderable.h" />
+    <ClInclude Include="Renderable\Triangle.h" />
+    <ClInclude Include="Graphics\Resource\ConstantBuffer.h" />
+    <ClInclude Include="Graphics\Resource\DepthStencil.h" />
+    <ClInclude Include="Graphics\Resource\IndexBuffer.h" />
+    <ClInclude Include="Graphics\Resource\VertexBuffer.h" />
   </ItemGroup>
   <ItemGroup>
     <FxCompile Include="Shader\PixelShader.hlsl" />

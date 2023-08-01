@@ -2,9 +2,14 @@
 
 #include "OtterEngine/Common/pch.h"
 #include <d3d11.h> // only declarations, need definitions in dlls 
+#include <memory>
+
+#include "Resource/GraphicsResource.h"
 
 class Graphics
 {
+	friend class GraphicsResource;
+
 public:
 	Graphics(HWND hWnd, unsigned int viewportWidth, unsigned int viewportHeight);
 	~Graphics() = default; // no need to call release for ComPtr
@@ -30,4 +35,6 @@ private:
 	Microsoft::WRL::ComPtr<ID3D11PixelShader> m_pPixelShader;
 	Microsoft::WRL::ComPtr<ID3D11InputLayout> m_pInputLayout;
 	D3D11_VIEWPORT m_viewport;
+
+	std::vector<std::unique_ptr<GraphicsResource>> m_graphicsResources;
 };

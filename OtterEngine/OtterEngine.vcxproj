@@ -162,6 +162,10 @@
     <ClCompile Include="Common\Randomizer.cpp" />
     <ClCompile Include="Game\Game.cpp" />
     <ClCompile Include="Graphics\Graphics.cpp" />
+    <ClCompile Include="Graphics\Resource\DepthStencil.cpp" />
+    <ClCompile Include="Graphics\Resource\InputLayout.cpp" />
+    <ClCompile Include="Graphics\Resource\PixelShader.cpp" />
+    <ClCompile Include="Graphics\Resource\VertexShader.cpp" />
     <ClCompile Include="Imgui\imgui.cpp" />
     <ClCompile Include="Imgui\ImguiManager.cpp" />
     <ClCompile Include="Imgui\imgui_demo.cpp" />
@@ -187,6 +191,14 @@
     <ClInclude Include="Common\utils.h" />
     <ClInclude Include="Game\Game.h" />
     <ClInclude Include="Graphics\Graphics.h" />
+    <ClInclude Include="Graphics\Resource\ConstantBuffer.h" />
+    <ClInclude Include="Graphics\Resource\DepthStencil.h" />
+    <ClInclude Include="Graphics\Resource\GraphicsResource.h" />
+    <ClInclude Include="Graphics\Resource\IndexBuffer.h" />
+    <ClInclude Include="Graphics\Resource\InputLayout.h" />
+    <ClInclude Include="Graphics\Resource\PixelShader.h" />
+    <ClInclude Include="Graphics\Resource\VertexBuffer.h" />
+    <ClInclude Include="Graphics\Resource\VertexShader.h" />
     <ClInclude Include="Imgui\imconfig.h" />
     <ClInclude Include="Imgui\imgui.h" />
     <ClInclude Include="Imgui\ImguiManager.h" />

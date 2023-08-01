@@ -11,6 +11,7 @@
 
 #include <wrl/client.h>
 
+#include <vector>
 #include <exception>
 #include <iostream>
 
