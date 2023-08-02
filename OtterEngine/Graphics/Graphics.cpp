@@ -7,6 +7,9 @@
 #include "Resource/VertexShader.h"
 #include "Resource/PixelShader.h"
 #include "Resource/InputLayout.h"
+#include "Resource/VertexBuffer.h"
+#include "Resource/IndexBuffer.h"
+#include "Resource/ConstantBuffer.h"
 
 #include "OtterEngine/Math/Vector3.h"
 #include "OtterEngine/Common/ReadData.h"
@@ -14,13 +17,8 @@
 
 #pragma comment(lib, "d3d11.lib")		// definitions of d3d11.h
 
-// IA = input assembler
+// IA = input assembler -> vertex buffer + index buffer
 // OM = output merger
-
-struct Vertex {
-	DirectX::XMVECTOR m_position;
-	DirectX::XMFLOAT4 m_color;
-};
 
 Graphics::Graphics(HWND hWnd, unsigned int viewportWidth, unsigned int viewportHeight) {
 
@@ -127,25 +125,6 @@ void Graphics::PostUpdate() {
 
 void Graphics::CreateRenderResource() {
 	/* Loadand create shaders */
-	// vertex shader
-	/*std::vector<uint8_t> vertexShaderBlob = DX::ReadData(L"VertexShader.cso");
-	DX::ThrowIfFailed(m_pDevice->CreateVertexShader(vertexShaderBlob.data(), vertexShaderBlob.size(),
-		nullptr, &m_pVertexShader));
-
-	// pixel shader
-	std::vector<uint8_t> pixelShaderBlob = DX::ReadData(L"PixelShader.cso");
-	DX::ThrowIfFailed(m_pDevice->CreatePixelShader(pixelShaderBlob.data(), pixelShaderBlob.size(),
-		nullptr, &m_pPixelShader));
-
-	// input layout
-	// AlignedByteOffset can use D3D11_APPEND_ALIGNED_ELEMENT to automatically assign
-	const D3D11_INPUT_ELEMENT_DESC s_inputElementDesc[] = {
-		{ "SV_Position", 0, DXGI_FORMAT_R32G32B32A32_FLOAT, 0, 0,   D3D11_INPUT_PER_VERTEX_DATA, 0 },
-		{ "COLOR",		 0, DXGI_FORMAT_R32G32B32A32_FLOAT, 0, 16u, D3D11_INPUT_PER_VERTEX_DATA, 0 }, // semantic takes COLOR instead of COLOR0 ?
-	};
-	DX::ThrowIfFailed(m_pDevice->CreateInputLayout(s_inputElementDesc, sizeof(s_inputElementDesc) / sizeof(D3D11_INPUT_ELEMENT_DESC),
-		vertexShaderBlob.data(), vertexShaderBlob.size(), &m_pInputLayout));*/
-
 	std::unique_ptr<VertexShader> pVertexShader = std::make_unique<VertexShader>(m_pDevice.Get());
 	const std::vector<uint8_t> vertexShaderBlob = pVertexShader->GetVertexShaderBlob();
 	m_graphicsResources.push_back(std::move(pVertexShader));
@@ -156,7 +135,7 @@ void Graphics::CreateRenderResource() {
 void Graphics::DrawTriangle(double angle) {
 	/* IA(Input assembler)->vertex buffer + index buffer */
 	// ==================== create vertex buffer ====================
-	const Vertex vertices[] = {
+	/*const Vertex vertices[] = {
 		{DirectX::XMVectorSet(0.0f,  0.5f,  0.0f, 1.0f), DirectX::XMFLOAT4(1.0f, 0.0f, 0.0f, 1.0f)},
 		{DirectX::XMVectorSet(0.5f, -0.5f,  0.0f, 1.0f), DirectX::XMFLOAT4(0.0f, 1.0f, 0.0f, 1.0f)},
 		{DirectX::XMVectorSet(-0.5f, -0.5f,  0.0f, 1.0f), DirectX::XMFLOAT4(0.0f, 0.0f, 1.0f, 1.0f)},
@@ -231,37 +210,23 @@ void Graphics::DrawTriangle(double angle) {
 
 	// ==================== draw call ====================
 	//m_pDeviceContext->Draw(3u, 0u);
-	m_pDeviceContext->DrawIndexed(sizeof(indices) / sizeof(unsigned short), 0u, 0u); // draw with index buffer
+	m_pDeviceContext->DrawIndexed(sizeof(indices) / sizeof(unsigned short), 0u, 0u); // draw with index buffer*/
 }
 
 void Graphics::DrawCube(double angleX, double angleY, double angleZ) {
-	/* IA(Input assembler)->vertex buffer + index buffer */
-	// ==================== create vertex buffer ====================
-	const Vertex vertices[] = {
-		{DirectX::XMVectorSet( -1.0f, -1.0f, -1.0f, 1.0f), DirectX::XMFLOAT4(0.0f, 0.0f, 0.0f, 1.0f)},
-		{DirectX::XMVectorSet(  1.0f, -1.0f, -1.0f, 1.0f), DirectX::XMFLOAT4(1.0f, 0.0f, 0.0f, 1.0f)},
-		{DirectX::XMVectorSet(  1.0f,  1.0f, -1.0f, 1.0f), DirectX::XMFLOAT4(1.0f, 1.0f, 0.0f, 1.0f)},
-		{DirectX::XMVectorSet( -1.0f,  1.0f, -1.0f, 1.0f), DirectX::XMFLOAT4(0.0f, 1.0f, 0.0f, 1.0f)},
-		{DirectX::XMVectorSet( -1.0f, -1.0f,  1.0f, 1.0f), DirectX::XMFLOAT4(0.0f, 0.0f, 1.0f, 1.0f)},
-		{DirectX::XMVectorSet(  1.0f, -1.0f,  1.0f, 1.0f), DirectX::XMFLOAT4(1.0f, 0.0f, 1.0f, 1.0f)},
-		{DirectX::XMVectorSet(  1.0f,  1.0f,  1.0f, 1.0f), DirectX::XMFLOAT4(1.0f, 1.0f, 1.0f, 1.0f)},
-		{DirectX::XMVectorSet( -1.0f,  1.0f,  1.0f, 1.0f), DirectX::XMFLOAT4(0.0f, 1.0f, 1.0f, 1.0f)},
-	};
-	Microsoft::WRL::ComPtr<ID3D11Buffer> pVertexBuffer;
-	D3D11_BUFFER_DESC vertexBufferDesc = {};
-	vertexBufferDesc.ByteWidth = sizeof(vertices); // return total array size in bytes
-	vertexBufferDesc.Usage = D3D11_USAGE_DEFAULT;
-	vertexBufferDesc.BindFlags = D3D11_BIND_VERTEX_BUFFER;
-	vertexBufferDesc.CPUAccessFlags = 0u;
-	vertexBufferDesc.MiscFlags = 0u;
-	vertexBufferDesc.StructureByteStride = sizeof(Vertex);
-	D3D11_SUBRESOURCE_DATA vertexSubResourceData = {};
-	vertexSubResourceData.pSysMem = vertices;
-	DX::ThrowIfFailed(m_pDevice->CreateBuffer(&vertexBufferDesc, &vertexSubResourceData, &pVertexBuffer));
 
-	// ==================== create index buffer ====================
-	// indices are 2 bytes by default
-	const unsigned short indices[] = {
+	const std::vector<Vertex> vertices = {
+		{DirectX::XMVectorSet(-1.0f, -1.0f, -1.0f, 1.0f), DirectX::XMFLOAT4(0.0f, 0.0f, 0.0f, 1.0f)},
+		{DirectX::XMVectorSet(1.0f, -1.0f, -1.0f, 1.0f), DirectX::XMFLOAT4(1.0f, 0.0f, 0.0f, 1.0f)},
+		{DirectX::XMVectorSet(1.0f,  1.0f, -1.0f, 1.0f), DirectX::XMFLOAT4(1.0f, 1.0f, 0.0f, 1.0f)},
+		{DirectX::XMVectorSet(-1.0f,  1.0f, -1.0f, 1.0f), DirectX::XMFLOAT4(0.0f, 1.0f, 0.0f, 1.0f)},
+		{DirectX::XMVectorSet(-1.0f, -1.0f,  1.0f, 1.0f), DirectX::XMFLOAT4(0.0f, 0.0f, 1.0f, 1.0f)},
+		{DirectX::XMVectorSet(1.0f, -1.0f,  1.0f, 1.0f), DirectX::XMFLOAT4(1.0f, 0.0f, 1.0f, 1.0f)},
+		{DirectX::XMVectorSet(1.0f,  1.0f,  1.0f, 1.0f), DirectX::XMFLOAT4(1.0f, 1.0f, 1.0f, 1.0f)},
+		{DirectX::XMVectorSet(-1.0f,  1.0f,  1.0f, 1.0f), DirectX::XMFLOAT4(0.0f, 1.0f, 1.0f, 1.0f)},
+	};
+
+	const std::vector<unsigned short> indices = {
 		0, 1, 2,  2, 3, 0, // back
 		6, 5, 4,  4, 7, 6, // front
 		7, 4, 0,  0, 3, 7, // left
@@ -269,67 +234,27 @@ void Graphics::DrawCube(double angleX, double angleY, double angleZ) {
 		2, 6, 7,  7, 3, 2, // top
 		4, 5, 1,  1, 0, 4, // bottom
 	};
-	Microsoft::WRL::ComPtr<ID3D11Buffer> pIndexBuffer;
-	D3D11_BUFFER_DESC indexBufferDesc = {};
-	indexBufferDesc.ByteWidth = sizeof(indices); // return total array size in bytes
-	indexBufferDesc.Usage = D3D11_USAGE_DEFAULT;
-	indexBufferDesc.BindFlags = D3D11_BIND_INDEX_BUFFER;
-	indexBufferDesc.CPUAccessFlags = 0u;
-	indexBufferDesc.MiscFlags = 0u;
-	indexBufferDesc.StructureByteStride = sizeof(unsigned short);
-	D3D11_SUBRESOURCE_DATA indexSubResourceData = {};
-	indexSubResourceData.pSysMem = indices;
-	DX::ThrowIfFailed(m_pDevice->CreateBuffer(&indexBufferDesc, &indexSubResourceData, &pIndexBuffer));
+	
+	const DirectX::XMMATRIX transformation =
+		DirectX::XMMatrixRotationX(angleX) *
+		DirectX::XMMatrixRotationY(angleY) *
+		DirectX::XMMatrixRotationZ(angleZ) *
+		DirectX::XMMatrixTranslation(0.0f, 0.0f, -4.0f);
 
-	// VS -> constant buffer
-	// ==================== create constant buffer ====================
-	struct ConstantBuffer {
-		DirectX::XMMATRIX transform;
-	};
+	m_graphicsBuffers.push_back(std::make_unique<VertexBuffer>(m_pDevice.Get(), vertices));
+	m_graphicsBuffers.push_back(std::make_unique<IndexBuffer>(m_pDevice.Get(), indices));
+	m_graphicsBuffers.push_back(std::make_unique<ConstantBuffer>(m_pDevice.Get(), transformation));
 
-	// in Left Hand System (LH) Z axis direction is away from screen, RH toward screen **
-	const ConstantBuffer constantbuffer = {
-		DirectX::XMMatrixTranspose(
-			DirectX::XMMatrixRotationX(angleX) *
-			DirectX::XMMatrixRotationY(angleY) *
-			DirectX::XMMatrixRotationZ(angleZ) *
-			DirectX::XMMatrixTranslation(0.0f,  0.0f, -4.0f) *
-			DirectX::XMMatrixPerspectiveRH(1.0, kRenderRatio, 0.1f, 20.0f)
-		)
-	};
-	Microsoft::WRL::ComPtr<ID3D11Buffer> pConstantBuffer;
-	D3D11_BUFFER_DESC constantBufferDesc = {};
-	constantBufferDesc.ByteWidth = sizeof(constantbuffer); // return total array size in bytes
-	constantBufferDesc.Usage = D3D11_USAGE_DYNAMIC;	// to be able to update every frame
-	constantBufferDesc.BindFlags = D3D11_BIND_CONSTANT_BUFFER;
-	constantBufferDesc.CPUAccessFlags = D3D11_CPU_ACCESS_WRITE; // cpu need permission to update buffer
-	constantBufferDesc.MiscFlags = 0u;
-	constantBufferDesc.StructureByteStride = 0u; // only single element
-	D3D11_SUBRESOURCE_DATA constantSubResourceData = {};
-	constantSubResourceData.pSysMem = &constantbuffer;
-	DX::ThrowIfFailed(m_pDevice->CreateBuffer(&constantBufferDesc, &constantSubResourceData, &pConstantBuffer));
 
-	// ==================== bind buffers ====================
-	const unsigned int vertexBufferStride = sizeof(Vertex);
-	const unsigned int vertexBufferoffset = 0u;
+	// need to use reference for unique pointer
+	for (std::unique_ptr<GraphicsResource>& resource : m_graphicsBuffers) {
+		resource->Bind(m_pDeviceContext.Get());
+	}
 
-	// pOffsets -> Each offset is the bytes between the first element of a vertex buffer and the first element that will be used.
-	m_pDeviceContext->IASetVertexBuffers(0u, 1u, pVertexBuffer.GetAddressOf(), &vertexBufferStride, &vertexBufferoffset);
-	m_pDeviceContext->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
-	m_pDeviceContext->IASetIndexBuffer(pIndexBuffer.Get(), DXGI_FORMAT_R16_UINT, 0u);
-	m_pDeviceContext->VSSetConstantBuffers(0u, 1u, pConstantBuffer.GetAddressOf());
-
-	// ==================== bind device dependent resource ====================
-	//m_pDeviceContext->IASetInputLayout(m_pInputLayout.Get());
-	//m_pDeviceContext->VSSetShader(m_pVertexShader.Get(), nullptr, 0);
-	//m_pDeviceContext->PSSetShader(m_pPixelShader.Get(), nullptr, 0);
-
-	// need to use reference since it's unique
 	for (std::unique_ptr<GraphicsResource>& resource : m_graphicsResources) {
 		resource->Bind(m_pDeviceContext.Get());
 	}
 
 	// ==================== draw call ====================
-	//m_pDeviceContext->Draw(3u, 0u);
-	m_pDeviceContext->DrawIndexed(sizeof(indices) / sizeof(unsigned short), 0u, 0u); // draw with index buffer
+	m_pDeviceContext->DrawIndexed(indices.size(), 0u, 0u); // draw with index buffer
 }

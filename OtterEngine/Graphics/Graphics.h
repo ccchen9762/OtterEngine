@@ -31,10 +31,13 @@ private:
 	Microsoft::WRL::ComPtr<IDXGISwapChain> m_pSwapChain;
 	Microsoft::WRL::ComPtr<ID3D11RenderTargetView> m_pRenderTargetView;
 	Microsoft::WRL::ComPtr<ID3D11DepthStencilView> m_pDepthStencilView;
-	Microsoft::WRL::ComPtr<ID3D11VertexShader> m_pVertexShader;
-	Microsoft::WRL::ComPtr<ID3D11PixelShader> m_pPixelShader;
-	Microsoft::WRL::ComPtr<ID3D11InputLayout> m_pInputLayout;
+	
+	//Microsoft::WRL::ComPtr<ID3D11VertexShader> m_pVertexShader;
+	//Microsoft::WRL::ComPtr<ID3D11PixelShader> m_pPixelShader;
+	//Microsoft::WRL::ComPtr<ID3D11InputLayout> m_pInputLayout;
+	
 	D3D11_VIEWPORT m_viewport;
 
 	std::vector<std::unique_ptr<GraphicsResource>> m_graphicsResources;
+	std::vector<std::unique_ptr<GraphicsResource>> m_graphicsBuffers;
 };

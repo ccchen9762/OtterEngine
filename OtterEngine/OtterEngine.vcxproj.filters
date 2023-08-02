@@ -23,6 +23,9 @@
     <ClCompile Include="Renderable\Cube.cpp" />
     <ClCompile Include="Renderable\Triangle.cpp" />
     <ClCompile Include="Graphics\Resource\DepthStencil.cpp" />
+    <ClCompile Include="Graphics\Resource\VertexBuffer.cpp" />
+    <ClCompile Include="Graphics\Resource\IndexBuffer.cpp" />
+    <ClCompile Include="Graphics\Resource\ConstantBuffer.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="WindowClass\Window.h" />

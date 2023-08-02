@@ -162,9 +162,12 @@
     <ClCompile Include="Common\Randomizer.cpp" />
     <ClCompile Include="Game\Game.cpp" />
     <ClCompile Include="Graphics\Graphics.cpp" />
+    <ClCompile Include="Graphics\Resource\ConstantBuffer.cpp" />
     <ClCompile Include="Graphics\Resource\DepthStencil.cpp" />
+    <ClCompile Include="Graphics\Resource\IndexBuffer.cpp" />
     <ClCompile Include="Graphics\Resource\InputLayout.cpp" />
     <ClCompile Include="Graphics\Resource\PixelShader.cpp" />
+    <ClCompile Include="Graphics\Resource\VertexBuffer.cpp" />
     <ClCompile Include="Graphics\Resource\VertexShader.cpp" />
     <ClCompile Include="Imgui\imgui.cpp" />
     <ClCompile Include="Imgui\ImguiManager.cpp" />
