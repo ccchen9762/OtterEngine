@@ -8,6 +8,7 @@
 
 class Graphics
 {
+	friend class Game;
 	friend class GraphicsResource;
 
 public:
@@ -26,15 +27,19 @@ public:
 	void DrawCube(double angleX, double angleY, double angleZ);
 
 private:
+	const Microsoft::WRL::ComPtr<ID3D11Device>& GetDevice() { return m_pDevice; }
+	const Microsoft::WRL::ComPtr<ID3D11DeviceContext>& GetDeviceConetxt() { return m_pDeviceContext; }
+
+private:
  	Microsoft::WRL::ComPtr<ID3D11Device> m_pDevice;
 	Microsoft::WRL::ComPtr<ID3D11DeviceContext> m_pDeviceContext;
 	Microsoft::WRL::ComPtr<IDXGISwapChain> m_pSwapChain;
 	Microsoft::WRL::ComPtr<ID3D11RenderTargetView> m_pRenderTargetView;
 	Microsoft::WRL::ComPtr<ID3D11DepthStencilView> m_pDepthStencilView;
 	
-	//Microsoft::WRL::ComPtr<ID3D11VertexShader> m_pVertexShader;
-	//Microsoft::WRL::ComPtr<ID3D11PixelShader> m_pPixelShader;
-	//Microsoft::WRL::ComPtr<ID3D11InputLayout> m_pInputLayout;
+	Microsoft::WRL::ComPtr<ID3D11VertexShader> m_pVertexShader;
+	Microsoft::WRL::ComPtr<ID3D11PixelShader> m_pPixelShader;
+	Microsoft::WRL::ComPtr<ID3D11InputLayout> m_pInputLayout;
 	
 	D3D11_VIEWPORT m_viewport;
 

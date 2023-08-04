@@ -11,7 +11,7 @@
 #include "Resource/IndexBuffer.h"
 #include "Resource/ConstantBuffer.h"
 
-#include "OtterEngine/Math/Vector3.h"
+#include "OtterEngine/Common/Math/Vector3.h"
 #include "OtterEngine/Common/ReadData.h"
 #include "OtterEngine/Common/constants.h"
 
@@ -124,12 +124,18 @@ void Graphics::PostUpdate() {
 }
 
 void Graphics::CreateRenderResource() {
-	/* Loadand create shaders */
-	std::unique_ptr<VertexShader> pVertexShader = std::make_unique<VertexShader>(m_pDevice.Get());
-	const std::vector<uint8_t> vertexShaderBlob = pVertexShader->GetVertexShaderBlob();
-	m_graphicsResources.push_back(std::move(pVertexShader));
-	m_graphicsResources.push_back(std::make_unique<PixelShader>(m_pDevice.Get()));
-	m_graphicsResources.push_back(std::make_unique<InputLayout>(m_pDevice.Get(), vertexShaderBlob));
+	for (auto& a : m_graphicsResources)
+		a.reset();
+	
+	m_graphicsResources.clear();
+
+	//std::unique_ptr<VertexShader> pVertexShader = std::make_unique<VertexShader>(m_pDevice.Get());
+	//const std::vector<uint8_t> vertexShaderBlob = pVertexShader->GetVertexShaderBlob();
+	//m_graphicsResources.emplace_back(std::move(pVertexShader));
+	//m_graphicsResources.emplace_back(std::make_unique<PixelShader>(m_pDevice.Get()));
+	//m_graphicsResources.emplace_back(std::make_unique<InputLayout>(m_pDevice.Get(), vertexShaderBlob));
+
+	// memory leak?
 }
 
 void Graphics::DrawTriangle(double angle) {
@@ -204,9 +210,13 @@ void Graphics::DrawTriangle(double angle) {
 	m_pDeviceContext->VSSetConstantBuffers(0u, 1u, pConstantBuffer.GetAddressOf());
 
 	// ==================== bind device dependent resource ====================
-	m_pDeviceContext->IASetInputLayout(m_pInputLayout.Get());
-	m_pDeviceContext->VSSetShader(m_pVertexShader.Get(), nullptr, 0);
-	m_pDeviceContext->PSSetShader(m_pPixelShader.Get(), nullptr, 0);
+	//m_pDeviceContext->IASetInputLayout(m_pInputLayout.Get());
+	//m_pDeviceContext->VSSetShader(m_pVertexShader.Get(), nullptr, 0);
+	//m_pDeviceContext->PSSetShader(m_pPixelShader.Get(), nullptr, 0);
+
+	for (std::unique_ptr<GraphicsResource>& resource : m_graphicsResources) {
+		resource->Bind(m_pDeviceContext.Get());
+	}
 
 	// ==================== draw call ====================
 	//m_pDeviceContext->Draw(3u, 0u);

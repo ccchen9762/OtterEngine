@@ -6,21 +6,37 @@
 #include "OtterEngine/Imgui/imgui_impl_win32.h"
 #include "OtterEngine/Imgui/imgui_impl_dx11.h"
 
+#include "OtterEngine/Entity/Cube.h"
+#include "OtterEngine/Entity/Triangle.h"
+
 #include "OtterEngine/Common/Randomizer.h"
 #include "OtterEngine/Common/utils.h"
+#include "OtterEngine/Common/constants.h"
+
 
 Game::Game() :
-    m_mainWindow(Window(kDefWndTitle, kRenderWidth, kRenderHeight)), m_mainWindowAlive(true), 
+    m_mainWindow(Window(kDefWndTitle, kRenderWidth, kRenderHeight)), 
+    m_alive(true), 
     m_timer(Timer()),
     m_imguiManager(ImguiManager()) {
 
     Randomizer::Init();
+
+    for (int i = 0; i < 5; i++) {
+        m_renderList.push_back(std::make_unique<Cube>(
+            m_mainWindow.m_pGraphics->GetDevice(),
+            Vector3(Randomizer::GetFloat(kPI), Randomizer::GetFloat(kPI), Randomizer::GetFloat(kPI)),
+            Vector3(Randomizer::GetFloat(1.0f), Randomizer::GetFloat(1.0f), -4.0f),
+            Vector3(0.0f, 0.0f, 0.0f),
+            Vector3(1.0f, 1.0f, 1.0f)
+            ));
+    }
 }
 
 int Game::Start() {
     // message loop
     MSG msg = {};
-    while (m_mainWindowAlive) {
+    while (m_alive) {
 
         /*  nullptr in GetMessage() / PeekMessage() means to retrieve messages from any window belongs to current thread
             GetMessage() waits until a message comes in, return 0 means WM_QUIT, return -1 means error
@@ -59,7 +75,7 @@ int Game::Start() {
                     }
                     case Mouse::MouseEvent::Type::Move: {
                         Vector3Int pos = mouseEvent.getPosition();
-                        const std::wstring title = L"X: " + std::to_wstring(pos.m_x) + L", Y: " + std::to_wstring(pos.m_y);
+                        const std::wstring title = L"X: " + std::to_wstring(pos.x) + L", Y: " + std::to_wstring(pos.y);
                         m_mainWindow.setTitle(title);
                         break;
                     }
@@ -68,7 +84,7 @@ int Game::Start() {
             }
 
             if (msg.message == WM_QUIT) {
-                m_mainWindowAlive = false;
+                m_alive = false;
             }
         }
 
@@ -85,9 +101,12 @@ void Game::Update() {
 
     m_mainWindow.m_pGraphics->ClearBuffer(0.1f, 0.1f, 0.1f);
     
-    m_mainWindow.m_pGraphics->CreateRenderResource();
-    // m_mainWindow.m_pGraphics->DrawTriangle(kPI/4);
-    m_mainWindow.m_pGraphics->DrawCube(m_timer.GetElapsedTimeSecond(), m_timer.GetElapsedTimeSecond() / 2, 0.0f);
+    for (int i = 0; i < m_renderList.size(); i++) {
+        m_renderList[i]->Render(m_mainWindow.m_pGraphics->GetDeviceConetxt());
+    }
+    //m_mainWindow.m_pGraphics->CreateRenderResource();
+    //m_mainWindow.m_pGraphics->DrawTriangle(m_timer.GetElapsedTimeSecond());
+    //m_mainWindow.m_pGraphics->DrawCube(m_timer.GetElapsedTimeSecond(), m_timer.GetElapsedTimeSecond() / 2, 0.0f);
     // m_mainWindow.m_pGraphics->DrawCube(Randomizer::GetFloat(kPI), Randomizer::GetFloat(kPI), 0.0f);
     m_imguiManager.Update();
 

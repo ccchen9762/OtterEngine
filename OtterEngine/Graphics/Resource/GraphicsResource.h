@@ -5,7 +5,7 @@
 class GraphicsResource
 {
 public:
-	virtual void Bind(ID3D11DeviceContext*) const = 0;
+	virtual void Bind(const Microsoft::WRL::ComPtr<ID3D11DeviceContext>& pDeviceContext) const = 0;
 
 protected:
 	//static ID3D11Device* GetDevice(const Graphics& graphics) { return graphics.m_pDevice.Get(); }

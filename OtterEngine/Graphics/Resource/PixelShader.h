@@ -5,10 +5,10 @@
 class PixelShader : public GraphicsResource
 {
 public:
-	PixelShader(ID3D11Device* pDevice);
+	PixelShader(const Microsoft::WRL::ComPtr<ID3D11Device>& pDevice);
 	~PixelShader() = default;
 
-	void Bind(ID3D11DeviceContext* pDeviceContext) const;
+	void Bind(const Microsoft::WRL::ComPtr<ID3D11DeviceContext>& pDeviceContext) const override;
 
 private:
 	Microsoft::WRL::ComPtr<ID3D11PixelShader> m_pPixelShader;

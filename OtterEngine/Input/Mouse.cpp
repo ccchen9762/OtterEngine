@@ -22,8 +22,8 @@ void Mouse::PopMouseEventBuffer() {
 }
 
 void Mouse::OnMouseMove(const Vector3Int& pos) {
-	m_position.m_x = pos.m_x;
-	m_position.m_y = pos.m_y;
+	m_position.x = pos.x;
+	m_position.y = pos.y;
 
 	m_mouseEventBuffer.push(MouseEvent(MouseEvent::Type::Move, pos));
 	PopMouseEventBuffer();

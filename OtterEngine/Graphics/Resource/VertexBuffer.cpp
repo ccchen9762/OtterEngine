@@ -1,6 +1,6 @@
 #include "VertexBuffer.h"
 
-VertexBuffer::VertexBuffer(ID3D11Device* pDevice, const std::vector<Vertex>& vertices) :
+VertexBuffer::VertexBuffer(const Microsoft::WRL::ComPtr<ID3D11Device>& pDevice, const std::vector<Vertex>& vertices) :
 	m_vertexBufferStride(sizeof(Vertex)), m_vertexBufferoffset(0u) {
 
 	// triangle
@@ -36,7 +36,7 @@ VertexBuffer::VertexBuffer(ID3D11Device* pDevice, const std::vector<Vertex>& ver
 	DX::ThrowIfFailed(pDevice->CreateBuffer(&vertexBufferDesc, &vertexSubResourceData, &m_pVertexBuffer));
 }
 
-void VertexBuffer::Bind(ID3D11DeviceContext* pDeviceContext) const {
+void VertexBuffer::Bind(const Microsoft::WRL::ComPtr<ID3D11DeviceContext>& pDeviceContext) const {
 	
 	pDeviceContext->IASetVertexBuffers(0u, 1u, 
 		m_pVertexBuffer.GetAddressOf(), &m_vertexBufferStride, &m_vertexBufferoffset);

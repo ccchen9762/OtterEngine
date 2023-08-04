@@ -12,10 +12,10 @@ struct Vertex {
 class VertexBuffer : public GraphicsResource
 {
 public:
-	VertexBuffer(ID3D11Device* pDevice, const std::vector<Vertex>& vertices);
+	VertexBuffer(const Microsoft::WRL::ComPtr<ID3D11Device>& pDevice, const std::vector<Vertex>& vertices);
 	~VertexBuffer() = default;
 
-	void Bind(ID3D11DeviceContext* pDeviceContext) const;
+	void Bind(const Microsoft::WRL::ComPtr<ID3D11DeviceContext>& pDeviceContext) const override;
 
 private:
 	Microsoft::WRL::ComPtr<ID3D11Buffer> m_pVertexBuffer;

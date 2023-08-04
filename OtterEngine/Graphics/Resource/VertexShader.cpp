@@ -4,7 +4,7 @@
 
 #pragma comment(lib, "d3d11.lib")
 
-VertexShader::VertexShader(ID3D11Device* pDevice) {
+VertexShader::VertexShader(const Microsoft::WRL::ComPtr<ID3D11Device>& pDevice) {
 
 	m_vertexShaderBlob = DX::ReadData(L"VertexShader.cso");
 
@@ -12,6 +12,6 @@ VertexShader::VertexShader(ID3D11Device* pDevice) {
 		nullptr, &m_pVertexShader));
 }
 
-void VertexShader::Bind(ID3D11DeviceContext* pDeviceContext) const {
+void VertexShader::Bind(const Microsoft::WRL::ComPtr<ID3D11DeviceContext>& pDeviceContext) const {
 	pDeviceContext->VSSetShader(m_pVertexShader.Get(), nullptr, 0);
 }

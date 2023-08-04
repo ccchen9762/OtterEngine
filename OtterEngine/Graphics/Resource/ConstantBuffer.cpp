@@ -2,7 +2,7 @@
 
 #include "OtterEngine/Common/constants.h"
 
-ConstantBuffer::ConstantBuffer(ID3D11Device* pDevice, const DirectX::XMMATRIX& transformation) {
+ConstantBuffer::ConstantBuffer(const Microsoft::WRL::ComPtr<ID3D11Device>& pDevice, const DirectX::XMMATRIX& transformation) {
 	// in Left Hand System (LH) Z axis direction is away from screen, RH toward screen
 	// remember XMMatrixTranspose only need once
 	const cbuf constantbuffer = {
@@ -24,6 +24,6 @@ ConstantBuffer::ConstantBuffer(ID3D11Device* pDevice, const DirectX::XMMATRIX& t
 	DX::ThrowIfFailed(pDevice->CreateBuffer(&constantBufferDesc, &constantSubResourceData, &m_pConstantBuffer));
 }
 
-void ConstantBuffer::Bind(ID3D11DeviceContext* pDeviceContext) const {
+void ConstantBuffer::Bind(const Microsoft::WRL::ComPtr<ID3D11DeviceContext>& pDeviceContext) const {
 	pDeviceContext->VSSetConstantBuffers(0u, 1u, m_pConstantBuffer.GetAddressOf());
 }

@@ -1,6 +1,6 @@
 #include "InputLayout.h"
 
-InputLayout::InputLayout(ID3D11Device* pDevice, const std::vector<uint8_t>& vertexShaderBlob) {
+InputLayout::InputLayout(const Microsoft::WRL::ComPtr<ID3D11Device>& pDevice, const std::vector<uint8_t>& vertexShaderBlob) {
 	
 	// AlignedByteOffset can use D3D11_APPEND_ALIGNED_ELEMENT to automatically assign
 	const D3D11_INPUT_ELEMENT_DESC s_inputElementDesc[] = {
@@ -12,6 +12,6 @@ InputLayout::InputLayout(ID3D11Device* pDevice, const std::vector<uint8_t>& vert
 		vertexShaderBlob.data(), vertexShaderBlob.size(), &m_pInputLayout));
 }
 
-void InputLayout::Bind(ID3D11DeviceContext* pDeviceContext) const {
+void InputLayout::Bind(const Microsoft::WRL::ComPtr<ID3D11DeviceContext>& pDeviceContext) const {
 	pDeviceContext->IASetInputLayout(m_pInputLayout.Get());
 }

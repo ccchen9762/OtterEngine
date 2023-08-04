@@ -4,7 +4,7 @@
 
 #pragma comment(lib, "d3d11.lib")
 
-PixelShader::PixelShader(ID3D11Device* pDevice) {
+PixelShader::PixelShader(const Microsoft::WRL::ComPtr<ID3D11Device>& pDevice) {
 
 	m_pixelShaderBlob = DX::ReadData(L"PixelShader.cso");
 	
@@ -12,6 +12,6 @@ PixelShader::PixelShader(ID3D11Device* pDevice) {
 		nullptr, &m_pPixelShader));
 }
 
-void PixelShader::Bind(ID3D11DeviceContext* pDeviceContext) const {
+void PixelShader::Bind(const Microsoft::WRL::ComPtr<ID3D11DeviceContext>& pDeviceContext) const {
 	pDeviceContext->PSSetShader(m_pPixelShader.Get(), nullptr, 0);
 }

@@ -159,11 +159,11 @@
     </FxCompile>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="Common\Randomizer.cpp" />
+    <ClCompile Include="Entity\Entity.cpp" />
     <ClCompile Include="Game\Game.cpp" />
+    <ClCompile Include="Graphics\Camera\Camera.cpp" />
     <ClCompile Include="Graphics\Graphics.cpp" />
     <ClCompile Include="Graphics\Resource\ConstantBuffer.cpp" />
-    <ClCompile Include="Graphics\Resource\DepthStencil.cpp" />
     <ClCompile Include="Graphics\Resource\IndexBuffer.cpp" />
     <ClCompile Include="Graphics\Resource\InputLayout.cpp" />
     <ClCompile Include="Graphics\Resource\PixelShader.cpp" />
@@ -180,9 +180,9 @@
     <ClCompile Include="Input\Keyboard.cpp" />
     <ClCompile Include="Input\Mouse.cpp" />
     <ClCompile Include="Main.cpp" />
-    <ClCompile Include="Math\Vector3.cpp" />
-    <ClCompile Include="Renderable\Cube.cpp" />
-    <ClCompile Include="Renderable\Triangle.cpp" />
+    <ClCompile Include="Common\Math\Vector3.cpp" />
+    <ClCompile Include="Entity\Cube.cpp" />
+    <ClCompile Include="Entity\Triangle.cpp" />
     <ClCompile Include="WindowClass\Window.cpp" />
   </ItemGroup>
   <ItemGroup>
@@ -193,9 +193,9 @@
     <ClInclude Include="Common\Timer.h" />
     <ClInclude Include="Common\utils.h" />
     <ClInclude Include="Game\Game.h" />
+    <ClInclude Include="Graphics\Camera\Camera.h" />
     <ClInclude Include="Graphics\Graphics.h" />
     <ClInclude Include="Graphics\Resource\ConstantBuffer.h" />
-    <ClInclude Include="Graphics\Resource\DepthStencil.h" />
     <ClInclude Include="Graphics\Resource\GraphicsResource.h" />
     <ClInclude Include="Graphics\Resource\IndexBuffer.h" />
     <ClInclude Include="Graphics\Resource\InputLayout.h" />
@@ -211,10 +211,10 @@
     <ClInclude Include="Imgui\imstb_textedit.h" />
     <ClInclude Include="Input\Keyboard.h" />
     <ClInclude Include="Input\Mouse.h" />
-    <ClInclude Include="Math\Vector3.h" />
-    <ClInclude Include="Renderable\Cube.h" />
-    <ClInclude Include="Renderable\Renderable.h" />
-    <ClInclude Include="Renderable\Triangle.h" />
+    <ClInclude Include="Common\Math\Vector3.h" />
+    <ClInclude Include="Entity\Cube.h" />
+    <ClInclude Include="Entity\Entity.h" />
+    <ClInclude Include="Entity\Triangle.h" />
     <ClInclude Include="Timer\Timer.h" />
     <ClInclude Include="WindowClass\Window.h" />
   </ItemGroup>

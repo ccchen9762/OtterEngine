@@ -8,12 +8,12 @@ public:
 	Vector3(float x, float y, float z = 0.0f);
 	~Vector3() = default;
 
-	float length() { return sqrtf(m_x * m_x + m_y * m_y + m_z * m_z); }
+	float length() { return sqrtf(x * x + y * y + z * z); }
 	void normalize();
 
-	float m_x = 0.0f;
-	float m_y = 0.0f;
-	float m_z = 0.0f;
+	float x;
+	float y;
+	float z;
 };
 
 struct Vector3Int {
@@ -22,7 +22,7 @@ public:
 	Vector3Int(int x, int y, int z = 0);
 	~Vector3Int() = default;
 
-	int m_x = 0;
-	int m_y = 0;
-	int m_z = 0;
+	int x;
+	int y;
+	int z;
 };
