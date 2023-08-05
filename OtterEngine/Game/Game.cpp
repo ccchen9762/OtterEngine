@@ -22,14 +22,23 @@ Game::Game() :
 
     Randomizer::Init();
 
-    for (int i = 0; i < 5; i++) {
-        m_renderList.push_back(std::make_unique<Cube>(
+    for (int i = 0; i < 30; i++) {
+        /*m_renderList.push_back(std::make_unique<Cube>(
             m_mainWindow.m_pGraphics->GetDevice(),
-            Vector3(Randomizer::GetFloat(kPI), Randomizer::GetFloat(kPI), Randomizer::GetFloat(kPI)),
-            Vector3(Randomizer::GetFloat(1.0f), Randomizer::GetFloat(1.0f), -4.0f),
+            Vector3(0.0f, kPI / 4, 0.0f),
+            Vector3(10.0f, 0.0f, -20.0f),
             Vector3(0.0f, 0.0f, 0.0f),
             Vector3(1.0f, 1.0f, 1.0f)
-            ));
+            ));*/
+
+        m_renderList.push_back(std::make_unique<Cube>(
+            m_mainWindow.m_pGraphics->GetDevice(),
+            Vector3(Randomizer::GetFloat(kPI), Randomizer::GetFloat(kPI), 0.0f),
+            Vector3(Randomizer::GetFloat(5.0f, -5.0f), Randomizer::GetFloat(5.0f, -5.0f), -20.0f),
+            Vector3(0.0f, 0.0f, 0.0f),
+            Vector3(1.0f, 1.0f, 1.0f),
+            Randomizer::GetFloat(0.08f, 0.02f)
+        ));
     }
 }
 
@@ -102,6 +111,7 @@ void Game::Update() {
     m_mainWindow.m_pGraphics->ClearBuffer(0.1f, 0.1f, 0.1f);
     
     for (int i = 0; i < m_renderList.size(); i++) {
+        m_renderList[i]->Update();
         m_renderList[i]->Render(m_mainWindow.m_pGraphics->GetDeviceConetxt());
     }
     //m_mainWindow.m_pGraphics->CreateRenderResource();

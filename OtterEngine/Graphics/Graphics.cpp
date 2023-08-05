@@ -124,16 +124,11 @@ void Graphics::PostUpdate() {
 }
 
 void Graphics::CreateRenderResource() {
-	for (auto& a : m_graphicsResources)
-		a.reset();
-	
-	m_graphicsResources.clear();
-
-	//std::unique_ptr<VertexShader> pVertexShader = std::make_unique<VertexShader>(m_pDevice.Get());
-	//const std::vector<uint8_t> vertexShaderBlob = pVertexShader->GetVertexShaderBlob();
-	//m_graphicsResources.emplace_back(std::move(pVertexShader));
-	//m_graphicsResources.emplace_back(std::make_unique<PixelShader>(m_pDevice.Get()));
-	//m_graphicsResources.emplace_back(std::make_unique<InputLayout>(m_pDevice.Get(), vertexShaderBlob));
+	/*std::unique_ptr<VertexShader> pVertexShader = std::make_unique<VertexShader>(m_pDevice.Get());
+	const std::vector<uint8_t> vertexShaderBlob = pVertexShader->GetVertexShaderBlob();
+	m_graphicsResources.push_back(std::move(pVertexShader));
+	m_graphicsResources.push_back(std::make_unique<PixelShader>(m_pDevice.Get()));
+	m_graphicsResources.push_back(std::make_unique<InputLayout>(m_pDevice.Get(), vertexShaderBlob));*/
 
 	// memory leak?
 }
@@ -225,7 +220,7 @@ void Graphics::DrawTriangle(double angle) {
 
 void Graphics::DrawCube(double angleX, double angleY, double angleZ) {
 
-	const std::vector<Vertex> vertices = {
+	/*const std::vector<Vertex> vertices = {
 		{DirectX::XMVectorSet(-1.0f, -1.0f, -1.0f, 1.0f), DirectX::XMFLOAT4(0.0f, 0.0f, 0.0f, 1.0f)},
 		{DirectX::XMVectorSet(1.0f, -1.0f, -1.0f, 1.0f), DirectX::XMFLOAT4(1.0f, 0.0f, 0.0f, 1.0f)},
 		{DirectX::XMVectorSet(1.0f,  1.0f, -1.0f, 1.0f), DirectX::XMFLOAT4(1.0f, 1.0f, 0.0f, 1.0f)},
@@ -266,5 +261,5 @@ void Graphics::DrawCube(double angleX, double angleY, double angleZ) {
 	}
 
 	// ==================== draw call ====================
-	m_pDeviceContext->DrawIndexed(indices.size(), 0u, 0u); // draw with index buffer
+	m_pDeviceContext->DrawIndexed(indices.size(), 0u, 0u); // draw with index buffer*/
 }

@@ -3,28 +3,22 @@
 #include <DirectXMath.h>
 
 #include "OtterEngine/Graphics/Resource/GraphicsResource.h"
-#include "OtterEngine/Graphics/Resource/VertexShader.h"
-#include "OtterEngine/Graphics/Resource/PixelShader.h"
-#include "OtterEngine/Graphics/Resource/InputLayout.h"
-#include "OtterEngine/Graphics/Resource/VertexBuffer.h"
-#include "OtterEngine/Graphics/Resource/IndexBuffer.h"
-#include "OtterEngine/Graphics/Resource/ConstantBuffer.h"
+
 #include "OtterEngine/Common/Math/Vector3.h"
+#include "OtterEngine/Common/constants.h"
+
+struct Vertex;
 
 class Entity
 {
 public:
-	Entity(Vector3 rotation, Vector3 translation, Vector3 revolution, Vector3 scale, size_t indicesSize);
-	~Entity() = default;
+	Entity(Vector3 rotation, Vector3 translation, Vector3 revolution, Vector3 scale, size_t indicesSize, float speed);
+	virtual ~Entity() = default; // make sure derived class destructors are called properly
 
-	void Render(const Microsoft::WRL::ComPtr<ID3D11DeviceContext>& pDeviceContext);
+	virtual void Update();
+	void Render(const Microsoft::WRL::ComPtr<ID3D11DeviceContext>& pDeviceContext) const;
 
-	DirectX::XMMATRIX GetTransformMatrix() { 
-		return DirectX::XMMatrixRotationRollPitchYaw(m_rotation.x, m_rotation.y, m_rotation.z) *
-			DirectX::XMMatrixTranslation(m_translation.x, m_translation.y, m_translation.z) *
-			//DirectX::XMMatrixRotationRollPitchYaw(m_revolution.x, m_revolution.y, m_revolution.z) *
-			DirectX::XMMatrixScaling(m_scale.x, m_scale.y, m_scale.z);
-	}
+	DirectX::XMMATRIX GetTransformMatrix() const;
 
 protected:
 	Vector3 m_rotation;
@@ -34,4 +28,6 @@ protected:
 	size_t m_indicesSize;
 	std::vector<std::unique_ptr<GraphicsResource>> m_graphicsResources;
 	std::vector<std::unique_ptr<GraphicsResource>> m_graphicsBuffers;
+	
+	float m_speed; // for testing
 };

@@ -22,13 +22,13 @@ public:
 
 	// float [0.0, 1.0]
 	static float GetFloat() {
-		static std::uniform_real_distribution<float> distributionFloat;
+		std::uniform_real_distribution<float> distributionFloat;
 		return distributionFloat(s_random);
 	}
 
 	// float [min, max]
-	static float GetFloat(int max, int min = 0) {
-		static std::uniform_real_distribution<float> distributionFloat(min, max);
+	static float GetFloat(float max, float min = 0.0) {
+		std::uniform_real_distribution<float> distributionFloat(min, max);
 		return distributionFloat(s_random);
 	}
 

@@ -6,7 +6,7 @@ class Cube : public Entity
 {
 public:
 	Cube(const Microsoft::WRL::ComPtr<ID3D11Device>& pDevice, 
-		Vector3 rotation, Vector3 translation, Vector3 revolution, Vector3 scale);
+		Vector3 rotation, Vector3 translation, Vector3 revolution, Vector3 scale, float speed = 1.0f);
 	~Cube() = default;
 
 private:

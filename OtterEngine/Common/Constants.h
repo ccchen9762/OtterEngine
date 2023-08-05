@@ -12,7 +12,7 @@ inline const unsigned int kInputBufferLimit = 16u;
 
 // final render size
 inline const unsigned int kRenderWidth = 1280u, kRenderHeight = 720u;
-constexpr float kRenderRatio = static_cast<float>(kRenderHeight) / static_cast<float>(kRenderWidth);
+constexpr float kRenderRatio = static_cast<float>(kRenderWidth) / static_cast<float>(kRenderHeight);
 
 // imgui settings
 inline bool kShowWindow = true, kShowAnotherWindow = true;

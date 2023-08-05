@@ -43,6 +43,6 @@ private:
 	
 	D3D11_VIEWPORT m_viewport;
 
-	std::vector<std::unique_ptr<GraphicsResource>> m_graphicsResources;
-	std::vector<std::unique_ptr<GraphicsResource>> m_graphicsBuffers;
+	//std::vector<std::unique_ptr<GraphicsResource>> m_graphicsResources;
+	//std::vector<std::unique_ptr<GraphicsResource>> m_graphicsBuffers;
 };
