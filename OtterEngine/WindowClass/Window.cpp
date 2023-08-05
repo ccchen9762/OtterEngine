@@ -119,6 +119,10 @@ LRESULT Window::MessageHandler(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam
                 m_mouse.OnMouseLeave();
             }
         }
+        if (wParam & MK_LBUTTON) {
+
+        }
+
         break;
     }
     case WM_LBUTTONDOWN: {

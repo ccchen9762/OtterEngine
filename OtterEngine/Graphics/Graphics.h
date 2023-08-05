@@ -4,11 +4,13 @@
 #include <d3d11.h> // only declarations, need definitions in dlls 
 #include <memory>
 
-#include "Resource/GraphicsResource.h"
+
+#include "Camera/Camera.h"
 
 class Graphics
 {
 	friend class Game;
+	friend class GraphicsResource;
 
 public:
 	Graphics(HWND hWnd, unsigned int viewportWidth, unsigned int viewportHeight);
@@ -31,7 +33,7 @@ private:
 	Microsoft::WRL::ComPtr<ID3D11DeviceContext> m_pDeviceContext;
 	Microsoft::WRL::ComPtr<IDXGISwapChain> m_pSwapChain;
 	Microsoft::WRL::ComPtr<ID3D11RenderTargetView> m_pRenderTargetView;
-	Microsoft::WRL::ComPtr<ID3D11DepthStencilView> m_pDepthStencilView;
-	
+	Microsoft::WRL::ComPtr<ID3D11DepthStencilView> m_pDepthStencilView;	
 	D3D11_VIEWPORT m_viewport;
+	Camera m_camera;
 };

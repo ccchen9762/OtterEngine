@@ -2,14 +2,14 @@
 
 #include "OtterEngine/Common/ReadData.h"
 
-PixelShader::PixelShader(const Microsoft::WRL::ComPtr<ID3D11Device>& pDevice) {
+PixelShader::PixelShader(const Graphics& graphics) {
 
 	m_pixelShaderBlob = DX::ReadData(L"PixelShader.cso");
 	
-	DX::ThrowIfFailed(pDevice->CreatePixelShader(m_pixelShaderBlob.data(), m_pixelShaderBlob.size(),
+	DX::ThrowIfFailed(GetDevice(graphics)->CreatePixelShader(m_pixelShaderBlob.data(), m_pixelShaderBlob.size(),
 		nullptr, &m_pPixelShader));
 }
 
-void PixelShader::Bind(const Microsoft::WRL::ComPtr<ID3D11DeviceContext>& pDeviceContext) const {
-	pDeviceContext->PSSetShader(m_pPixelShader.Get(), nullptr, 0);
+void PixelShader::Bind(const Graphics& graphics) const {
+	GetDeviceContext(graphics)->PSSetShader(m_pPixelShader.Get(), nullptr, 0);
 }

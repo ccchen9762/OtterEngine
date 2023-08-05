@@ -27,18 +27,27 @@ const std::vector<unsigned short> Cube::s_indices = {
 	4, 5, 1,  1, 0, 4, // bottom
 };
 
-Cube::Cube(const Microsoft::WRL::ComPtr<ID3D11Device>& pDevice, Vector3 rotation, Vector3 translation, Vector3 revolution, Vector3 scale, float speed)
+std::vector<std::unique_ptr<GraphicsResource>> Cube::s_commonResources;
+
+Cube::Cube(const Graphics& graphics, Vector3 rotation, Vector3 translation, Vector3 revolution, Vector3 scale, float speed)
 	: Entity(rotation, translation, revolution, scale, s_indices.size(), speed) {
 
-	// shaders & layout
-	std::unique_ptr<VertexShader> pVertexShader = std::make_unique<VertexShader>(pDevice.Get());
-	const std::vector<uint8_t> vertexShaderBlob = pVertexShader->GetVertexShaderBlob();
-	m_graphicsResources.push_back(std::move(pVertexShader));
-	m_graphicsResources.push_back(std::make_unique<PixelShader>(pDevice.Get()));
-	m_graphicsResources.push_back(std::make_unique<InputLayout>(pDevice.Get(), vertexShaderBlob));
+	if (s_commonResources.empty()) {
+		// shaders & layout
+		std::unique_ptr<VertexShader> pVertexShader = std::make_unique<VertexShader>(graphics);
+		const std::vector<uint8_t> vertexShaderBlob = pVertexShader->GetVertexShaderBlob();
+		s_commonResources.push_back(std::move(pVertexShader));
+		s_commonResources.push_back(std::make_unique<PixelShader>(graphics));
+		s_commonResources.push_back(std::make_unique<InputLayout>(graphics, vertexShaderBlob));
 
-	// buffers
-	m_graphicsBuffers.push_back(std::make_unique<VertexBuffer>(pDevice.Get(), s_vertices));
-	m_graphicsBuffers.push_back(std::make_unique<IndexBuffer>(pDevice.Get(), s_indices));
-	m_graphicsBuffers.push_back(std::make_unique<ConstantBufferVertex>(pDevice.Get(), *this));
+		// buffers
+		s_commonResources.push_back(std::make_unique<VertexBuffer>(graphics, s_vertices));
+		s_commonResources.push_back(std::make_unique<IndexBuffer>(graphics, s_indices));
+	}
+	
+	m_uniqueResources.push_back(std::make_unique<ConstantBufferTransformation>(graphics, *this));
+}
+
+const std::vector<std::unique_ptr<GraphicsResource>>& Cube::GetCommonResources() const {
+	return s_commonResources;
 }

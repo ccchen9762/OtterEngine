@@ -2,7 +2,7 @@
 
 #include "OtterEngine/Common/constants.h"
 
-ConstantBufferVertex::ConstantBufferVertex(const Microsoft::WRL::ComPtr<ID3D11Device>& pDevice, const Entity& parentEntity)
+ConstantBufferTransformation::ConstantBufferTransformation (const Graphics& graphics, const Entity& parentEntity)
 	: m_parentEntity(parentEntity) {
 
 	// in Left Hand System (LH) Z axis direction is away from screen, RH toward screen
@@ -10,7 +10,7 @@ ConstantBufferVertex::ConstantBufferVertex(const Microsoft::WRL::ComPtr<ID3D11De
 	const CBuffer cBuffer = {
 		DirectX::XMMatrixTranspose(
 			m_parentEntity.GetTransformMatrix() *
-			DirectX::XMMatrixPerspectiveFovRH(DirectX::XM_PIDIV4, kRenderRatio, 0.1f, 100.0f)
+			GetCamera(graphics).GetViewProjectionMatrix()
 		)
 	};
 
@@ -23,57 +23,87 @@ ConstantBufferVertex::ConstantBufferVertex(const Microsoft::WRL::ComPtr<ID3D11De
 	constantBufferDesc.StructureByteStride = 0u; // only single element
 	D3D11_SUBRESOURCE_DATA constantSubResourceData = {};
 	constantSubResourceData.pSysMem = &cBuffer;
-	DX::ThrowIfFailed(pDevice->CreateBuffer(&constantBufferDesc, &constantSubResourceData, &m_pConstantBuffer));
+	DX::ThrowIfFailed(GetDevice(graphics)->CreateBuffer(&constantBufferDesc, &constantSubResourceData, &m_pConstantBuffer));
 }
 
-void ConstantBufferVertex::Bind(const Microsoft::WRL::ComPtr<ID3D11DeviceContext>& pDeviceContext) const {
-	Update(pDeviceContext);
-	pDeviceContext->VSSetConstantBuffers(0u, 1u, m_pConstantBuffer.GetAddressOf());
+void ConstantBufferTransformation::Bind(const Graphics& graphics) const {
+
+	Update(graphics);
+	GetDeviceContext(graphics)->VSSetConstantBuffers(0u, 1u, m_pConstantBuffer.GetAddressOf());
 }
 
-void ConstantBufferVertex::Update(const Microsoft::WRL::ComPtr<ID3D11DeviceContext>& pDeviceContext) const {
+void ConstantBufferTransformation::Update(const Graphics& graphics) const {
 
 	const CBuffer cBuffer = {
 		DirectX::XMMatrixTranspose(
 			m_parentEntity.GetTransformMatrix() *
-			DirectX::XMMatrixPerspectiveFovRH(DirectX::XM_PIDIV4, kRenderRatio, 0.1f, 100.0f)
+			GetCamera(graphics).GetViewProjectionMatrix()
 		)
 	};
 
 	D3D11_MAPPED_SUBRESOURCE mappedSubResource;
-	pDeviceContext->Map(m_pConstantBuffer.Get(), 0u,
+	GetDeviceContext(graphics)->Map(m_pConstantBuffer.Get(), 0u,
 		D3D11_MAP_WRITE_DISCARD, 0u, &mappedSubResource);
 	memcpy(mappedSubResource.pData, &cBuffer, sizeof(cBuffer));
-	pDeviceContext->Unmap(m_pConstantBuffer.Get(), 0u);
+	GetDeviceContext(graphics)->Unmap(m_pConstantBuffer.Get(), 0u);
 }
 
 /* ================================================== */
 
-/*ConstantBufferPixel::ConstantBufferPixel(const Microsoft::WRL::ComPtr<ID3D11Device>& pDevice) {
+ConstantBufferVertex::ConstantBufferVertex(const Graphics& graphics) {
 
 	D3D11_BUFFER_DESC constantBufferDesc = {};
-	constantBufferDesc.ByteWidth = sizeof(constantbuffer); // return total array size in bytes
+	//constantBufferDesc.ByteWidth = sizeof(cBuffer); // return total array size in bytes
 	constantBufferDesc.Usage = D3D11_USAGE_DYNAMIC;	// to be able to update every frame
 	constantBufferDesc.BindFlags = D3D11_BIND_CONSTANT_BUFFER;
 	constantBufferDesc.CPUAccessFlags = D3D11_CPU_ACCESS_WRITE; // cpu need permission to update buffer
 	constantBufferDesc.MiscFlags = 0u;
 	constantBufferDesc.StructureByteStride = 0u; // only single element
 	D3D11_SUBRESOURCE_DATA constantSubResourceData = {};
-	constantSubResourceData.pSysMem = &constantbuffer;
-	DX::ThrowIfFailed(pDevice->CreateBuffer(&constantBufferDesc, &constantSubResourceData, &m_pConstantBuffer));
+	//constantSubResourceData.pSysMem = &cBuffer;
+	DX::ThrowIfFailed(GetDevice(graphics)->CreateBuffer(&constantBufferDesc, &constantSubResourceData, &m_pConstantBuffer));
 }
 
-void ConstantBufferPixel::Bind(const Microsoft::WRL::ComPtr<ID3D11DeviceContext>& pDeviceContext) const {
-	pDeviceContext->PSSetConstantBuffers(0u, 1u, m_pConstantBuffer.GetAddressOf());
+void ConstantBufferVertex::Bind(const Graphics& graphics) const {
+	Update(graphics);
+	GetDeviceContext(graphics)->VSSetConstantBuffers(0u, 1u, m_pConstantBuffer.GetAddressOf());
 }
 
-void ConstantBufferPixel::Update(const Microsoft::WRL::ComPtr<ID3D11DeviceContext>& pDeviceContext, const CBuffer& cBuffer) {
+void ConstantBufferVertex::Update(const Graphics& graphics) const {
+
 	D3D11_MAPPED_SUBRESOURCE mappedSubResource;
-
-	pDeviceContext->Map(m_pConstantBuffer.Get(), 0u,
+	GetDeviceContext(graphics)->Map(m_pConstantBuffer.Get(), 0u,
 		D3D11_MAP_WRITE_DISCARD, 0u, &mappedSubResource);
+	//memcpy(mappedSubResource.pData, &cBuffer, sizeof(cBuffer));
+	GetDeviceContext(graphics)->Unmap(m_pConstantBuffer.Get(), 0u);
+}
 
-	memcpy(mappedSubResource.pData, &cBuffer, sizeof(cBuffer));
+/* ================================================== */
 
-	pDeviceContext->Unmap(m_pConstantBuffer.Get(), 0u);
-}*/
+ConstantBufferPixel::ConstantBufferPixel(const Graphics& graphics) {
+
+	D3D11_BUFFER_DESC constantBufferDesc = {};
+	//constantBufferDesc.ByteWidth = sizeof(cBuffer); // return total array size in bytes
+	constantBufferDesc.Usage = D3D11_USAGE_DYNAMIC;	// to be able to update every frame
+	constantBufferDesc.BindFlags = D3D11_BIND_CONSTANT_BUFFER;
+	constantBufferDesc.CPUAccessFlags = D3D11_CPU_ACCESS_WRITE; // cpu need permission to update buffer
+	constantBufferDesc.MiscFlags = 0u;
+	constantBufferDesc.StructureByteStride = 0u; // only single element
+	D3D11_SUBRESOURCE_DATA constantSubResourceData = {};
+	//constantSubResourceData.pSysMem = &cBuffer;
+	DX::ThrowIfFailed(GetDevice(graphics)->CreateBuffer(&constantBufferDesc, &constantSubResourceData, &m_pConstantBuffer));
+}
+
+void ConstantBufferPixel::Bind(const Graphics& graphics) const {
+	Update(graphics);
+	GetDeviceContext(graphics)->PSSetConstantBuffers(0u, 1u, m_pConstantBuffer.GetAddressOf());
+}
+
+void ConstantBufferPixel::Update(const Graphics& graphics) const {
+
+	D3D11_MAPPED_SUBRESOURCE mappedSubResource;
+	GetDeviceContext(graphics)->Map(m_pConstantBuffer.Get(), 0u,
+		D3D11_MAP_WRITE_DISCARD, 0u, &mappedSubResource);
+	//memcpy(mappedSubResource.pData, &cBuffer, sizeof(cBuffer));
+	GetDeviceContext(graphics)->Unmap(m_pConstantBuffer.Get(), 0u);
+}

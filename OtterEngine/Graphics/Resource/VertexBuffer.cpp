@@ -1,6 +1,6 @@
 #include "VertexBuffer.h"
 
-VertexBuffer::VertexBuffer(const Microsoft::WRL::ComPtr<ID3D11Device>& pDevice, const std::vector<Vertex>& vertices) :
+VertexBuffer::VertexBuffer(const Graphics& graphics, const std::vector<Vertex>& vertices) :
 	m_vertexBufferStride(sizeof(Vertex)), m_vertexBufferoffset(0u) {
 	
 	D3D11_BUFFER_DESC vertexBufferDesc = {};
@@ -13,12 +13,12 @@ VertexBuffer::VertexBuffer(const Microsoft::WRL::ComPtr<ID3D11Device>& pDevice, 
 	D3D11_SUBRESOURCE_DATA vertexSubResourceData = {};
 	vertexSubResourceData.pSysMem = vertices.data();
 	
-	DX::ThrowIfFailed(pDevice->CreateBuffer(&vertexBufferDesc, &vertexSubResourceData, &m_pVertexBuffer));
+	DX::ThrowIfFailed(GetDevice(graphics)->CreateBuffer(&vertexBufferDesc, &vertexSubResourceData, &m_pVertexBuffer));
 }
 
-void VertexBuffer::Bind(const Microsoft::WRL::ComPtr<ID3D11DeviceContext>& pDeviceContext) const {
+void VertexBuffer::Bind(const Graphics& graphics) const {
 	
-	pDeviceContext->IASetVertexBuffers(0u, 1u, 
+	GetDeviceContext(graphics)->IASetVertexBuffers(0u, 1u,
 		m_pVertexBuffer.GetAddressOf(), &m_vertexBufferStride, &m_vertexBufferoffset);
-	pDeviceContext->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
+	GetDeviceContext(graphics)->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
 }

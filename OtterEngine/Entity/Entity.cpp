@@ -15,14 +15,14 @@ void Entity::Update() {
 	m_rotation.z += m_speed;
 }
 
-void Entity::Render(const Microsoft::WRL::ComPtr<ID3D11DeviceContext>& pDeviceContext) const {
+void Entity::Render(const Graphics& graphics, const Microsoft::WRL::ComPtr<ID3D11DeviceContext>& pDeviceContext) const {
 	// need to use reference for unique pointer
-	for (const std::unique_ptr<GraphicsResource>& resource : m_graphicsBuffers) {
-		resource->Bind(pDeviceContext.Get());
+	for (const std::unique_ptr<GraphicsResource>& resource : GetCommonResources()) {
+		resource->Bind(graphics);
 	}
 
-	for (const std::unique_ptr<GraphicsResource>& resource : m_graphicsResources) {
-		resource->Bind(pDeviceContext.Get());
+	for (const std::unique_ptr<GraphicsResource>& resource : m_uniqueResources) {
+		resource->Bind(graphics);
 	}
 
 	pDeviceContext->DrawIndexed(m_indicesSize, 0u, 0u); // draw with index buffer

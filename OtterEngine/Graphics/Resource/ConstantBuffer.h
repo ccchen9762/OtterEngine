@@ -10,32 +10,52 @@ struct CBuffer {
 	DirectX::XMMATRIX transform;
 };
 
-class ConstantBufferVertex : public GraphicsResource
+class ConstantBufferTransformation : public GraphicsResource
 {
 public:
-	ConstantBufferVertex(const Microsoft::WRL::ComPtr<ID3D11Device>& pDevice, const Entity& parentEntity);
-	~ConstantBufferVertex() = default;
+	ConstantBufferTransformation(const Graphics& graphics, const Entity& parentEntity);
+	~ConstantBufferTransformation() = default;
 
-	void Bind(const Microsoft::WRL::ComPtr<ID3D11DeviceContext>& pDeviceContext) const override;
+	void Bind(const Graphics& graphics) const override;
 
 private:
-	void Update(const Microsoft::WRL::ComPtr<ID3D11DeviceContext>& pDeviceContext) const;
+	void Update(const Graphics& graphics) const;
 
 private:
 	Microsoft::WRL::ComPtr<ID3D11Buffer> m_pConstantBuffer;
 	const Entity& m_parentEntity;
 };
 
-/*class ConstantBufferPixel : public GraphicsResource
+// ========================================
+
+class ConstantBufferVertex : public GraphicsResource
 {
 public:
-	ConstantBufferPixel(const Microsoft::WRL::ComPtr<ID3D11Device>& pDevice);
-	~ConstantBufferPixel() = default;
+	ConstantBufferVertex(const Graphics& graphics);
+	~ConstantBufferVertex() = default;
 
-	void Bind(const Microsoft::WRL::ComPtr<ID3D11DeviceContext>& pDeviceContext) const override;
+	void Bind(const Graphics& graphics) const override;
 
-	void Update(const Microsoft::WRL::ComPtr<ID3D11DeviceContext>& pDeviceContext, const CBuffer& cBuffer);
+private:
+	void Update(const Graphics& graphics) const;
 
 private:
 	Microsoft::WRL::ComPtr<ID3D11Buffer> m_pConstantBuffer;
-};*/
+};
+
+// ========================================
+
+class ConstantBufferPixel : public GraphicsResource
+{
+public:
+	ConstantBufferPixel(const Graphics& graphics);
+	~ConstantBufferPixel() = default;
+
+	void Bind(const Graphics& graphics) const override;
+
+private:
+	void Update(const Graphics& graphics) const;
+
+private:
+	Microsoft::WRL::ComPtr<ID3D11Buffer> m_pConstantBuffer;
+};

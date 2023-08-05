@@ -1,6 +1,6 @@
 #include "IndexBuffer.h"
 
-IndexBuffer::IndexBuffer(const Microsoft::WRL::ComPtr<ID3D11Device>& pDevice, const std::vector<unsigned short>& indices) {
+IndexBuffer::IndexBuffer(const Graphics& graphics, const std::vector<unsigned short>& indices) {
 	
 	// indices are 2 bytes by default
 	/*unsigned short indices[] = {
@@ -27,9 +27,9 @@ IndexBuffer::IndexBuffer(const Microsoft::WRL::ComPtr<ID3D11Device>& pDevice, co
 	D3D11_SUBRESOURCE_DATA indexSubResourceData = {};
 	indexSubResourceData.pSysMem = indices.data();
 	
-	DX::ThrowIfFailed(pDevice->CreateBuffer(&indexBufferDesc, &indexSubResourceData, &m_pIndexBuffer));
+	DX::ThrowIfFailed(GetDevice(graphics)->CreateBuffer(&indexBufferDesc, &indexSubResourceData, &m_pIndexBuffer));
 }
 
-void IndexBuffer::Bind(const Microsoft::WRL::ComPtr<ID3D11DeviceContext>& pDeviceContext) const {
-	pDeviceContext->IASetIndexBuffer(m_pIndexBuffer.Get(), DXGI_FORMAT_R16_UINT, 0u);
+void IndexBuffer::Bind(const Graphics& graphics) const {
+	GetDeviceContext(graphics)->IASetIndexBuffer(m_pIndexBuffer.Get(), DXGI_FORMAT_R16_UINT, 0u);
 }

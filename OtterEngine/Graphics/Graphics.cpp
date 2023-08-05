@@ -20,7 +20,8 @@
 // IA = input assembler -> vertex buffer + index buffer
 // OM = output merger
 
-Graphics::Graphics(HWND hWnd, unsigned int viewportWidth, unsigned int viewportHeight) {
+Graphics::Graphics(HWND hWnd, unsigned int viewportWidth, unsigned int viewportHeight) :
+	m_camera(Camera(Vector3(0.0f, 0.0f, 0.0f), DirectX::XM_PIDIV4, kRenderRatio, 0.1f, 100.0f)) {
 
 	// desc stands for descriptor
 	DXGI_SWAP_CHAIN_DESC swapChainDesc = {};

@@ -5,10 +5,10 @@
 class VertexShader : public GraphicsResource
 {
 public:
-	VertexShader(const Microsoft::WRL::ComPtr<ID3D11Device>& pDevice);
+	VertexShader(const Graphics& graphics);
 	~VertexShader() = default;
 
-	void Bind(const Microsoft::WRL::ComPtr<ID3D11DeviceContext>& pDeviceContext) const override;
+	void Bind(const Graphics& graphics) const override;
 
 	const std::vector<uint8_t>& GetVertexShaderBlob() const { return m_vertexShaderBlob; }
 

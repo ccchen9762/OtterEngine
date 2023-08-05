@@ -6,5 +6,10 @@ class GraphicsResource
 {
 public:
 	virtual ~GraphicsResource() = default; // make sure derived class destructors are called properly
-	virtual void Bind(const Microsoft::WRL::ComPtr<ID3D11DeviceContext>& pDeviceContext) const = 0;
+	virtual void Bind(const Graphics& graphics) const = 0;
+
+protected:
+	const Microsoft::WRL::ComPtr<ID3D11Device>& GetDevice(const Graphics& graphics) const { return graphics.m_pDevice; }
+	const Microsoft::WRL::ComPtr<ID3D11DeviceContext>& GetDeviceContext(const Graphics& graphics) const { return graphics.m_pDeviceContext; }
+	const Camera& GetCamera(const Graphics& graphics) const { return graphics.m_camera; }
 };

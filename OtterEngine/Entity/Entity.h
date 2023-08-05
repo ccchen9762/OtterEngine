@@ -16,9 +16,12 @@ public:
 	virtual ~Entity() = default; // make sure derived class destructors are called properly
 
 	virtual void Update();
-	void Render(const Microsoft::WRL::ComPtr<ID3D11DeviceContext>& pDeviceContext) const;
+	void Render(const Graphics& graphics, const Microsoft::WRL::ComPtr<ID3D11DeviceContext>& pDeviceContext) const;
 
 	DirectX::XMMATRIX GetTransformMatrix() const;
+	
+private:
+	virtual const std::vector<std::unique_ptr<GraphicsResource>>& GetCommonResources() const = 0;
 
 protected:
 	Vector3 m_rotation;
@@ -26,8 +29,7 @@ protected:
 	Vector3 m_revolution;
 	Vector3 m_scale;
 	size_t m_indicesSize;
-	std::vector<std::unique_ptr<GraphicsResource>> m_graphicsResources;
-	std::vector<std::unique_ptr<GraphicsResource>> m_graphicsBuffers;
+	std::vector<std::unique_ptr<GraphicsResource>> m_uniqueResources;
 	
 	float m_speed; // for testing
 };

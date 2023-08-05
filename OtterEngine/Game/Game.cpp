@@ -20,9 +20,9 @@ Game::Game() :
 
     Randomizer::Init();
 
-    for (int i = 0; i < 30; i++) {
+    for (int i = 0; i < 80; i++) {
         m_renderList.push_back(std::make_unique<Cube>(
-            m_mainWindow.m_pGraphics->GetDevice(),
+            *(m_mainWindow.m_pGraphics),
             Vector3(Randomizer::GetFloat(kPI), Randomizer::GetFloat(kPI), 0.0f),
             Vector3(Randomizer::GetFloat(5.0f, -5.0f), Randomizer::GetFloat(5.0f, -5.0f), -20.0f),
             Vector3(0.0f, 0.0f, 0.0f),
@@ -74,8 +74,12 @@ int Game::Start() {
                     }
                     case Mouse::MouseEvent::Type::Move: {
                         Vector3Int pos = mouseEvent.getPosition();
+                        static Vector3Int prevPos = pos;
                         const std::wstring title = L"X: " + std::to_wstring(pos.x) + L", Y: " + std::to_wstring(pos.y);
                         m_mainWindow.setTitle(title);
+                        m_mainWindow.m_pGraphics->m_camera.MoveCamera(
+                            Vector3(static_cast<float>(pos.x - prevPos.x) / kRenderWidth, static_cast<float>(prevPos.y - pos.y) / kRenderHeight) * 10);
+                        prevPos = pos;
                         break;
                     }
                     }
@@ -102,7 +106,7 @@ void Game::Update() {
     
     for (int i = 0; i < m_renderList.size(); i++) {
         m_renderList[i]->Update();
-        m_renderList[i]->Render(m_mainWindow.m_pGraphics->GetDeviceConetxt());
+        m_renderList[i]->Render(*(m_mainWindow.m_pGraphics), m_mainWindow.m_pGraphics->GetDeviceConetxt());
     }
 
     m_imguiManager.Update();
