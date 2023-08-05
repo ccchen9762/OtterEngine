@@ -191,7 +191,6 @@
     <ClInclude Include="Common\Randomizer.h" />
     <ClInclude Include="Common\ReadData.h" />
     <ClInclude Include="Common\Timer.h" />
-    <ClInclude Include="Common\utils.h" />
     <ClInclude Include="Game\Game.h" />
     <ClInclude Include="Graphics\Camera\Camera.h" />
     <ClInclude Include="Graphics\Graphics.h" />

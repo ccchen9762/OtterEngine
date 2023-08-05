@@ -10,9 +10,7 @@
 #include "OtterEngine/Entity/Triangle.h"
 
 #include "OtterEngine/Common/Randomizer.h"
-#include "OtterEngine/Common/utils.h"
 #include "OtterEngine/Common/constants.h"
-
 
 Game::Game() :
     m_mainWindow(Window(kDefWndTitle, kRenderWidth, kRenderHeight)), 
@@ -23,14 +21,6 @@ Game::Game() :
     Randomizer::Init();
 
     for (int i = 0; i < 30; i++) {
-        /*m_renderList.push_back(std::make_unique<Cube>(
-            m_mainWindow.m_pGraphics->GetDevice(),
-            Vector3(0.0f, kPI / 4, 0.0f),
-            Vector3(10.0f, 0.0f, -20.0f),
-            Vector3(0.0f, 0.0f, 0.0f),
-            Vector3(1.0f, 1.0f, 1.0f)
-            ));*/
-
         m_renderList.push_back(std::make_unique<Cube>(
             m_mainWindow.m_pGraphics->GetDevice(),
             Vector3(Randomizer::GetFloat(kPI), Randomizer::GetFloat(kPI), 0.0f),
@@ -114,10 +104,7 @@ void Game::Update() {
         m_renderList[i]->Update();
         m_renderList[i]->Render(m_mainWindow.m_pGraphics->GetDeviceConetxt());
     }
-    //m_mainWindow.m_pGraphics->CreateRenderResource();
-    //m_mainWindow.m_pGraphics->DrawTriangle(m_timer.GetElapsedTimeSecond());
-    //m_mainWindow.m_pGraphics->DrawCube(m_timer.GetElapsedTimeSecond(), m_timer.GetElapsedTimeSecond() / 2, 0.0f);
-    // m_mainWindow.m_pGraphics->DrawCube(Randomizer::GetFloat(kPI), Randomizer::GetFloat(kPI), 0.0f);
+
     m_imguiManager.Update();
 
     m_mainWindow.m_pGraphics->PostUpdate();

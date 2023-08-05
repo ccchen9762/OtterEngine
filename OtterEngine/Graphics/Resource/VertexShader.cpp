@@ -2,8 +2,6 @@
 
 #include "OtterEngine/Common/ReadData.h"
 
-#pragma comment(lib, "d3d11.lib")
-
 VertexShader::VertexShader(const Microsoft::WRL::ComPtr<ID3D11Device>& pDevice) {
 
 	m_vertexShaderBlob = DX::ReadData(L"VertexShader.cso");

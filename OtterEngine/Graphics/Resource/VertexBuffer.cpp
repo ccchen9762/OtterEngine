@@ -2,26 +2,6 @@
 
 VertexBuffer::VertexBuffer(const Microsoft::WRL::ComPtr<ID3D11Device>& pDevice, const std::vector<Vertex>& vertices) :
 	m_vertexBufferStride(sizeof(Vertex)), m_vertexBufferoffset(0u) {
-
-	// triangle
-	/*const Vertex vertices[] = {
-		{DirectX::XMVectorSet(0.0f,  0.5f,  0.0f, 1.0f), DirectX::XMFLOAT4(1.0f, 0.0f, 0.0f, 1.0f)},
-		{DirectX::XMVectorSet(0.5f, -0.5f,  0.0f, 1.0f), DirectX::XMFLOAT4(0.0f, 1.0f, 0.0f, 1.0f)},
-		{DirectX::XMVectorSet(-0.5f, -0.5f,  0.0f, 1.0f), DirectX::XMFLOAT4(0.0f, 0.0f, 1.0f, 1.0f)},
-	};*/
-
-	// cube
-	/*
-	const Vertex vertices[] = {
-		{DirectX::XMVectorSet( -1.0f, -1.0f, -1.0f, 1.0f), DirectX::XMFLOAT4(0.0f, 0.0f, 0.0f, 1.0f)},
-		{DirectX::XMVectorSet(  1.0f, -1.0f, -1.0f, 1.0f), DirectX::XMFLOAT4(1.0f, 0.0f, 0.0f, 1.0f)},
-		{DirectX::XMVectorSet(  1.0f,  1.0f, -1.0f, 1.0f), DirectX::XMFLOAT4(1.0f, 1.0f, 0.0f, 1.0f)},
-		{DirectX::XMVectorSet( -1.0f,  1.0f, -1.0f, 1.0f), DirectX::XMFLOAT4(0.0f, 1.0f, 0.0f, 1.0f)},
-		{DirectX::XMVectorSet( -1.0f, -1.0f,  1.0f, 1.0f), DirectX::XMFLOAT4(0.0f, 0.0f, 1.0f, 1.0f)},
-		{DirectX::XMVectorSet(  1.0f, -1.0f,  1.0f, 1.0f), DirectX::XMFLOAT4(1.0f, 0.0f, 1.0f, 1.0f)},
-		{DirectX::XMVectorSet(  1.0f,  1.0f,  1.0f, 1.0f), DirectX::XMFLOAT4(1.0f, 1.0f, 1.0f, 1.0f)},
-		{DirectX::XMVectorSet( -1.0f,  1.0f,  1.0f, 1.0f), DirectX::XMFLOAT4(0.0f, 1.0f, 1.0f, 1.0f)},
-	};*/
 	
 	D3D11_BUFFER_DESC vertexBufferDesc = {};
 	vertexBufferDesc.ByteWidth = sizeof(Vertex) * vertices.size(); // return total array size in bytes

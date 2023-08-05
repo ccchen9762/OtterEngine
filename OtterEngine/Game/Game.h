@@ -3,8 +3,8 @@
 #include <memory>
 
 #include "OtterEngine/WindowClass/Window.h"
-#include "OtterEngine/Imgui/ImguiManager.h"
 #include "OtterEngine/Entity/Entity.h"
+#include "OtterEngine/Imgui/ImguiManager.h"
 #include "OtterEngine/Common/Timer.h"
 
 class Game {
