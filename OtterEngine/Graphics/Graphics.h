@@ -4,9 +4,6 @@
 #include <d3d11.h> // only declarations, need definitions in dlls 
 #include <memory>
 
-
-#include "Camera/Camera.h"
-
 class Graphics
 {
 	friend class Game;
@@ -21,6 +18,7 @@ public:
 	Graphics& operator= (const Graphics&) = delete;
 
 	void ClearBuffer(float red, float green, float blue);
+	void RenderIndexed(size_t indicesSize) const;
 	void Update();		// called each frame to update graphics
 	void PostUpdate();	// things to do after Update()
 
@@ -35,5 +33,4 @@ private:
 	Microsoft::WRL::ComPtr<ID3D11RenderTargetView> m_pRenderTargetView;
 	Microsoft::WRL::ComPtr<ID3D11DepthStencilView> m_pDepthStencilView;	
 	D3D11_VIEWPORT m_viewport;
-	Camera m_camera;
 };

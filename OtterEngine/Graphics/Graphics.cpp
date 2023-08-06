@@ -20,8 +20,7 @@
 // IA = input assembler -> vertex buffer + index buffer
 // OM = output merger
 
-Graphics::Graphics(HWND hWnd, unsigned int viewportWidth, unsigned int viewportHeight) :
-	m_camera(Camera(Vector3(0.0f, 0.0f, 0.0f), DirectX::XM_PIDIV4, kRenderRatio, 0.1f, 100.0f)) {
+Graphics::Graphics(HWND hWnd, unsigned int viewportWidth, unsigned int viewportHeight) {
 
 	// desc stands for descriptor
 	DXGI_SWAP_CHAIN_DESC swapChainDesc = {};
@@ -115,6 +114,10 @@ void Graphics::ClearBuffer(float red, float green, float blue) {
 
 	m_pDeviceContext->ClearRenderTargetView(m_pRenderTargetView.Get(), color);
 	m_pDeviceContext->ClearDepthStencilView(m_pDepthStencilView.Get(), D3D11_CLEAR_DEPTH, 1.0, 0u);
+}
+
+void Graphics::RenderIndexed(size_t indicesSize) const {
+	m_pDeviceContext->DrawIndexed(indicesSize, 0u, 0u); // draw with index buffer
 }
 
 void Graphics::Update() {

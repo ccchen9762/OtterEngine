@@ -19,8 +19,9 @@ const std::vector<unsigned short> Triangle::s_indices = {
 
 std::vector<std::unique_ptr<GraphicsResource>> Triangle::s_commonResources;
 
-Triangle::Triangle(const Graphics& graphics, Vector3 rotation, Vector3 translation, Vector3 revolution, Vector3 scale, float speed)
-	: Entity(rotation, translation, revolution, scale, s_indices.size(), speed) {
+Triangle::Triangle(const Graphics& graphics, Vector3 rotation, Vector3 translation, Vector3 revolution, Vector3 scale, 
+	const DirectX::XMMATRIX& viewProjectionMatrix, float speed)
+	: Entity(rotation, translation, revolution, scale, s_indices.size(), viewProjectionMatrix, speed) {
 
 	if (s_commonResources.empty()) {
 		// shaders & layout

@@ -29,8 +29,9 @@ const std::vector<unsigned short> Cube::s_indices = {
 
 std::vector<std::unique_ptr<GraphicsResource>> Cube::s_commonResources;
 
-Cube::Cube(const Graphics& graphics, Vector3 rotation, Vector3 translation, Vector3 revolution, Vector3 scale, float speed)
-	: Entity(rotation, translation, revolution, scale, s_indices.size(), speed) {
+Cube::Cube(const Graphics& graphics, Vector3 rotation, Vector3 translation, Vector3 revolution, Vector3 scale, 
+	const DirectX::XMMATRIX& viewProjectionMatrix, float speed)
+	: Entity(rotation, translation, revolution, scale, s_indices.size(), viewProjectionMatrix, speed) {
 
 	if (s_commonResources.empty()) {
 		// shaders & layout

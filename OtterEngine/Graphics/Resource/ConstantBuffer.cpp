@@ -10,7 +10,7 @@ ConstantBufferTransformation::ConstantBufferTransformation (const Graphics& grap
 	const CBuffer cBuffer = {
 		DirectX::XMMatrixTranspose(
 			m_parentEntity.GetTransformMatrix() *
-			GetCamera(graphics).GetViewProjectionMatrix()
+			m_parentEntity.GetViewProjectionMatrix()
 		)
 	};
 
@@ -27,7 +27,6 @@ ConstantBufferTransformation::ConstantBufferTransformation (const Graphics& grap
 }
 
 void ConstantBufferTransformation::Bind(const Graphics& graphics) const {
-
 	Update(graphics);
 	GetDeviceContext(graphics)->VSSetConstantBuffers(0u, 1u, m_pConstantBuffer.GetAddressOf());
 }
@@ -37,7 +36,7 @@ void ConstantBufferTransformation::Update(const Graphics& graphics) const {
 	const CBuffer cBuffer = {
 		DirectX::XMMatrixTranspose(
 			m_parentEntity.GetTransformMatrix() *
-			GetCamera(graphics).GetViewProjectionMatrix()
+			m_parentEntity.GetViewProjectionMatrix()
 		)
 	};
 

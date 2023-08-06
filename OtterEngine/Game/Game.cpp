@@ -13,20 +13,23 @@
 #include "OtterEngine/Common/constants.h"
 
 Game::Game() :
+    m_imguiManager(ImguiManager()),
     m_mainWindow(Window(kDefWndTitle, kRenderWidth, kRenderHeight)), 
     m_alive(true), 
     m_timer(Timer()),
-    m_imguiManager(ImguiManager()) {
+    m_camera(Vector3(0.0f, 0.0f, 0.0f), Vector3(0.0f, 0.0f, -1.0f), Vector3(0.0f, 1.0f, 0.0f), 
+        DirectX::XM_PIDIV4, kRenderRatio, 0.1f, 100.0f) {
 
     Randomizer::Init();
 
-    for (int i = 0; i < 80; i++) {
+    for (int i = 0; i < 20; i++) {
         m_renderList.push_back(std::make_unique<Cube>(
             *(m_mainWindow.m_pGraphics),
-            Vector3(Randomizer::GetFloat(kPI), Randomizer::GetFloat(kPI), 0.0f),
+            Vector3(Randomizer::GetFloat(static_cast<float>(kPI)), Randomizer::GetFloat(static_cast<float>(kPI)), 0.0f),
             Vector3(Randomizer::GetFloat(5.0f, -5.0f), Randomizer::GetFloat(5.0f, -5.0f), -20.0f),
             Vector3(0.0f, 0.0f, 0.0f),
             Vector3(1.0f, 1.0f, 1.0f),
+            m_camera.GetViewProjectionMatrix(),
             Randomizer::GetFloat(0.08f, 0.02f)
         ));
     }
@@ -77,7 +80,7 @@ int Game::Start() {
                         static Vector3Int prevPos = pos;
                         const std::wstring title = L"X: " + std::to_wstring(pos.x) + L", Y: " + std::to_wstring(pos.y);
                         m_mainWindow.setTitle(title);
-                        m_mainWindow.m_pGraphics->m_camera.MoveCamera(
+                        m_camera.MoveCamera(
                             Vector3(static_cast<float>(pos.x - prevPos.x) / kRenderWidth, static_cast<float>(prevPos.y - pos.y) / kRenderHeight) * 10);
                         prevPos = pos;
                         break;
@@ -95,7 +98,7 @@ int Game::Start() {
     }
 
     // WM_QUIT.wParam is parameter of PostQuitMessage
-	return msg.wParam;
+	return static_cast<int>(msg.wParam);
 }
 
 void Game::Update() {
@@ -106,7 +109,7 @@ void Game::Update() {
     
     for (int i = 0; i < m_renderList.size(); i++) {
         m_renderList[i]->Update();
-        m_renderList[i]->Render(*(m_mainWindow.m_pGraphics), m_mainWindow.m_pGraphics->GetDeviceConetxt());
+        m_renderList[i]->Render(*(m_mainWindow.m_pGraphics));
     }
 
     m_imguiManager.Update();

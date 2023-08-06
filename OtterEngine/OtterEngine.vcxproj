@@ -161,7 +161,7 @@
   <ItemGroup>
     <ClCompile Include="Entity\Entity.cpp" />
     <ClCompile Include="Game\Game.cpp" />
-    <ClCompile Include="Graphics\Camera\Camera.cpp" />
+    <ClCompile Include="Camera\Camera.cpp" />
     <ClCompile Include="Graphics\Graphics.cpp" />
     <ClCompile Include="Graphics\Resource\ConstantBuffer.cpp" />
     <ClCompile Include="Graphics\Resource\IndexBuffer.cpp" />
@@ -192,7 +192,7 @@
     <ClInclude Include="Common\ReadData.h" />
     <ClInclude Include="Common\Timer.h" />
     <ClInclude Include="Game\Game.h" />
-    <ClInclude Include="Graphics\Camera\Camera.h" />
+    <ClInclude Include="Camera\Camera.h" />
     <ClInclude Include="Graphics\Graphics.h" />
     <ClInclude Include="Graphics\Resource\ConstantBuffer.h" />
     <ClInclude Include="Graphics\Resource\GraphicsResource.h" />

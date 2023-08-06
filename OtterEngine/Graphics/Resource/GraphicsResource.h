@@ -11,5 +11,4 @@ public:
 protected:
 	const Microsoft::WRL::ComPtr<ID3D11Device>& GetDevice(const Graphics& graphics) const { return graphics.m_pDevice; }
 	const Microsoft::WRL::ComPtr<ID3D11DeviceContext>& GetDeviceContext(const Graphics& graphics) const { return graphics.m_pDeviceContext; }
-	const Camera& GetCamera(const Graphics& graphics) const { return graphics.m_camera; }
 };

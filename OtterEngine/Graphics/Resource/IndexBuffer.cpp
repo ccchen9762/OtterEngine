@@ -18,7 +18,7 @@ IndexBuffer::IndexBuffer(const Graphics& graphics, const std::vector<unsigned sh
 
 
 	D3D11_BUFFER_DESC indexBufferDesc = {};
-	indexBufferDesc.ByteWidth = sizeof(unsigned short) * indices.size(); // return total array size in bytes
+	indexBufferDesc.ByteWidth = static_cast<UINT>(sizeof(unsigned short) * indices.size()); // return total array size in bytes
 	indexBufferDesc.Usage = D3D11_USAGE_DEFAULT;
 	indexBufferDesc.BindFlags = D3D11_BIND_INDEX_BUFFER;
 	indexBufferDesc.CPUAccessFlags = 0u;

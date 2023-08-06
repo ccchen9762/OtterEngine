@@ -5,6 +5,7 @@
 #include <DirectXMath.h>
 
 #include "OtterEngine/Entity/Entity.h"
+#include "OtterEngine/Camera/Camera.h"
 
 struct CBuffer {
 	DirectX::XMMATRIX transform;

@@ -24,7 +24,7 @@
     <ClCompile Include="Graphics\Resource\VertexBuffer.cpp" />
     <ClCompile Include="Graphics\Resource\IndexBuffer.cpp" />
     <ClCompile Include="Graphics\Resource\ConstantBuffer.cpp" />
-    <ClCompile Include="Graphics\Camera\Camera.cpp" />
+    <ClCompile Include="Camera\Camera.cpp" />
     <ClCompile Include="Entity\Entity.cpp" />
   </ItemGroup>
   <ItemGroup>
@@ -57,7 +57,7 @@
     <ClInclude Include="Graphics\Resource\ConstantBuffer.h" />
     <ClInclude Include="Graphics\Resource\IndexBuffer.h" />
     <ClInclude Include="Graphics\Resource\VertexBuffer.h" />
-    <ClInclude Include="Graphics\Camera\Camera.h" />
+    <ClInclude Include="Camera\Camera.h" />
   </ItemGroup>
   <ItemGroup>
     <FxCompile Include="Shader\PixelShader.hlsl" />
