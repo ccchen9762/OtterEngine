@@ -159,6 +159,8 @@
     </FxCompile>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="Common\Math\MathUtils.cpp" />
+    <ClCompile Include="Common\Math\Matrix3x3.cpp" />
     <ClCompile Include="Entity\Entity.cpp" />
     <ClCompile Include="Game\Game.cpp" />
     <ClCompile Include="Camera\Camera.cpp" />
@@ -187,6 +189,8 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Common\constants.h" />
+    <ClInclude Include="Common\Math\MathUtils.h" />
+    <ClInclude Include="Common\Math\Matrix3x3.h" />
     <ClInclude Include="Common\pch.h" />
     <ClInclude Include="Common\Randomizer.h" />
     <ClInclude Include="Common\ReadData.h" />

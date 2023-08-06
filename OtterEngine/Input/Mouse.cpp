@@ -42,32 +42,38 @@ void Mouse::OnMouseLeave() {
 }
 
 void Mouse::OnLButtonDown(const Vector3Int& pos) {
+	m_LButtonState = true;
 	m_mouseEventBuffer.push(MouseEvent(MouseEvent::Type::LButtonDown, pos));
 	PopMouseEventBuffer();
 }
 
 void Mouse::OnLButtonUp(const Vector3Int& pos) {
+	m_LButtonState = false;
 	m_mouseEventBuffer.push(MouseEvent(MouseEvent::Type::LButtonUp, pos));
 	PopMouseEventBuffer();
 }
 
-void Mouse::OnRButtonDown(const Vector3Int& pos) {
-	m_mouseEventBuffer.push(MouseEvent(MouseEvent::Type::RButtonDown, pos));
-	PopMouseEventBuffer();
-}
-
-void Mouse::OnRButtonUp(const Vector3Int& pos) {
-	m_mouseEventBuffer.push(MouseEvent(MouseEvent::Type::RButtonUp, pos));
-	PopMouseEventBuffer();
-}
-
 void Mouse::OnMButtonDown(const Vector3Int& pos) {
+	m_MButtonState = true;
 	m_mouseEventBuffer.push(MouseEvent(MouseEvent::Type::MButtonDown, pos));
 	PopMouseEventBuffer();
 }
 
 void Mouse::OnMButtonUp(const Vector3Int& pos) {
+	m_MButtonState = false;
 	m_mouseEventBuffer.push(MouseEvent(MouseEvent::Type::MButtonUp, pos));
+	PopMouseEventBuffer();
+}
+
+void Mouse::OnRButtonDown(const Vector3Int& pos) {
+	m_RButtonState = true;
+	m_mouseEventBuffer.push(MouseEvent(MouseEvent::Type::RButtonDown, pos));
+	PopMouseEventBuffer();
+}
+
+void Mouse::OnRButtonUp(const Vector3Int& pos) {
+	m_RButtonState = false;
+	m_mouseEventBuffer.push(MouseEvent(MouseEvent::Type::RButtonUp, pos));
 	PopMouseEventBuffer();
 }
 

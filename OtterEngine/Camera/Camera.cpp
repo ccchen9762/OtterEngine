@@ -1,67 +1,42 @@
 #include "Camera.h"
 
-Camera::Camera(Vector3 position, Vector3 orientation, Vector3 up, float fov, float ratio, float nearZ, float farZ) :
-	m_position(position),
-	m_orientation(orientation),
-	m_up(up) {
+Camera::Camera(Vector3 position, Vector3 orientation, Vector3 up, 
+	float fov, float ratio, float nearZ, float farZ, float speed, float angularSpeed) :
+	m_position(position), m_orientation(orientation), m_up(up),
+	m_speed(speed), m_angularSpeed(angularSpeed) {
 
-	m_viewMatrix = DirectX::XMMatrixTranslation(-position.x, -position.y, -position.z);
+	SetViewMatrix();
 	SetProjectionMatrix(fov, ratio, nearZ, farZ);
 	m_viewProjectionMatrix = m_viewMatrix * m_projectionMatrix;
 }
 
-void Camera::Update() {
-	// move camera only when L CTRL is pressed
-	/*if (glfwGetKey(window, GLFW_KEY_LEFT_CONTROL) == GLFW_PRESS) {
-		double mouseX, mouseY;
-		glfwGetCursorPos(window, &mouseX, &mouseY);
+void Camera::TranslateCamera(Vector3Int position, Vector3Int prevPosition) {
+	float translateX = m_speed * (position.x - prevPosition.x);
+	float translateY = m_speed * (position.y - prevPosition.y);
 
-		// translation XY
-		if (glfwGetMouseButton(window, GLFW_MOUSE_BUTTON_LEFT) == GLFW_PRESS) {
-			float translateX = m_Speed * (float)(mouseX - m_MousePositionX);
-			float translateY = m_Speed * (float)(mouseY - m_MousePositionY);
+	m_position += translateX * CrossProduct(m_orientation, m_up);
+	m_position -= translateY * m_up;
 
-			m_Position += translateX * glm::cross(m_Orientation, m_UpVector);
-			m_Position -= translateY * m_UpVector;
-			//m_Position.x += translateX;
-			//m_Position.y -= translateY;
-		}
-		// translation Z
-		else if (glfwGetMouseButton(window, GLFW_MOUSE_BUTTON_MIDDLE) == GLFW_PRESS) {
-			float translateY = m_Speed * (float)(mouseY - m_MousePositionY);
-
-			m_Position -= translateY * m_Orientation;
-			//m_Position.z -= translateY;
-		}
-		// rotation
-		else if (glfwGetMouseButton(window, GLFW_MOUSE_BUTTON_RIGHT) == GLFW_PRESS) {
-			double mouseX, mouseY;
-			glfwGetCursorPos(window, &mouseX, &mouseY);
-
-			float rotationX = m_Sensitivity * (float)(mouseY - m_MousePositionY);
-			float rotationY = m_Sensitivity * (float)(mouseX - m_MousePositionX);
-
-			glm::vec3 newOrientation = glm::rotate(m_Orientation, glm::radians(-rotationX), glm::normalize(glm::cross(m_Orientation, m_UpVector)));
-			if (!(glm::angle(newOrientation, m_UpVector) <= glm::radians(5.0f) || glm::angle(newOrientation, -m_UpVector) <= glm::radians(5.0f))) {
-				m_Orientation = newOrientation;
-			}
-			m_Orientation = glm::rotate(m_Orientation, glm::radians(-rotationY), m_UpVector);
-		}
-
-		m_MousePositionX = mouseX;
-		m_MousePositionY = mouseY;
-	}
-
-	glfwGetCursorPos(window, &m_MousePositionX, &m_MousePositionY);*/
+	SetViewMatrix();
 }
 
-void Camera::MoveCamera(Vector3 position) {
-	m_position += position;
+void Camera::RotateCamera(Vector3Int position, Vector3Int prevPosition) {
+	float rotationX = m_angularSpeed * (position.y - prevPosition.y);
+	float rotationY = m_angularSpeed * (position.x - prevPosition.x);
+
+	Vector3 xAxis = CrossProduct(m_orientation, m_up);
+	xAxis.normalize();
+	m_orientation = RotateAroundAxis(m_orientation, xAxis, DirectX::XMConvertToRadians(-rotationX));
+	m_orientation = RotateAroundAxis(m_orientation, m_up, DirectX::XMConvertToRadians(-rotationY));
+
 	SetViewMatrix();
 }
 
 void Camera::SetViewMatrix() {
-	m_viewMatrix = DirectX::XMMatrixTranslation(-m_position.x, -m_position.y, -m_position.z);
+	m_viewMatrix = DirectX::XMMatrixLookToRH(
+		DirectX::XMVECTOR{ m_position.x, m_position.y, m_position.z },
+		DirectX::XMVECTOR{ m_orientation.x, m_orientation.y, m_orientation.z },
+		DirectX::XMVECTOR{ m_up.x, m_up.y, m_up.z });
 	m_viewProjectionMatrix = m_viewMatrix * m_projectionMatrix;
 }
 

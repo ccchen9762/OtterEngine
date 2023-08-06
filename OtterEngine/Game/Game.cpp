@@ -18,7 +18,7 @@ Game::Game() :
     m_alive(true), 
     m_timer(Timer()),
     m_camera(Vector3(0.0f, 0.0f, 0.0f), Vector3(0.0f, 0.0f, -1.0f), Vector3(0.0f, 1.0f, 0.0f), 
-        DirectX::XM_PIDIV4, kRenderRatio, 0.1f, 100.0f) {
+        DirectX::XM_PIDIV4, kRenderRatio, 0.1f, 100.0f, 0.02f, 0.1f) {
 
     Randomizer::Init();
 
@@ -77,11 +77,16 @@ int Game::Start() {
                     }
                     case Mouse::MouseEvent::Type::Move: {
                         Vector3Int pos = mouseEvent.getPosition();
-                        static Vector3Int prevPos = pos;
                         const std::wstring title = L"X: " + std::to_wstring(pos.x) + L", Y: " + std::to_wstring(pos.y);
                         m_mainWindow.setTitle(title);
-                        m_camera.MoveCamera(
-                            Vector3(static_cast<float>(pos.x - prevPos.x) / kRenderWidth, static_cast<float>(prevPos.y - pos.y) / kRenderHeight) * 10);
+
+                        static Vector3Int prevPos = pos;    // only initialized once
+                        if (m_mainWindow.m_mouse.IsMButtonPressed()) {
+                            m_camera.TranslateCamera(pos, prevPos);
+                        }
+                        if (m_mainWindow.m_mouse.IsRButtonPressed()) {
+                            m_camera.RotateCamera(pos, prevPos);
+                        }
                         prevPos = pos;
                         break;
                     }

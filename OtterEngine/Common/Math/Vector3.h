@@ -2,6 +2,8 @@
 
 #include <cmath>
 
+#include "Matrix3x3.h"
+
 struct Vector3 {
 public:
 	Vector3() = default;
@@ -10,14 +12,13 @@ public:
 
 	Vector3 operator+(const Vector3& v2) const;
 	Vector3& operator+=(const Vector3& v2);
+	Vector3& operator-=(const Vector3& v2);
 	Vector3 operator*(float scale) const;
 
 	float length() { return sqrtf(x * x + y * y + z * z); }
 	void normalize();
 
-	float x;
-	float y;
-	float z;
+	float x, y, z;
 };
 
 struct Vector3Int {
@@ -26,7 +27,5 @@ public:
 	Vector3Int(int x, int y, int z = 0);
 	~Vector3Int() = default;
 
-	int x;
-	int y;
-	int z;
+	int x, y, z;
 };

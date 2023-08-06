@@ -2,23 +2,24 @@
 
 #include <DirectXMath.h>
 
-#include "OtterEngine/Common/Math/Vector3.h"
+#include "OtterEngine/Common/Math/MathUtils.h"
 
 class Camera
 {
 public:
-	Camera(Vector3 position, Vector3 orientation, Vector3 up, float fov, float ratio, float nearZ, float farZ);
+	Camera(Vector3 position, Vector3 orientation, Vector3 up, float fov, float ratio, float nearZ, float farZ, float speed, float angularSpeed);
 	~Camera() = default;
 
-	void Update();
-	void MoveCamera(Vector3 position);
+	void TranslateCamera(Vector3Int position, Vector3Int prevPosition);
+	void RotateCamera(Vector3Int position, Vector3Int prevPosition);
 	void SetViewMatrix();
 	void SetProjectionMatrix(float fov, float ratio, float near, float far);
 
 	const DirectX::XMMATRIX& GetViewProjectionMatrix() const;
 
 private:
-	float m_sensitivity;
+	float m_speed;
+	float m_angularSpeed;
 	Vector3 m_position;
 	Vector3 m_orientation;
 	Vector3 m_up;

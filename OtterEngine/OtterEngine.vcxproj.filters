@@ -26,6 +26,8 @@
     <ClCompile Include="Graphics\Resource\ConstantBuffer.cpp" />
     <ClCompile Include="Camera\Camera.cpp" />
     <ClCompile Include="Entity\Entity.cpp" />
+    <ClCompile Include="Common\Math\Matrix3x3.cpp" />
+    <ClCompile Include="Common\Math\MathUtils.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="WindowClass\Window.h" />
@@ -58,6 +60,8 @@
     <ClInclude Include="Graphics\Resource\IndexBuffer.h" />
     <ClInclude Include="Graphics\Resource\VertexBuffer.h" />
     <ClInclude Include="Camera\Camera.h" />
+    <ClInclude Include="Common\Math\Matrix3x3.h" />
+    <ClInclude Include="Common\Math\MathUtils.h" />
   </ItemGroup>
   <ItemGroup>
     <FxCompile Include="Shader\PixelShader.hlsl" />

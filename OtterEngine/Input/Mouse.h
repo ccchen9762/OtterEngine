@@ -43,6 +43,10 @@ public:
 
 	bool IsInWindow() const { return m_inWindow; }
 
+	bool IsLButtonPressed() { return m_LButtonState; }
+	bool IsMButtonPressed() { return m_MButtonState; }
+	bool IsRButtonPressed() { return m_RButtonState; }
+
 	MouseEvent ReadFirstEvent();
 
 	bool MouseEventBufferEmpty() const { return m_mouseEventBuffer.empty(); }
@@ -56,16 +60,19 @@ private:
 	void OnMouseLeave();
 	void OnLButtonDown(const Vector3Int& pos);
 	void OnLButtonUp(const Vector3Int& pos);
-	void OnRButtonDown(const Vector3Int& pos);
-	void OnRButtonUp(const Vector3Int& pos);
 	void OnMButtonDown(const Vector3Int& pos);
 	void OnMButtonUp(const Vector3Int& pos);
+	void OnRButtonDown(const Vector3Int& pos);
+	void OnRButtonUp(const Vector3Int& pos);
 	void OnWheelScrolled(const Vector3Int& pos, int delta);
 	void OnWheelUp(const Vector3Int& pos);
 	void OnWheelDown(const Vector3Int& pos);
 
 private:
 	bool m_inWindow = false;
+	bool m_LButtonState = false;
+	bool m_MButtonState = false;
+	bool m_RButtonState = false;
 	Vector3Int m_position;
 	int m_wheelDelta = 0;
 	std::queue<MouseEvent> m_mouseEventBuffer;

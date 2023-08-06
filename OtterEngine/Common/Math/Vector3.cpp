@@ -14,9 +14,17 @@ Vector3& Vector3::operator+=(const Vector3& v2) {
 	return *this;
 }
 
+Vector3& Vector3::operator-=(const Vector3& v2) {
+	x -= v2.x, y -= v2.y, z -= v2.z;
+	return *this;
+}
+
 Vector3 Vector3::operator*(float scale) const {
-	Vector3 result = *this;
-	result.x *= scale, result.y *= scale, result.z *= scale;
+	Vector3 result(
+		x * scale, 
+		y * scale,
+		z * scale	
+	);
 	return result;
 }
 
