@@ -6,8 +6,10 @@
 #include "OtterEngine/Imgui/imgui_impl_win32.h"
 #include "OtterEngine/Imgui/imgui_impl_dx11.h"
 
-#include "OtterEngine/Entity/Cube.h"
 #include "OtterEngine/Entity/Triangle.h"
+#include "OtterEngine/Entity/Cube.h"
+#include "OtterEngine/Entity/Plane.h"
+
 
 #include "OtterEngine/Common/Randomizer.h"
 #include "OtterEngine/Common/constants.h"
@@ -17,7 +19,7 @@ Game::Game() :
     m_mainWindow(Window(kDefWndTitle, kRenderWidth, kRenderHeight)), 
     m_alive(true), 
     m_timer(Timer()),
-    m_camera(Vector3(0.0f, 0.0f, 0.0f), Vector3(0.0f, 0.0f, -1.0f), Vector3(0.0f, 1.0f, 0.0f), 
+    m_camera(Vector3(0.0f, 2.0f, 10.0f), Vector3(0.0f, -0.33f, -1.0f), Vector3(0.0f, 1.0f, 0.0f), 
         DirectX::XM_PIDIV4, kRenderRatio, 0.1f, 100.0f, 0.02f, 0.1f) {
 
     Randomizer::Init();
@@ -26,13 +28,22 @@ Game::Game() :
         m_renderList.push_back(std::make_unique<Cube>(
             *(m_mainWindow.m_pGraphics),
             Vector3(Randomizer::GetFloat(static_cast<float>(kPI)), Randomizer::GetFloat(static_cast<float>(kPI)), 0.0f),
-            Vector3(Randomizer::GetFloat(5.0f, -5.0f), Randomizer::GetFloat(5.0f, -5.0f), -20.0f),
+            Vector3(Randomizer::GetFloat(5.0f, -5.0f), Randomizer::GetFloat(5.0f, -5.0f), -5.0f),
             Vector3(0.0f, 0.0f, 0.0f),
             Vector3(1.0f, 1.0f, 1.0f),
             m_camera.GetViewProjectionMatrix(),
             Randomizer::GetFloat(0.08f, 0.02f)
         ));
     }
+
+    m_renderList.push_back(std::make_unique<Plane>(
+        *(m_mainWindow.m_pGraphics),
+        Vector3(0.0f, 0.0f, 0.0f),
+        Vector3(0.0f, -5.0f, -5.0f),
+        Vector3(10.0f, 1.0f, 10.0f),
+        m_camera.GetViewProjectionMatrix(),
+        L"Texture\\wood.jpg"
+    ));
 }
 
 int Game::Start() {
@@ -48,62 +59,67 @@ int Game::Start() {
             TranslateMessage(&msg);
             DispatchMessage(&msg);
 
-            if (m_mainWindow.m_keyboard.IsKeyPressed(VK_TAB) || m_mainWindow.m_keyboard.IsKeyPressed(VK_MENU)) {
-                unsigned int result = MessageBox(nullptr, L"HIHIHI", L"TMEPY", MB_OK);
-                if (result == IDOK)
-                    m_mainWindow.CaptureWindow();
-            }
-
-            while (!m_mainWindow.m_mouse.MouseEventBufferEmpty()) {
-                const Mouse::MouseEvent mouseEvent = m_mainWindow.m_mouse.ReadFirstEvent();
-
-                static int test = 0;
-                if (mouseEvent.getEventType() != Mouse::MouseEvent::Type::Empty) {
-                    switch (mouseEvent.getEventType()) {
-                    case Mouse::MouseEvent::Type::Leave:
-                        m_mainWindow.setTitle(L"outside");
-                        break;
-                    case Mouse::MouseEvent::Type::WheelDown: {
-                        --test;
-                        const std::wstring title = std::to_wstring(test);
-                        m_mainWindow.setTitle(title);
-                        break;
-                    }
-                    case Mouse::MouseEvent::Type::WheelUp: {
-                        ++test;
-                        const std::wstring title = std::to_wstring(test);
-                        m_mainWindow.setTitle(title);
-                        break;
-                    }
-                    case Mouse::MouseEvent::Type::Move: {
-                        Vector3Int pos = mouseEvent.getPosition();
-                        const std::wstring title = L"X: " + std::to_wstring(pos.x) + L", Y: " + std::to_wstring(pos.y);
-                        m_mainWindow.setTitle(title);
-
-                        static Vector3Int prevPos = pos;    // only initialized once
-                        if (m_mainWindow.m_mouse.IsMButtonPressed()) {
-                            m_camera.TranslateCamera(pos, prevPos);
-                        }
-                        if (m_mainWindow.m_mouse.IsRButtonPressed()) {
-                            m_camera.RotateCamera(pos, prevPos);
-                        }
-                        prevPos = pos;
-                        break;
-                    }
-                    }
-                }
-            }
+            HandleInput();
 
             if (msg.message == WM_QUIT) {
                 m_alive = false;
             }
         }
-
-        Update();
+        else {  // Magic!!! "else" prevents slow down when large amount of inputs come in
+            Update();
+        }
     }
 
-    // WM_QUIT.wParam is parameter of PostQuitMessage
+    // wParam of WM_QUIT is parameter of PostQuitMessage
 	return static_cast<int>(msg.wParam);
+}
+
+void Game::HandleInput() {
+    if (m_mainWindow.m_keyboard.IsKeyPressed(VK_TAB) || m_mainWindow.m_keyboard.IsKeyPressed(VK_MENU)) {
+        unsigned int result = MessageBox(nullptr, L"HIHIHI", L"TMEPY", MB_OK);
+        if (result == IDOK)
+            m_mainWindow.CaptureWindow();
+    }
+
+    while (!m_mainWindow.m_mouse.MouseEventBufferEmpty()) {
+        const Mouse::MouseEvent mouseEvent = m_mainWindow.m_mouse.ReadFirstEvent();
+
+        static int test = 0;
+        if (mouseEvent.getEventType() != Mouse::MouseEvent::Type::Empty) {
+            switch (mouseEvent.getEventType()) {
+            case Mouse::MouseEvent::Type::Leave:
+                m_mainWindow.setTitle(L"outside");
+                break;
+            case Mouse::MouseEvent::Type::WheelDown: {
+                --test;
+                const std::wstring title = std::to_wstring(test);
+                m_mainWindow.setTitle(title);
+                break;
+            }
+            case Mouse::MouseEvent::Type::WheelUp: {
+                ++test;
+                const std::wstring title = std::to_wstring(test);
+                m_mainWindow.setTitle(title);
+                break;
+            }
+            case Mouse::MouseEvent::Type::Move: {
+                Vector3Int pos = mouseEvent.getPosition();
+                const std::wstring title = L"X: " + std::to_wstring(pos.x) + L", Y: " + std::to_wstring(pos.y);
+                m_mainWindow.setTitle(title);
+
+                static Vector3Int prevPos = pos;    // only initialized once
+                if (m_mainWindow.m_mouse.IsMButtonPressed()) {
+                    m_camera.TranslateCamera(pos, prevPos);
+                }
+                if (m_mainWindow.m_mouse.IsRButtonPressed()) {
+                    m_camera.RotateCamera(pos, prevPos);
+                }
+                prevPos = pos;
+                break;
+            }
+            }
+        }
+    }
 }
 
 void Game::Update() {

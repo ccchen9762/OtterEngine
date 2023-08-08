@@ -20,6 +20,7 @@ public:
 	int Start();
 
 private:
+	void HandleInput();
 	void Update();
 
 private:

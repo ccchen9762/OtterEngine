@@ -4,15 +4,12 @@
 
 #include <DirectXMath.h>
 
-struct Vertex {
-	DirectX::XMVECTOR m_position;
-	DirectX::XMFLOAT4 m_color;
-};
+#include "OtterEngine/Common/Vertex.h"
 
 class VertexBuffer : public GraphicsResource
 {
 public:
-	VertexBuffer(const Graphics& graphics, const std::vector<Vertex>& vertices);
+	VertexBuffer(const Graphics& graphics, const void* verticesData, unsigned int stride, size_t size);
 	~VertexBuffer() = default;
 
 	void Bind(const Graphics& graphics) const override;

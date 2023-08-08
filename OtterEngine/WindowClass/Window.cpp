@@ -179,7 +179,11 @@ LRESULT Window::MessageHandler(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam
 	/* ========== Keyboard handling begin ========== */
 	case WM_KEYDOWN:
     case WM_SYSKEYDOWN: {
-		m_keyboard.OnKeyDown(static_cast<unsigned char>(wParam));
+        // lParam bit 30 represents the previous state of key, 1 is down, 0 is up
+        // disabled auto repeat
+        if (!(lParam & 0x40000000)) {
+		    m_keyboard.OnKeyDown(static_cast<unsigned char>(wParam));
+        }
 		break;
     }
 	case WM_KEYUP:

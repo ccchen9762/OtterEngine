@@ -5,7 +5,7 @@
 class VertexShader : public GraphicsResource
 {
 public:
-	VertexShader(const Graphics& graphics);
+	VertexShader(const Graphics& graphics, const std::wstring& filename);
 	~VertexShader() = default;
 
 	void Bind(const Graphics& graphics) const override;

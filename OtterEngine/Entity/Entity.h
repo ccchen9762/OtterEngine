@@ -4,10 +4,9 @@
 
 #include "OtterEngine/Graphics/Resource/GraphicsResource.h"
 #include "OtterEngine/Camera/Camera.h"
-#include "OtterEngine/Common/Math/Vector3.h"
+#include "OtterEngine/Common/Math/MathUtils.h"
 #include "OtterEngine/Common/constants.h"
-
-struct Vertex;
+#include "OtterEngine/Common/Vertex.h"
 
 class Entity
 {

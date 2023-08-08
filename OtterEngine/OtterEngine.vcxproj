@@ -159,9 +159,11 @@
     </FxCompile>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="Common\External\LoadImage.cpp" />
     <ClCompile Include="Common\Math\MathUtils.cpp" />
     <ClCompile Include="Common\Math\Matrix3x3.cpp" />
     <ClCompile Include="Entity\Entity.cpp" />
+    <ClCompile Include="Entity\Plane.cpp" />
     <ClCompile Include="Game\Game.cpp" />
     <ClCompile Include="Camera\Camera.cpp" />
     <ClCompile Include="Graphics\Graphics.cpp" />
@@ -169,6 +171,7 @@
     <ClCompile Include="Graphics\Resource\IndexBuffer.cpp" />
     <ClCompile Include="Graphics\Resource\InputLayout.cpp" />
     <ClCompile Include="Graphics\Resource\PixelShader.cpp" />
+    <ClCompile Include="Graphics\Resource\Texture.cpp" />
     <ClCompile Include="Graphics\Resource\VertexBuffer.cpp" />
     <ClCompile Include="Graphics\Resource\VertexShader.cpp" />
     <ClCompile Include="Imgui\imgui.cpp" />
@@ -189,12 +192,17 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Common\constants.h" />
+    <ClInclude Include="Common\External\FindMedia.h" />
+    <ClInclude Include="Common\External\LoadImage.h" />
+    <ClInclude Include="Common\External\ReadData.h" />
     <ClInclude Include="Common\Math\MathUtils.h" />
     <ClInclude Include="Common\Math\Matrix3x3.h" />
     <ClInclude Include="Common\pch.h" />
     <ClInclude Include="Common\Randomizer.h" />
-    <ClInclude Include="Common\ReadData.h" />
+    <ClInclude Include="Common\DirectX\ReadData.h" />
     <ClInclude Include="Common\Timer.h" />
+    <ClInclude Include="Common\Vertex.h" />
+    <ClInclude Include="Entity\Plane.h" />
     <ClInclude Include="Game\Game.h" />
     <ClInclude Include="Camera\Camera.h" />
     <ClInclude Include="Graphics\Graphics.h" />
@@ -203,6 +211,7 @@
     <ClInclude Include="Graphics\Resource\IndexBuffer.h" />
     <ClInclude Include="Graphics\Resource\InputLayout.h" />
     <ClInclude Include="Graphics\Resource\PixelShader.h" />
+    <ClInclude Include="Graphics\Resource\Texture.h" />
     <ClInclude Include="Graphics\Resource\VertexBuffer.h" />
     <ClInclude Include="Graphics\Resource\VertexShader.h" />
     <ClInclude Include="Imgui\imconfig.h" />
@@ -228,7 +237,19 @@
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Pixel</ShaderType>
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Pixel</ShaderType>
     </FxCompile>
+    <FxCompile Include="Shader\PixelShaderTexture.hlsl">
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Pixel</ShaderType>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Pixel</ShaderType>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Pixel</ShaderType>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Pixel</ShaderType>
+    </FxCompile>
     <FxCompile Include="Shader\VertexShader.hlsl">
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Vertex</ShaderType>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Vertex</ShaderType>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Vertex</ShaderType>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Vertex</ShaderType>
+    </FxCompile>
+    <FxCompile Include="Shader\VertexShaderTexture.hlsl">
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Vertex</ShaderType>
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Vertex</ShaderType>
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Vertex</ShaderType>

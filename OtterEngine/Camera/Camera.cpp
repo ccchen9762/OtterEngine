@@ -26,8 +26,8 @@ void Camera::RotateCamera(Vector3Int position, Vector3Int prevPosition) {
 
 	Vector3 xAxis = CrossProduct(m_orientation, m_up);
 	xAxis.normalize();
-	m_orientation = RotateAroundAxis(m_orientation, xAxis, DirectX::XMConvertToRadians(-rotationX));
-	m_orientation = RotateAroundAxis(m_orientation, m_up, DirectX::XMConvertToRadians(-rotationY));
+	m_orientation = RotateAroundAxis(m_orientation, xAxis, DirectX::XMConvertToRadians(rotationX));
+	m_orientation = RotateAroundAxis(m_orientation, m_up, DirectX::XMConvertToRadians(rotationY));
 
 	SetViewMatrix();
 }

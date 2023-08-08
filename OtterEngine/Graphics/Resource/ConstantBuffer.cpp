@@ -41,8 +41,8 @@ void ConstantBufferTransformation::Update(const Graphics& graphics) const {
 	};
 
 	D3D11_MAPPED_SUBRESOURCE mappedSubResource;
-	GetDeviceContext(graphics)->Map(m_pConstantBuffer.Get(), 0u,
-		D3D11_MAP_WRITE_DISCARD, 0u, &mappedSubResource);
+	DX::ThrowIfFailed(GetDeviceContext(graphics)->Map(m_pConstantBuffer.Get(), 0u,
+		D3D11_MAP_WRITE_DISCARD, 0u, &mappedSubResource));
 	memcpy(mappedSubResource.pData, &cBuffer, sizeof(cBuffer));
 	GetDeviceContext(graphics)->Unmap(m_pConstantBuffer.Get(), 0u);
 }
@@ -71,8 +71,8 @@ void ConstantBufferVertex::Bind(const Graphics& graphics) const {
 void ConstantBufferVertex::Update(const Graphics& graphics) const {
 
 	D3D11_MAPPED_SUBRESOURCE mappedSubResource;
-	GetDeviceContext(graphics)->Map(m_pConstantBuffer.Get(), 0u,
-		D3D11_MAP_WRITE_DISCARD, 0u, &mappedSubResource);
+	DX::ThrowIfFailed(GetDeviceContext(graphics)->Map(m_pConstantBuffer.Get(), 0u,
+		D3D11_MAP_WRITE_DISCARD, 0u, &mappedSubResource));
 	//memcpy(mappedSubResource.pData, &cBuffer, sizeof(cBuffer));
 	GetDeviceContext(graphics)->Unmap(m_pConstantBuffer.Get(), 0u);
 }
@@ -101,8 +101,8 @@ void ConstantBufferPixel::Bind(const Graphics& graphics) const {
 void ConstantBufferPixel::Update(const Graphics& graphics) const {
 
 	D3D11_MAPPED_SUBRESOURCE mappedSubResource;
-	GetDeviceContext(graphics)->Map(m_pConstantBuffer.Get(), 0u,
-		D3D11_MAP_WRITE_DISCARD, 0u, &mappedSubResource);
+	DX::ThrowIfFailed(GetDeviceContext(graphics)->Map(m_pConstantBuffer.Get(), 0u,
+		D3D11_MAP_WRITE_DISCARD, 0u, &mappedSubResource));
 	//memcpy(mappedSubResource.pData, &cBuffer, sizeof(cBuffer));
 	GetDeviceContext(graphics)->Unmap(m_pConstantBuffer.Get(), 0u);
 }

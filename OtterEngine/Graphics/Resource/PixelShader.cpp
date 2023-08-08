@@ -1,10 +1,10 @@
 #include "PixelShader.h"
 
-#include "OtterEngine/Common/ReadData.h"
+#include "OtterEngine/Common/External/ReadData.h"
 
-PixelShader::PixelShader(const Graphics& graphics) {
+PixelShader::PixelShader(const Graphics& graphics, const std::wstring& filename) {
 
-	m_pixelShaderBlob = DX::ReadData(L"PixelShader.cso");
+	m_pixelShaderBlob = DX::ReadData(filename.c_str());
 	
 	DX::ThrowIfFailed(GetDevice(graphics)->CreatePixelShader(m_pixelShaderBlob.data(), m_pixelShaderBlob.size(),
 		nullptr, &m_pPixelShader));

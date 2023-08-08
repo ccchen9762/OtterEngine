@@ -28,6 +28,9 @@
     <ClCompile Include="Entity\Entity.cpp" />
     <ClCompile Include="Common\Math\Matrix3x3.cpp" />
     <ClCompile Include="Common\Math\MathUtils.cpp" />
+    <ClCompile Include="Graphics\Resource\Texture.cpp" />
+    <ClCompile Include="Entity\Plane.cpp" />
+    <ClCompile Include="Common\External\LoadImage.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="WindowClass\Window.h" />
@@ -40,7 +43,7 @@
     <ClInclude Include="Graphics\Graphics.h" />
     <ClInclude Include="Timer\Timer.h" />
     <ClInclude Include="Common\Timer.h" />
-    <ClInclude Include="Common\ReadData.h" />
+    <ClInclude Include="Common\DirectX\ReadData.h" />
     <ClInclude Include="Common\Randomizer.h" />
     <ClInclude Include="Imgui\imgui.h" />
     <ClInclude Include="Imgui\imgui_impl_dx11.h" />
@@ -62,10 +65,18 @@
     <ClInclude Include="Camera\Camera.h" />
     <ClInclude Include="Common\Math\Matrix3x3.h" />
     <ClInclude Include="Common\Math\MathUtils.h" />
+    <ClInclude Include="Graphics\Resource\Texture.h" />
+    <ClInclude Include="Entity\Plane.h" />
+    <ClInclude Include="Common\Vertex.h" />
+    <ClInclude Include="Common\External\ReadData.h" />
+    <ClInclude Include="Common\External\LoadImage.h" />
+    <ClInclude Include="Common\External\FindMedia.h" />
   </ItemGroup>
   <ItemGroup>
     <FxCompile Include="Shader\PixelShader.hlsl" />
     <FxCompile Include="Shader\VertexShader.hlsl" />
+    <FxCompile Include="Shader\VertexShaderTexture.hlsl" />
+    <FxCompile Include="Shader\PixelShaderTexture.hlsl" />
   </ItemGroup>
   <ItemGroup>
     <None Include="imgui.ini" />

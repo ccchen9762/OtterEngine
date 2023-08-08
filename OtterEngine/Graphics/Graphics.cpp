@@ -11,8 +11,8 @@
 #include "Resource/IndexBuffer.h"
 #include "Resource/ConstantBuffer.h"
 
-#include "OtterEngine/Common/Math/Vector3.h"
-#include "OtterEngine/Common/ReadData.h"
+#include "OtterEngine/Common/Math/MathUtils.h"
+#include "OtterEngine/Common/External/ReadData.h"
 #include "OtterEngine/Common/constants.h"
 
 #pragma comment(lib, "d3d11.lib") // definitions of d3d11.h (D3D11CreateDeviceAndSwapChain)

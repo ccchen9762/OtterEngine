@@ -33,12 +33,12 @@ void Entity::Render(const Graphics& graphics) const {
 DirectX::XMMATRIX Entity::GetTransformMatrix() const {
 
 	return //DirectX::XMMatrixRotationRollPitchYaw(m_rotation.x, m_rotation.y, m_rotation.z) *
+		DirectX::XMMatrixScaling(m_scale.x, m_scale.y, m_scale.z) *
 		DirectX::XMMatrixRotationX(m_rotation.x) *
 		DirectX::XMMatrixRotationY(m_rotation.y) *
 		DirectX::XMMatrixRotationZ(m_rotation.z) *
-		DirectX::XMMatrixTranslation(m_translation.x, m_translation.y, m_translation.z) *
-		//DirectX::XMMatrixRotationRollPitchYaw(m_revolution.x, m_revolution.y, m_revolution.z) *
-		DirectX::XMMatrixScaling(m_scale.x, m_scale.y, m_scale.z);
+		DirectX::XMMatrixTranslation(m_translation.x, m_translation.y, m_translation.z);
+		//DirectX::XMMatrixRotationRollPitchYaw(m_revolution.x, m_revolution.y, m_revolution.z);
 }
 
 const DirectX::XMMATRIX& Entity::GetViewProjectionMatrix() const {

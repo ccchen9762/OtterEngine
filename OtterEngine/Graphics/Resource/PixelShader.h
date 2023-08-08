@@ -5,7 +5,7 @@
 class PixelShader : public GraphicsResource
 {
 public:
-	PixelShader(const Graphics& graphics);
+	PixelShader(const Graphics& graphics, const std::wstring& filename);
 	~PixelShader() = default;
 
 	void Bind(const Graphics& graphics) const override;

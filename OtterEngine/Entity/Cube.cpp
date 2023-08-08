@@ -8,14 +8,14 @@
 #include "OtterEngine/Graphics/Resource/ConstantBuffer.h"
 
 const std::vector<Vertex> Cube::s_vertices = {
-	{DirectX::XMVectorSet(-1.0f, -1.0f, -1.0f, 1.0f), DirectX::XMFLOAT4(0.0f, 0.0f, 0.0f, 1.0f)},
-	{DirectX::XMVectorSet( 1.0f, -1.0f, -1.0f, 1.0f), DirectX::XMFLOAT4(1.0f, 0.0f, 0.0f, 1.0f)},
-	{DirectX::XMVectorSet( 1.0f,  1.0f, -1.0f, 1.0f), DirectX::XMFLOAT4(1.0f, 1.0f, 0.0f, 1.0f)},
-	{DirectX::XMVectorSet(-1.0f,  1.0f, -1.0f, 1.0f), DirectX::XMFLOAT4(0.0f, 1.0f, 0.0f, 1.0f)},
-	{DirectX::XMVectorSet(-1.0f, -1.0f,  1.0f, 1.0f), DirectX::XMFLOAT4(0.0f, 0.0f, 1.0f, 1.0f)},
-	{DirectX::XMVectorSet( 1.0f, -1.0f,  1.0f, 1.0f), DirectX::XMFLOAT4(1.0f, 0.0f, 1.0f, 1.0f)},
-	{DirectX::XMVectorSet( 1.0f,  1.0f,  1.0f, 1.0f), DirectX::XMFLOAT4(1.0f, 1.0f, 1.0f, 1.0f)},
-	{DirectX::XMVectorSet(-1.0f,  1.0f,  1.0f, 1.0f), DirectX::XMFLOAT4(0.0f, 1.0f, 1.0f, 1.0f)},
+	{DirectX::XMVectorSet(-0.5f, -0.5f, -0.5f, 1.0f), {0.0f, 0.0f, 0.0f, 1.0f}},
+	{DirectX::XMVectorSet( 0.5f, -0.5f, -0.5f, 1.0f), {1.0f, 0.0f, 0.0f, 1.0f}},
+	{DirectX::XMVectorSet( 0.5f,  0.5f, -0.5f, 1.0f), {1.0f, 1.0f, 0.0f, 1.0f}},
+	{DirectX::XMVectorSet(-0.5f,  0.5f, -0.5f, 1.0f), {0.0f, 1.0f, 0.0f, 1.0f}},
+	{DirectX::XMVectorSet(-0.5f, -0.5f,  0.5f, 1.0f), {0.0f, 0.0f, 1.0f, 1.0f}},
+	{DirectX::XMVectorSet( 0.5f, -0.5f,  0.5f, 1.0f), {1.0f, 0.0f, 1.0f, 1.0f}},
+	{DirectX::XMVectorSet( 0.5f,  0.5f,  0.5f, 1.0f), {1.0f, 1.0f, 1.0f, 1.0f}},
+	{DirectX::XMVectorSet(-0.5f,  0.5f,  0.5f, 1.0f), {0.0f, 1.0f, 1.0f, 1.0f}},
 };
 
 const std::vector<unsigned short> Cube::s_indices = {
@@ -35,14 +35,15 @@ Cube::Cube(const Graphics& graphics, Vector3 rotation, Vector3 translation, Vect
 
 	if (s_commonResources.empty()) {
 		// shaders & layout
-		std::unique_ptr<VertexShader> pVertexShader = std::make_unique<VertexShader>(graphics);
+		std::unique_ptr<VertexShader> pVertexShader = std::make_unique<VertexShader>(graphics, L"VertexShader.cso");
 		const std::vector<uint8_t> vertexShaderBlob = pVertexShader->GetVertexShaderBlob();
 		s_commonResources.push_back(std::move(pVertexShader));
-		s_commonResources.push_back(std::make_unique<PixelShader>(graphics));
+		s_commonResources.push_back(std::make_unique<PixelShader>(graphics, L"PixelShader.cso"));
 		s_commonResources.push_back(std::make_unique<InputLayout>(graphics, vertexShaderBlob));
 
 		// buffers
-		s_commonResources.push_back(std::make_unique<VertexBuffer>(graphics, s_vertices));
+		s_commonResources.push_back(std::make_unique<VertexBuffer>(graphics, 
+			s_vertices.data(), sizeof(Vertex), s_vertices.size()));
 		s_commonResources.push_back(std::make_unique<IndexBuffer>(graphics, s_indices));
 	}
 	
