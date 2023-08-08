@@ -1,4 +1,4 @@
-#include "Triangle.h"
+#include "Line.h"
 
 #include "OtterEngine/Graphics/Resource/VertexShader.h"
 #include "OtterEngine/Graphics/Resource/PixelShader.h"
@@ -7,21 +7,20 @@
 #include "OtterEngine/Graphics/Resource/IndexBuffer.h"
 #include "OtterEngine/Graphics/Resource/ConstantBuffer.h"
 
-const std::vector<Vertex> Triangle::s_vertices = {
-	{DirectX::XMVectorSet( 0.0f,  0.5f,  0.0f, 1.0f), {1.0f, 0.0f, 0.0f, 1.0f}},
-	{DirectX::XMVectorSet( 0.5f, -0.5f,  0.0f, 1.0f), {0.0f, 1.0f, 0.0f, 1.0f}},
-	{DirectX::XMVectorSet(-0.5f, -0.5f,  0.0f, 1.0f), {0.0f, 0.0f, 1.0f, 1.0f}},
+const std::vector<unsigned short> Line::s_indices = {
+	0,1
 };
 
-const std::vector<unsigned short> Triangle::s_indices = {
-	0,1,2
-};
+std::vector<std::unique_ptr<GraphicsResource>> Line::s_commonResources;
 
-std::vector<std::unique_ptr<GraphicsResource>> Triangle::s_commonResources;
-
-Triangle::Triangle(const Graphics& graphics, const Vector3& translation, const Vector3& rotation, const Vector3& scale,
-	const DirectX::XMMATRIX& viewProjectionMatrix, bool isStatic)
+Line::Line(const Graphics& graphics, const Vector3& translation, const Vector3& rotation, const Vector3& scale,
+	const DirectX::XMMATRIX& viewProjectionMatrix, const Color4& color, bool isStatic)
 	: Entity(translation, rotation, scale, s_indices.size(), viewProjectionMatrix, isStatic) {
+
+	m_vertices = {
+		{DirectX::XMVectorSet(0.0f,  0.0f,  0.0f, 1.0f), {color.r, color.g, color.b, color.a}},
+		{DirectX::XMVectorSet(1.0f,  0.0f,  0.0f, 1.0f), {color.r, color.g, color.b, color.a}},
+	};
 
 	if (s_commonResources.empty()) {
 		// shaders & layout
@@ -32,14 +31,15 @@ Triangle::Triangle(const Graphics& graphics, const Vector3& translation, const V
 		s_commonResources.push_back(std::make_unique<InputLayout>(graphics, vertexShaderBlob));
 
 		// buffers
-		s_commonResources.push_back(std::make_unique<VertexBuffer>(graphics, 
-			s_vertices.data(), sizeof(Vertex), s_vertices.size()));
 		s_commonResources.push_back(std::make_unique<IndexBuffer>(graphics, s_indices));
 	}
+
+	m_uniqueResources.push_back(std::make_unique<VertexBuffer>(graphics,
+		m_vertices.data(), sizeof(Vertex), m_vertices.size(), false));
 
 	m_uniqueResources.push_back(std::make_unique<ConstantBufferTransformation>(graphics, *this));
 }
 
-const std::vector<std::unique_ptr<GraphicsResource>>& Triangle::GetCommonResources() const {
+const std::vector<std::unique_ptr<GraphicsResource>>& Line::GetCommonResources() const {
 	return s_commonResources;
 }

@@ -1,7 +1,7 @@
 #include "VertexBuffer.h"
 
-VertexBuffer::VertexBuffer(const Graphics& graphics, const void* verticesData, unsigned int stride, size_t size) :
-	m_vertexBufferStride(stride), m_vertexBufferoffset(0u) {
+VertexBuffer::VertexBuffer(const Graphics& graphics, const void* verticesData, unsigned int stride, size_t size, bool isTriangle) :
+	m_vertexBufferStride(stride), m_vertexBufferoffset(0u), m_isTriangle(isTriangle) {
 	
 	D3D11_BUFFER_DESC vertexBufferDesc = {};
 	vertexBufferDesc.ByteWidth = stride * size; // return total array size in bytes
@@ -20,5 +20,8 @@ void VertexBuffer::Bind(const Graphics& graphics) const {
 	
 	GetDeviceContext(graphics)->IASetVertexBuffers(0u, 1u,
 		m_pVertexBuffer.GetAddressOf(), &m_vertexBufferStride, &m_vertexBufferoffset);
-	GetDeviceContext(graphics)->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
+	if(m_isTriangle)
+		GetDeviceContext(graphics)->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
+	else
+		GetDeviceContext(graphics)->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_LINELIST);
 }

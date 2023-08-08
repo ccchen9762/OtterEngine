@@ -11,8 +11,8 @@
 class Entity
 {
 public:
-	Entity(Vector3 rotation, Vector3 translation, Vector3 revolution, Vector3 scale, size_t indicesSize, 
-		const DirectX::XMMATRIX& viewProjectionMatrix, float speed);
+	Entity(const Vector3& translation, const Vector3& rotation, const Vector3& scale, size_t indicesSize, 
+		const DirectX::XMMATRIX& viewProjectionMatrix, bool isStatic);
 	virtual ~Entity() = default; // make sure derived class destructors are called properly
 
 	virtual void Update();
@@ -25,9 +25,9 @@ private:
 	virtual const std::vector<std::unique_ptr<GraphicsResource>>& GetCommonResources() const = 0;
 
 protected:
-	Vector3 m_rotation;
+	bool m_isStatic;
 	Vector3 m_translation;
-	Vector3 m_revolution;
+	Vector3 m_rotation;
 	Vector3 m_scale;
 	size_t m_indicesSize;
 	const DirectX::XMMATRIX& m_viewProjectionMatrix;

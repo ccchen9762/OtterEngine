@@ -35,5 +35,3 @@ public:
 private:
 	static std::mt19937 s_random;
 };
-
-std::mt19937 Randomizer::s_random;

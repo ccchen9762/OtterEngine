@@ -4,6 +4,8 @@
 #include "imgui_impl_win32.h"
 #include "imgui_impl_dx11.h"
 
+#include "OtterEngine/Game/Game.h"
+
 #include "OtterEngine/Common/constants.h"
 
 ImguiManager::ImguiManager() {
@@ -25,7 +27,7 @@ ImguiManager::~ImguiManager() {
     ImGui::DestroyContext();
 }
 
-void ImguiManager::Update() {
+void ImguiManager::Update(Game& game) {
     // Start the Dear ImGui frame
     ImGui_ImplDX11_NewFrame();
     ImGui_ImplWin32_NewFrame();
@@ -34,10 +36,10 @@ void ImguiManager::Update() {
     if (kShowWindow) {
         ImGui::Begin("Control Panel", &kShowWindow);
 
-        //ImGui::SliderFloat("float", &f, 0.0f, 1.0f);            // Edit 1 float using a slider from 0.0f to 1.0f
-        //ImGui::ColorEdit3("clear color", (float*)&clear_color); // Edit 3 floats representing a color
         ImGuiIO& io = ImGui::GetIO(); (void)io;
         ImGui::Text("Application average %.3f ms/frame (%.1f FPS)", 1000.0f / io.Framerate, io.Framerate);
+        ImGui::Spacing();
+        ImGui::Checkbox("Show Debug items", &game.showDebug);
 
         ImGui::End();
     }

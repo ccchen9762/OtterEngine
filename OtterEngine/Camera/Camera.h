@@ -7,11 +7,12 @@
 class Camera
 {
 public:
-	Camera(Vector3 position, Vector3 orientation, Vector3 up, float fov, float ratio, float nearZ, float farZ, float speed, float angularSpeed);
+	Camera(const Vector3& position, const Vector3& orientation, const Vector3& up, 
+		float fov, float ratio, float nearZ, float farZ, float speed, float angularSpeed);
 	~Camera() = default;
 
-	void TranslateCamera(Vector3Int position, Vector3Int prevPosition);
-	void RotateCamera(Vector3Int position, Vector3Int prevPosition);
+	void TranslateCamera(const Vector3Int& position, const Vector3Int& prevPosition);
+	void RotateCamera(const Vector3Int& position, const Vector3Int& prevPosition);
 	void SetViewMatrix();
 	void SetProjectionMatrix(float fov, float ratio, float near, float far);
 

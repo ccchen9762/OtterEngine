@@ -1,6 +1,6 @@
 #include "Camera.h"
 
-Camera::Camera(Vector3 position, Vector3 orientation, Vector3 up, 
+Camera::Camera(const Vector3& position, const Vector3& orientation, const Vector3& up,
 	float fov, float ratio, float nearZ, float farZ, float speed, float angularSpeed) :
 	m_position(position), m_orientation(orientation), m_up(up),
 	m_speed(speed), m_angularSpeed(angularSpeed) {
@@ -10,7 +10,7 @@ Camera::Camera(Vector3 position, Vector3 orientation, Vector3 up,
 	m_viewProjectionMatrix = m_viewMatrix * m_projectionMatrix;
 }
 
-void Camera::TranslateCamera(Vector3Int position, Vector3Int prevPosition) {
+void Camera::TranslateCamera(const Vector3Int& position, const Vector3Int& prevPosition) {
 	float translateX = m_speed * (position.x - prevPosition.x);
 	float translateY = m_speed * (position.y - prevPosition.y);
 
@@ -20,7 +20,7 @@ void Camera::TranslateCamera(Vector3Int position, Vector3Int prevPosition) {
 	SetViewMatrix();
 }
 
-void Camera::RotateCamera(Vector3Int position, Vector3Int prevPosition) {
+void Camera::RotateCamera(const Vector3Int& position, const Vector3Int& prevPosition) {
 	float rotationX = m_angularSpeed * (position.y - prevPosition.y);
 	float rotationY = m_angularSpeed * (position.x - prevPosition.x);
 

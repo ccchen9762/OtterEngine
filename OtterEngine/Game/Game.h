@@ -9,6 +9,9 @@
 #include "OtterEngine/Camera/Camera.h"
 
 class Game {
+	
+	friend class ImguiManager;
+
 public:
 	Game();
 	~Game() = default;
@@ -28,6 +31,8 @@ private:
 	Window m_mainWindow;
 	bool m_alive;
 	Timer m_timer;
+	std::vector<std::unique_ptr<Entity>> m_debugList;
 	std::vector<std::unique_ptr<Entity>> m_renderList;
 	Camera m_camera;
+	bool showDebug;
 };

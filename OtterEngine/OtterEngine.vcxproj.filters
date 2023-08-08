@@ -31,6 +31,8 @@
     <ClCompile Include="Graphics\Resource\Texture.cpp" />
     <ClCompile Include="Entity\Plane.cpp" />
     <ClCompile Include="Common\External\LoadImage.cpp" />
+    <ClCompile Include="Entity\Line.cpp" />
+    <ClCompile Include="Common\Randomizer.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="WindowClass\Window.h" />
@@ -71,6 +73,7 @@
     <ClInclude Include="Common\External\ReadData.h" />
     <ClInclude Include="Common\External\LoadImage.h" />
     <ClInclude Include="Common\External\FindMedia.h" />
+    <ClInclude Include="Entity\Line.h" />
   </ItemGroup>
   <ItemGroup>
     <FxCompile Include="Shader\PixelShader.hlsl" />

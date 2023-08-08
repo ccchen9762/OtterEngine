@@ -6,10 +6,10 @@
 #include "OtterEngine/Imgui/imgui_impl_win32.h"
 #include "OtterEngine/Imgui/imgui_impl_dx11.h"
 
+#include "OtterEngine/Entity/Line.h"
 #include "OtterEngine/Entity/Triangle.h"
 #include "OtterEngine/Entity/Cube.h"
 #include "OtterEngine/Entity/Plane.h"
-
 
 #include "OtterEngine/Common/Randomizer.h"
 #include "OtterEngine/Common/constants.h"
@@ -19,30 +19,60 @@ Game::Game() :
     m_mainWindow(Window(kDefWndTitle, kRenderWidth, kRenderHeight)), 
     m_alive(true), 
     m_timer(Timer()),
-    m_camera(Vector3(0.0f, 2.0f, 10.0f), Vector3(0.0f, -0.33f, -1.0f), Vector3(0.0f, 1.0f, 0.0f), 
-        DirectX::XM_PIDIV4, kRenderRatio, 0.1f, 100.0f, 0.02f, 0.1f) {
+    m_camera(Vector3(5.0f, 4.0f, 10.0f), Vector3(-0.5f, -0.33f, -1.0f), Vector3(0.0f, 1.0f, 0.0f), 
+        DirectX::XM_PIDIV4, kRenderRatio, 0.1f, 100.0f, 0.02f, 0.1f),
+    showDebug(true) {
 
     Randomizer::Init();
 
-    for (int i = 0; i < 20; i++) {
+    // render debug axis
+    m_debugList.push_back(std::make_unique<Line>(
+        *(m_mainWindow.m_pGraphics),
+        Vector3(0.0f, 0.0f, 0.0f),
+        Vector3(0.0f, 0.0f, 0.0f),
+        Vector3(2.0f, 2.0f, 2.0f),
+        m_camera.GetViewProjectionMatrix(),
+        Color4{1.0f, 0.0f, 0.0f, 1.0f},
+        true
+        ));
+    m_debugList.push_back(std::make_unique<Line>(
+        *(m_mainWindow.m_pGraphics),
+        Vector3(0.0f, 0.0f, 0.0f),
+        Vector3(0.0f, 0.0f, kPI/2),
+        Vector3(2.0f, 2.0f, 2.0f),
+        m_camera.GetViewProjectionMatrix(),
+        Color4{ 0.0f, 1.0f, 0.0f, 1.0f },
+        true
+    ));
+    m_debugList.push_back(std::make_unique<Line>(
+        *(m_mainWindow.m_pGraphics),
+        Vector3(0.0f, 0.0f, 0.0f),
+        Vector3(0.0f, -kPI/2, 0.0f),
+        Vector3(2.0f, 2.0f, 2.0f),
+        m_camera.GetViewProjectionMatrix(),
+        Color4{ 0.0f, 0.0f, 1.0f, 1.0f },
+        true
+    ));
+
+    for (int i = 0; i < 30; i++) {
         m_renderList.push_back(std::make_unique<Cube>(
             *(m_mainWindow.m_pGraphics),
+            Vector3(Randomizer::GetFloat(5.0f, -5.0f), Randomizer::GetFloat(10.0f, 0.0f), Randomizer::GetFloat(-5.0f, -15.0f)),
             Vector3(Randomizer::GetFloat(static_cast<float>(kPI)), Randomizer::GetFloat(static_cast<float>(kPI)), 0.0f),
-            Vector3(Randomizer::GetFloat(5.0f, -5.0f), Randomizer::GetFloat(5.0f, -5.0f), -5.0f),
-            Vector3(0.0f, 0.0f, 0.0f),
             Vector3(1.0f, 1.0f, 1.0f),
             m_camera.GetViewProjectionMatrix(),
-            Randomizer::GetFloat(0.08f, 0.02f)
+            false
         ));
     }
 
     m_renderList.push_back(std::make_unique<Plane>(
         *(m_mainWindow.m_pGraphics),
+        Vector3(0.0f, 0.0f, -10.0f),
         Vector3(0.0f, 0.0f, 0.0f),
-        Vector3(0.0f, -5.0f, -5.0f),
         Vector3(10.0f, 1.0f, 10.0f),
         m_camera.GetViewProjectionMatrix(),
-        L"Texture\\wood.jpg"
+        L"Texture\\wood.jpg",
+        true
     ));
 }
 
@@ -128,12 +158,19 @@ void Game::Update() {
 
     m_mainWindow.m_pGraphics->ClearBuffer(0.1f, 0.1f, 0.1f);
     
+    if(showDebug) {
+        for (int i = 0; i < m_debugList.size(); i++) {
+            m_debugList[i]->Update();
+            m_debugList[i]->Render(*(m_mainWindow.m_pGraphics));
+        }
+    }
+
     for (int i = 0; i < m_renderList.size(); i++) {
         m_renderList[i]->Update();
         m_renderList[i]->Render(*(m_mainWindow.m_pGraphics));
     }
 
-    m_imguiManager.Update();
+    m_imguiManager.Update(*this);
 
     m_mainWindow.m_pGraphics->PostUpdate();
 }

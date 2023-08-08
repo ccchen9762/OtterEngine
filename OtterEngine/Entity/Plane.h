@@ -7,8 +7,8 @@ class Plane : public Entity
 	friend class Entity;
 
 public:
-	Plane(const Graphics& graphics, Vector3 rotation, Vector3 translation, Vector3 scale,
-		const DirectX::XMMATRIX& viewProjectionMatrix, const std::wstring& path);
+	Plane(const Graphics& graphics, const Vector3& translation, const Vector3& rotation, const Vector3& scale,
+		const DirectX::XMMATRIX& viewProjectionMatrix, const std::wstring& path, bool isStatic);
 	~Plane() = default;
 
 private:

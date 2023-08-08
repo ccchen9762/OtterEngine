@@ -1,10 +1,12 @@
 #pragma once
 
+struct Color4 {
+	float r, g, b, a;
+};
+
 struct Vertex {
 	DirectX::XMVECTOR m_position;
-	struct {
-		float r, g, b, a;
-	} m_color;
+	Color4 m_color;
 };
 
 struct VertexTexture {
@@ -13,3 +15,4 @@ struct VertexTexture {
 		float u, v;
 	} m_texcoord;
 };
+
