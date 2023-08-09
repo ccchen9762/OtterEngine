@@ -4,7 +4,7 @@ VertexBuffer::VertexBuffer(const Graphics& graphics, const void* verticesData, u
 	m_vertexBufferStride(stride), m_vertexBufferoffset(0u), m_isTriangle(isTriangle) {
 	
 	D3D11_BUFFER_DESC vertexBufferDesc = {};
-	vertexBufferDesc.ByteWidth = stride * size; // return total array size in bytes
+	vertexBufferDesc.ByteWidth = static_cast<UINT>(stride * size); // return total array size in bytes
 	vertexBufferDesc.Usage = D3D11_USAGE_DEFAULT;
 	vertexBufferDesc.BindFlags = D3D11_BIND_VERTEX_BUFFER;
 	vertexBufferDesc.CPUAccessFlags = 0u;

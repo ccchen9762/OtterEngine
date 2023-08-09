@@ -62,8 +62,8 @@ Graphics::Graphics(HWND hWnd, unsigned int viewportWidth, unsigned int viewportH
 		DX::ThrowIfFailed(m_pDevice->CreateRenderTargetView(pBackBuffer.Get(), nullptr, &m_pRenderTargetView));
 
 	// Initialize viewport
-	m_viewport.Width = viewportWidth;
-	m_viewport.Height = viewportHeight;
+	m_viewport.Width = static_cast<float>(viewportWidth);
+	m_viewport.Height = static_cast<float>(viewportHeight);
 	m_viewport.MinDepth = 0.0f;
 	m_viewport.MaxDepth = 1.0f;
 	m_viewport.TopLeftX = 0.0f;
@@ -117,7 +117,7 @@ void Graphics::ClearBuffer(float red, float green, float blue) {
 }
 
 void Graphics::RenderIndexed(size_t indicesSize) const {
-	m_pDeviceContext->DrawIndexed(indicesSize, 0u, 0u); // draw with index buffer
+	m_pDeviceContext->DrawIndexed(static_cast<UINT>(indicesSize), 0u, 0u); // draw with index buffer
 }
 
 void Graphics::Update() {

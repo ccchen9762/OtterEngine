@@ -17,8 +17,6 @@
 #include <fileapi.h>
 #include <libloaderapi.h>
 
-#define MAX_PATH 128
-
 namespace DX {
     inline void FindMediaFile(
         _Out_writes_(cchDest) wchar_t* strDestPath,

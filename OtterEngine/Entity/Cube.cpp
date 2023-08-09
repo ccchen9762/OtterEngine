@@ -43,7 +43,7 @@ Cube::Cube(const Graphics& graphics, const Vector3& translation, const Vector3& 
 
 		// buffers
 		s_commonResources.push_back(std::make_unique<VertexBuffer>(graphics, 
-			s_vertices.data(), sizeof(Vertex), s_vertices.size()));
+			s_vertices.data(), static_cast<unsigned int>(sizeof(Vertex)), s_vertices.size()));
 		s_commonResources.push_back(std::make_unique<IndexBuffer>(graphics, s_indices));
 	}
 	

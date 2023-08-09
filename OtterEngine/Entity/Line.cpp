@@ -35,7 +35,7 @@ Line::Line(const Graphics& graphics, const Vector3& translation, const Vector3& 
 	}
 
 	m_uniqueResources.push_back(std::make_unique<VertexBuffer>(graphics,
-		m_vertices.data(), sizeof(Vertex), m_vertices.size(), false));
+		m_vertices.data(), static_cast<unsigned int>(sizeof(Vertex)), m_vertices.size(), false));
 
 	m_uniqueResources.push_back(std::make_unique<ConstantBufferTransformation>(graphics, *this));
 }
