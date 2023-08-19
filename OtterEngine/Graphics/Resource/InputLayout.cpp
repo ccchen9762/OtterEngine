@@ -3,7 +3,7 @@
 // AlignedByteOffset can use D3D11_APPEND_ALIGNED_ELEMENT to automatically assign
 const D3D11_INPUT_ELEMENT_DESC InputLayout::s_inputElementDesc[] = {
 	{ "SV_Position", 0, DXGI_FORMAT_R32G32B32A32_FLOAT, 0, 0,   D3D11_INPUT_PER_VERTEX_DATA, 0 },
-	{ "COLOR",		 0, DXGI_FORMAT_R32G32B32A32_FLOAT, 0, 16u, D3D11_INPUT_PER_VERTEX_DATA, 0 }, // semantic takes COLOR instead of COLOR0 ?
+	{ "COLOR",		 0, DXGI_FORMAT_R32G32B32A32_FLOAT, 0, 16u, D3D11_INPUT_PER_VERTEX_DATA, 0 }, // semantic should be without number, e.g. no COLOR0
 };
 
 const D3D11_INPUT_ELEMENT_DESC InputLayout::s_inputElementDescTextured[] = {
@@ -11,15 +11,31 @@ const D3D11_INPUT_ELEMENT_DESC InputLayout::s_inputElementDescTextured[] = {
 	{ "TEXCOORD",	 0, DXGI_FORMAT_R32G32_FLOAT,		0, 16u, D3D11_INPUT_PER_VERTEX_DATA, 0 },
 };
 
-InputLayout::InputLayout(const Graphics& graphics, const std::vector<uint8_t>& vertexShaderBlob, bool isTextured) {
+const D3D11_INPUT_ELEMENT_DESC InputLayout::s_inputElementDescPhong[] = {
+	{ "SV_Position", 0, DXGI_FORMAT_R32G32B32A32_FLOAT, 0, 0,   D3D11_INPUT_PER_VERTEX_DATA, 0 },
+	{ "COLOR",		 0, DXGI_FORMAT_R32G32B32A32_FLOAT,	0, 16u, D3D11_INPUT_PER_VERTEX_DATA, 0 },
+	{ "NORMAL",		 0, DXGI_FORMAT_R32G32B32_FLOAT,	0, 32u, D3D11_INPUT_PER_VERTEX_DATA, 0 },
+};
 
-	if (isTextured) {
-		DX::ThrowIfFailed(GetDevice(graphics)->CreateInputLayout(s_inputElementDescTextured, sizeof(s_inputElementDescTextured) / sizeof(D3D11_INPUT_ELEMENT_DESC),
-			vertexShaderBlob.data(), vertexShaderBlob.size(), &m_pInputLayout));
-	}
-	else {
+InputLayout::InputLayout(const Graphics& graphics, const std::vector<uint8_t>& vertexShaderBlob, LayoutType type) {
+
+	switch (type)
+	{
+	case InputLayout::LayoutType::Basic: {
 		DX::ThrowIfFailed(GetDevice(graphics)->CreateInputLayout(s_inputElementDesc, sizeof(s_inputElementDesc) / sizeof(D3D11_INPUT_ELEMENT_DESC),
 			vertexShaderBlob.data(), vertexShaderBlob.size(), &m_pInputLayout));
+		break;
+	}
+	case InputLayout::LayoutType::Texture: {
+		DX::ThrowIfFailed(GetDevice(graphics)->CreateInputLayout(s_inputElementDescTextured, sizeof(s_inputElementDescTextured) / sizeof(D3D11_INPUT_ELEMENT_DESC),
+			vertexShaderBlob.data(), vertexShaderBlob.size(), &m_pInputLayout));
+		break;
+	}
+	case InputLayout::LayoutType::Phong: {
+		DX::ThrowIfFailed(GetDevice(graphics)->CreateInputLayout(s_inputElementDescPhong, sizeof(s_inputElementDescPhong) / sizeof(D3D11_INPUT_ELEMENT_DESC),
+			vertexShaderBlob.data(), vertexShaderBlob.size(), &m_pInputLayout));
+		break;
+	}
 	}
 }
 

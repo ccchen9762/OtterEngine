@@ -12,6 +12,7 @@ public:
 	~Camera() = default;
 
 	void TranslateCamera(const Vector3Int& position, const Vector3Int& prevPosition);
+	void TranslateCameraZ(bool wheelUp);
 	void RotateCamera(const Vector3Int& position, const Vector3Int& prevPosition);
 	void SetViewMatrix();
 	void SetProjectionMatrix(float fov, float ratio, float near, float far);

@@ -7,7 +7,7 @@
 #include "OtterEngine/Graphics/Resource/IndexBuffer.h"
 #include "OtterEngine/Graphics/Resource/ConstantBuffer.h"
 
-const std::vector<Vertex> Triangle::s_vertices = {
+const std::vector<VertexSimple> Triangle::s_vertices = {
 	{DirectX::XMVectorSet( 0.0f,  0.5f,  0.0f, 1.0f), {1.0f, 0.0f, 0.0f, 1.0f}},
 	{DirectX::XMVectorSet( 0.5f, -0.5f,  0.0f, 1.0f), {0.0f, 1.0f, 0.0f, 1.0f}},
 	{DirectX::XMVectorSet(-0.5f, -0.5f,  0.0f, 1.0f), {0.0f, 0.0f, 1.0f, 1.0f}},
@@ -25,15 +25,15 @@ Triangle::Triangle(const Graphics& graphics, const Vector3& translation, const V
 
 	if (s_commonResources.empty()) {
 		// shaders & layout
-		std::unique_ptr<VertexShader> pVertexShader = std::make_unique<VertexShader>(graphics, L"VertexShader.cso");
+		std::unique_ptr<VertexShader> pVertexShader = std::make_unique<VertexShader>(graphics, L"GouraudVertexShader.cso");
 		const std::vector<uint8_t> vertexShaderBlob = pVertexShader->GetVertexShaderBlob();
 		s_commonResources.push_back(std::move(pVertexShader));
-		s_commonResources.push_back(std::make_unique<PixelShader>(graphics, L"PixelShader.cso"));
+		s_commonResources.push_back(std::make_unique<PixelShader>(graphics, L"GouraudPixelShader.cso"));
 		s_commonResources.push_back(std::make_unique<InputLayout>(graphics, vertexShaderBlob));
 
 		// buffers
 		s_commonResources.push_back(std::make_unique<VertexBuffer>(graphics, 
-			s_vertices.data(), static_cast<unsigned int>(sizeof(Vertex)), s_vertices.size()));
+			s_vertices.data(), static_cast<unsigned int>(sizeof(VertexSimple)), s_vertices.size()));
 		s_commonResources.push_back(std::make_unique<IndexBuffer>(graphics, s_indices));
 	}
 

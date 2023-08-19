@@ -5,6 +5,7 @@
 #include "OtterEngine/Imgui/ImguiManager.h" 
 #include "OtterEngine/WindowClass/Window.h"
 #include "OtterEngine/Common/Timer.h"
+#include "OtterEngine/Light/PointLight.h"
 #include "OtterEngine/Entity/Entity.h"
 #include "OtterEngine/Camera/Camera.h"
 
@@ -31,6 +32,7 @@ private:
 	Window m_mainWindow;
 	bool m_alive;
 	Timer m_timer;
+	std::vector<std::unique_ptr<PointLight>> m_lightList;
 	std::vector<std::unique_ptr<Entity>> m_debugList;
 	std::vector<std::unique_ptr<Entity>> m_renderList;
 	Camera m_camera;

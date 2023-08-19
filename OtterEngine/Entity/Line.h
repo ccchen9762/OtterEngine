@@ -15,7 +15,7 @@ private:
 	const std::vector<std::unique_ptr<GraphicsResource>>& GetCommonResources() const override;
 
 private:
-	std::vector<Vertex> m_vertices;
+	std::vector<VertexSimple> m_vertices;
 	static const std::vector<unsigned short> s_indices;
 
 	static std::vector<std::unique_ptr<GraphicsResource>> s_commonResources;

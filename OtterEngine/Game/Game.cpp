@@ -54,6 +54,11 @@ Game::Game() :
         true
     ));
 
+    m_lightList.push_back(std::make_unique<PointLight>(*(m_mainWindow.m_pGraphics), 
+        DirectX::XMFLOAT4{ 0.0f, 2.0f, 0.0f, 1.0f }, 
+        Color4{ 1.0f, 0.5f, 0.8f, 1.0f }, 
+        1.0f));
+
     for (int i = 0; i < 30; i++) {
         m_renderList.push_back(std::make_unique<Cube>(
             *(m_mainWindow.m_pGraphics),
@@ -124,12 +129,14 @@ void Game::HandleInput() {
                 --test;
                 const std::wstring title = std::to_wstring(test);
                 m_mainWindow.setTitle(title);
+                m_camera.TranslateCameraZ(false);
                 break;
             }
             case Mouse::MouseEvent::Type::WheelUp: {
                 ++test;
                 const std::wstring title = std::to_wstring(test);
                 m_mainWindow.setTitle(title);
+                m_camera.TranslateCameraZ(true);
                 break;
             }
             case Mouse::MouseEvent::Type::Move: {
@@ -137,7 +144,7 @@ void Game::HandleInput() {
                 const std::wstring title = L"X: " + std::to_wstring(pos.x) + L", Y: " + std::to_wstring(pos.y);
                 m_mainWindow.setTitle(title);
 
-                static Vector3Int prevPos = pos;    // only initialized once
+                static Vector3Int prevPos = pos; // static will only be initialized once
                 if (m_mainWindow.m_mouse.IsMButtonPressed()) {
                     m_camera.TranslateCamera(pos, prevPos);
                 }
@@ -158,6 +165,8 @@ void Game::Update() {
 
     m_mainWindow.m_pGraphics->ClearBuffer(0.1f, 0.1f, 0.1f);
     
+    m_lightList[0]->Bind(*(m_mainWindow.m_pGraphics));
+
     if(showDebug) {
         for (int i = 0; i < m_debugList.size(); i++) {
             m_debugList[i]->Update();
@@ -170,7 +179,16 @@ void Game::Update() {
         m_renderList[i]->Render(*(m_mainWindow.m_pGraphics));
     }
 
+    // Start the Dear ImGui frame
+    ImGui_ImplDX11_NewFrame();
+    ImGui_ImplWin32_NewFrame();
+    ImGui::NewFrame();
+
     m_imguiManager.Update(*this);
+    m_lightList[0]->ShowControlWindow();
+
+    ImGui::Render();
+    ImGui_ImplDX11_RenderDrawData(ImGui::GetDrawData());
 
     m_mainWindow.m_pGraphics->PostUpdate();
 }

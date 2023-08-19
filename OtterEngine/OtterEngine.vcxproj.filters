@@ -33,6 +33,7 @@
     <ClCompile Include="Common\External\LoadImage.cpp" />
     <ClCompile Include="Entity\Line.cpp" />
     <ClCompile Include="Common\Randomizer.cpp" />
+    <ClCompile Include="Light\PointLight.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="WindowClass\Window.h" />
@@ -76,14 +77,15 @@
     <ClInclude Include="Entity\Line.h" />
     <ClInclude Include="Imgui\imstb_rectpack.h" />
     <ClInclude Include="Imgui\imstb_truetype.h" />
+    <ClInclude Include="Light\PointLight.h" />
   </ItemGroup>
   <ItemGroup>
-    <FxCompile Include="Shader\PixelShader.hlsl" />
-    <FxCompile Include="Shader\VertexShader.hlsl" />
-    <FxCompile Include="Shader\VertexShaderTexture.hlsl" />
-    <FxCompile Include="Shader\PixelShaderTexture.hlsl" />
-    <FxCompile Include="Shader\VertexShaderPhong.hlsl" />
-    <FxCompile Include="Shader\PixelShaderPhong.hlsl" />
+    <FxCompile Include="Shader\GouraudPixelShader.hlsl" />
+    <FxCompile Include="Shader\GouraudVertexShader.hlsl" />
+    <FxCompile Include="Shader\TextureVertexShader.hlsl" />
+    <FxCompile Include="Shader\TexturePixelShader.hlsl" />
+    <FxCompile Include="Shader\PhongVertexShader.hlsl" />
+    <FxCompile Include="Shader\PhongPixelShader.hlsl" />
   </ItemGroup>
   <ItemGroup>
     <None Include="imgui.ini" />

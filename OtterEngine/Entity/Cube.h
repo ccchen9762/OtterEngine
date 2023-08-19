@@ -12,11 +12,12 @@ public:
 	~Cube() = default;
 
 private:
+	void static GenerateVertices();
 	const std::vector<std::unique_ptr<GraphicsResource>>& GetCommonResources() const override;
 
 private:
-	static const std::vector<Vertex> s_vertices;
-	static const std::vector<unsigned short> s_indices;
+	static std::vector<Vertex> s_vertices;
+	static std::vector<unsigned short> s_indices;
 
 	static std::vector<std::unique_ptr<GraphicsResource>> s_commonResources;
 };

@@ -1,5 +1,9 @@
 #pragma once
 
+struct Normal {
+	float x, y, z;
+};
+
 struct Color4 {
 	float r, g, b, a;
 };
@@ -7,6 +11,7 @@ struct Color4 {
 struct Vertex {
 	DirectX::XMVECTOR m_position;
 	Color4 m_color;
+	Normal m_normal;
 };
 
 struct VertexTexture {
@@ -14,5 +19,10 @@ struct VertexTexture {
 	struct {
 		float u, v;
 	} m_texcoord;
+};
+
+struct VertexSimple {
+	DirectX::XMVECTOR m_position;
+	Color4 m_color;
 };
 

@@ -28,10 +28,7 @@ ImguiManager::~ImguiManager() {
 }
 
 void ImguiManager::Update(Game& game) {
-    // Start the Dear ImGui frame
-    ImGui_ImplDX11_NewFrame();
-    ImGui_ImplWin32_NewFrame();
-    ImGui::NewFrame();
+    
 
     if (kShowWindow) {
         ImGui::Begin("Control Panel", &kShowWindow);
@@ -44,6 +41,5 @@ void ImguiManager::Update(Game& game) {
         ImGui::End();
     }
 
-    ImGui::Render();
-    ImGui_ImplDX11_RenderDrawData(ImGui::GetDrawData());
+    
 }

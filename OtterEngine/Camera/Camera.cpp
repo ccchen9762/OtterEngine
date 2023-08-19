@@ -20,6 +20,15 @@ void Camera::TranslateCamera(const Vector3Int& position, const Vector3Int& prevP
 	SetViewMatrix();
 }
 
+void Camera::TranslateCameraZ(bool wheelUp) {
+	float translateZ = wheelUp ? 1.0f : -1.0f;
+	translateZ *= m_speed * 50.0f;
+
+	m_position += translateZ * m_orientation;
+
+	SetViewMatrix();
+}
+
 void Camera::RotateCamera(const Vector3Int& position, const Vector3Int& prevPosition) {
 	float rotationX = m_angularSpeed * (position.y - prevPosition.y);
 	float rotationY = m_angularSpeed * (position.x - prevPosition.x);

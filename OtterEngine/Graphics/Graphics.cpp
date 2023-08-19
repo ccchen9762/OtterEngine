@@ -16,6 +16,7 @@
 #include "OtterEngine/Common/constants.h"
 
 #pragma comment(lib, "d3d11.lib") // definitions of d3d11.h (D3D11CreateDeviceAndSwapChain)
+#pragma comment(lib, "d3d12.lib") // definitions of d3d11.h (D3D11CreateDeviceAndSwapChain)
 
 // IA = input assembler -> vertex buffer + index buffer
 // OM = output merger
