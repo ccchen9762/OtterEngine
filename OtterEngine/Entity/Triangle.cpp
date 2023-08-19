@@ -7,7 +7,7 @@
 #include "OtterEngine/Graphics/Resource/IndexBuffer.h"
 #include "OtterEngine/Graphics/Resource/ConstantBuffer.h"
 
-const std::vector<VertexSimple> Triangle::s_vertices = {
+const std::vector<VertexBasic> Triangle::s_vertices = {
 	{DirectX::XMVectorSet( 0.0f,  0.5f,  0.0f, 1.0f), {1.0f, 0.0f, 0.0f, 1.0f}},
 	{DirectX::XMVectorSet( 0.5f, -0.5f,  0.0f, 1.0f), {0.0f, 1.0f, 0.0f, 1.0f}},
 	{DirectX::XMVectorSet(-0.5f, -0.5f,  0.0f, 1.0f), {0.0f, 0.0f, 1.0f, 1.0f}},
@@ -33,7 +33,7 @@ Triangle::Triangle(const Graphics& graphics, const Vector3& translation, const V
 
 		// buffers
 		s_commonResources.push_back(std::make_unique<VertexBuffer>(graphics, 
-			s_vertices.data(), static_cast<unsigned int>(sizeof(VertexSimple)), s_vertices.size()));
+			s_vertices.data(), static_cast<unsigned int>(sizeof(VertexBasic)), s_vertices.size()));
 		s_commonResources.push_back(std::make_unique<IndexBuffer>(graphics, s_indices));
 	}
 

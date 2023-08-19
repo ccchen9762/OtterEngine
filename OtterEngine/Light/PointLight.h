@@ -4,6 +4,7 @@
 
 #include "OtterEngine/Graphics/Graphics.h"
 #include "OtterEngine/Graphics/Resource/ConstantBuffer.h"
+#include "OtterEngine/Entity/DebugEntity/DebugSphere.h"
 #include "OtterEngine/Common/Vertex.h"
 
 class PointLight {
@@ -14,14 +15,16 @@ private:
 	};
 
 public:
-	PointLight(const Graphics& graphics, const DirectX::XMFLOAT4& position, const Color4& color, float scale);
+	PointLight(const Graphics& graphics, const DirectX::XMFLOAT4& position, const Color4& color, float scale,
+		const DirectX::XMMATRIX& viewProjectionMatrix);
 
-	void Bind(const Graphics& graphics) const;
-	void Render(const Graphics& graphics) const;
+	void Update(const Graphics& graphics) const;
+	void Render(const Graphics& graphics);
 	void ShowControlWindow();
 
 private:
 	LightBuffer m_lightBuffer;
 	float m_scale;
-	ConstantBufferPixel<LightBuffer> constantBufferPixel;
+	ConstantBufferPixel<LightBuffer> m_constantBufferPixel;
+	DebugSphere m_sphereMesh;
 };

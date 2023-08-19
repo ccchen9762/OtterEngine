@@ -20,6 +20,8 @@ public:
 
 	DirectX::XMMATRIX GetTransformMatrix() const;
 	const DirectX::XMMATRIX& GetViewProjectionMatrix() const;
+
+	void Translate(const Vector3& translation) { m_translation = translation; }
 	
 private:
 	virtual const std::vector<std::unique_ptr<GraphicsResource>>& GetCommonResources() const = 0;

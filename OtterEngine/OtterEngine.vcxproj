@@ -163,8 +163,9 @@
     <ClCompile Include="Common\Math\MathUtils.cpp" />
     <ClCompile Include="Common\Math\Matrix3x3.cpp" />
     <ClCompile Include="Common\Randomizer.cpp" />
+    <ClCompile Include="Entity\DebugEntity\DebugSphere.cpp" />
     <ClCompile Include="Entity\Entity.cpp" />
-    <ClCompile Include="Entity\Line.cpp" />
+    <ClCompile Include="Entity\DebugEntity\DebugLine.cpp" />
     <ClCompile Include="Entity\Plane.cpp" />
     <ClCompile Include="Entity\Sphere.cpp" />
     <ClCompile Include="Game\Game.cpp" />
@@ -206,7 +207,8 @@
     <ClInclude Include="Common\DirectX\ReadData.h" />
     <ClInclude Include="Common\Timer.h" />
     <ClInclude Include="Common\Vertex.h" />
-    <ClInclude Include="Entity\Line.h" />
+    <ClInclude Include="Entity\DebugEntity\DebugSphere.h" />
+    <ClInclude Include="Entity\DebugEntity\DebugLine.h" />
     <ClInclude Include="Entity\Plane.h" />
     <ClInclude Include="Entity\Sphere.h" />
     <ClInclude Include="Game\Game.h" />

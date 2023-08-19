@@ -21,7 +21,7 @@ struct VertexTexture {
 	} m_texcoord;
 };
 
-struct VertexSimple {
+struct VertexBasic {
 	DirectX::XMVECTOR m_position;
 	Color4 m_color;
 };

@@ -6,7 +6,7 @@
 #include "OtterEngine/Imgui/imgui_impl_win32.h"
 #include "OtterEngine/Imgui/imgui_impl_dx11.h"
 
-#include "OtterEngine/Entity/Line.h"
+#include "OtterEngine/Entity/DebugEntity/DebugLine.h"
 #include "OtterEngine/Entity/Triangle.h"
 #include "OtterEngine/Entity/Cube.h"
 #include "OtterEngine/Entity/Sphere.h"
@@ -27,7 +27,7 @@ Game::Game() :
     Randomizer::Init();
 
     // render debug axis
-    m_debugList.push_back(std::make_unique<Line>(
+    m_debugList.push_back(std::make_unique<DebugLine>(
         *(m_mainWindow.m_pGraphics),
         Vector3(0.0f, 0.0f, 0.0f),
         Vector3(0.0f, 0.0f, 0.0f),
@@ -36,7 +36,7 @@ Game::Game() :
         Color4{1.0f, 0.0f, 0.0f, 1.0f},
         true
         ));
-    m_debugList.push_back(std::make_unique<Line>(
+    m_debugList.push_back(std::make_unique<DebugLine>(
         *(m_mainWindow.m_pGraphics),
         Vector3(0.0f, 0.0f, 0.0f),
         Vector3(0.0f, 0.0f, static_cast<float>(kPI/2)),
@@ -45,7 +45,7 @@ Game::Game() :
         Color4{ 0.0f, 1.0f, 0.0f, 1.0f },
         true
     ));
-    m_debugList.push_back(std::make_unique<Line>(
+    m_debugList.push_back(std::make_unique<DebugLine>(
         *(m_mainWindow.m_pGraphics),
         Vector3(0.0f, 0.0f, 0.0f),
         Vector3(0.0f, static_cast<float>(-kPI/2), 0.0f),
@@ -58,7 +58,7 @@ Game::Game() :
     m_lightList.push_back(std::make_unique<PointLight>(*(m_mainWindow.m_pGraphics), 
         DirectX::XMFLOAT4{ 0.0f, 2.0f, 0.0f, 1.0f }, 
         Color4{ 1.0f, 0.5f, 0.8f, 1.0f }, 
-        1.0f));
+        1.0f, m_camera.GetViewProjectionMatrix()));
 
     for (int i = 0; i < 30; i++) {
         m_renderList.push_back(std::make_unique<Cube>(
@@ -78,7 +78,7 @@ Game::Game() :
             Vector3(Randomizer::GetFloat(static_cast<float>(kPI)), Randomizer::GetFloat(static_cast<float>(kPI)), 0.0f),
             Vector3(1.0f, 1.0f, 1.0f),
             m_camera.GetViewProjectionMatrix(),
-            false, 20
+            false
         ));
     }
 
@@ -177,7 +177,7 @@ void Game::Update() {
 
     m_mainWindow.m_pGraphics->ClearBuffer(0.1f, 0.1f, 0.1f);
     
-    m_lightList[0]->Bind(*(m_mainWindow.m_pGraphics));
+    m_lightList[0]->Update(*(m_mainWindow.m_pGraphics));
 
     if(showDebug) {
         for (int i = 0; i < m_debugList.size(); i++) {
@@ -190,6 +190,9 @@ void Game::Update() {
         m_renderList[i]->Update();
         m_renderList[i]->Render(*(m_mainWindow.m_pGraphics));
     }
+
+    m_lightList[0]->Render(*(m_mainWindow.m_pGraphics));
+
 
     // Start the Dear ImGui frame
     ImGui_ImplDX11_NewFrame();
