@@ -24,10 +24,10 @@ Line::Line(const Graphics& graphics, const Vector3& translation, const Vector3& 
 
 	if (s_commonResources.empty()) {
 		// shaders & layout
-		std::unique_ptr<VertexShader> pVertexShader = std::make_unique<VertexShader>(graphics, L"GouraudVertexShader.cso");
+		std::unique_ptr<VertexShader> pVertexShader = std::make_unique<VertexShader>(graphics, L"BasicVertexShader.cso");
 		const std::vector<uint8_t> vertexShaderBlob = pVertexShader->GetVertexShaderBlob();
 		s_commonResources.push_back(std::move(pVertexShader));
-		s_commonResources.push_back(std::make_unique<PixelShader>(graphics, L"GouraudPixelShader.cso"));
+		s_commonResources.push_back(std::make_unique<PixelShader>(graphics, L"BasicPixelShader.cso"));
 		s_commonResources.push_back(std::make_unique<InputLayout>(graphics, vertexShaderBlob));
 
 		// buffers

@@ -17,7 +17,7 @@ Cube::Cube(const Graphics& graphics, const Vector3& translation, const Vector3& 
 	: Entity(translation, rotation, scale, s_indices.size(), viewProjectionMatrix, isStatic) {
 
 	if (s_commonResources.empty()) {
-		GenerateVertices(); // generate static vertices and indices
+		GenerateMesh(); // generate static vertices and indices
 		
 		// shaders & layout
 		std::unique_ptr<VertexShader> pVertexShader = std::make_unique<VertexShader>(graphics, L"PhongVertexShader.cso");
@@ -35,7 +35,7 @@ Cube::Cube(const Graphics& graphics, const Vector3& translation, const Vector3& 
 	m_uniqueResources.push_back(std::make_unique<ConstantBufferTransformation>(graphics, *this));
 }
 
-void Cube::GenerateVertices() {
+void Cube::GenerateMesh() {
 	const DirectX::XMVECTOR verticesPosition[8] = {
 		{DirectX::XMVectorSet(-0.5f, -0.5f, -0.5f,  1.0f)},
 		{DirectX::XMVectorSet( 0.5f, -0.5f, -0.5f,  1.0f)},
@@ -57,12 +57,12 @@ void Cube::GenerateVertices() {
 	};
 
 	const Color4 verticesColor[6] = {
-		{1.0f, 1.0f, 1.0f, 1.0f},
-		{1.0f, 1.0f, 1.0f, 1.0f},
-		{1.0f, 1.0f, 1.0f, 1.0f},
-		{1.0f, 1.0f, 1.0f, 1.0f},
-		{1.0f, 1.0f, 1.0f, 1.0f},
-		{1.0f, 1.0f, 1.0f, 1.0f},
+		{1.0f, 1.0f, 0.0f, 1.0f},
+		{1.0f, 0.0f, 1.0f, 1.0f},
+		{0.0f, 1.0f, 1.0f, 1.0f},
+		{1.0f, 0.0f, 0.0f, 1.0f},
+		{0.0f, 1.0f, 0.0f, 1.0f},
+		{0.0f, 0.0f, 1.0f, 1.0f},
 	};
 
 	const Normal verticesNormal[6] = {

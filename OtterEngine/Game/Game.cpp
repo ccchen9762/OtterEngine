@@ -9,6 +9,7 @@
 #include "OtterEngine/Entity/Line.h"
 #include "OtterEngine/Entity/Triangle.h"
 #include "OtterEngine/Entity/Cube.h"
+#include "OtterEngine/Entity/Sphere.h"
 #include "OtterEngine/Entity/Plane.h"
 
 #include "OtterEngine/Common/Randomizer.h"
@@ -67,6 +68,17 @@ Game::Game() :
             Vector3(1.0f, 1.0f, 1.0f),
             m_camera.GetViewProjectionMatrix(),
             false
+        ));
+    }
+
+    for (int i = 0; i < 10; i++) {
+        m_renderList.push_back(std::make_unique<Sphere>(
+            *(m_mainWindow.m_pGraphics),
+            Vector3(Randomizer::GetFloat(5.0f, -5.0f), Randomizer::GetFloat(10.0f, 0.0f), Randomizer::GetFloat(1.0f, -9.0f)),
+            Vector3(Randomizer::GetFloat(static_cast<float>(kPI)), Randomizer::GetFloat(static_cast<float>(kPI)), 0.0f),
+            Vector3(1.0f, 1.0f, 1.0f),
+            m_camera.GetViewProjectionMatrix(),
+            false, 20
         ));
     }
 

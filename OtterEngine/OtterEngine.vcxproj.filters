@@ -34,6 +34,7 @@
     <ClCompile Include="Entity\Line.cpp" />
     <ClCompile Include="Common\Randomizer.cpp" />
     <ClCompile Include="Light\PointLight.cpp" />
+    <ClCompile Include="Entity\Sphere.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="WindowClass\Window.h" />
@@ -78,6 +79,7 @@
     <ClInclude Include="Imgui\imstb_rectpack.h" />
     <ClInclude Include="Imgui\imstb_truetype.h" />
     <ClInclude Include="Light\PointLight.h" />
+    <ClInclude Include="Entity\Sphere.h" />
   </ItemGroup>
   <ItemGroup>
     <FxCompile Include="Shader\GouraudPixelShader.hlsl" />
@@ -86,6 +88,8 @@
     <FxCompile Include="Shader\TexturePixelShader.hlsl" />
     <FxCompile Include="Shader\PhongVertexShader.hlsl" />
     <FxCompile Include="Shader\PhongPixelShader.hlsl" />
+    <FxCompile Include="Shader\BasicVertexShader.hlsl" />
+    <FxCompile Include="Shader\BasicPixelShader.hlsl" />
   </ItemGroup>
   <ItemGroup>
     <None Include="imgui.ini" />

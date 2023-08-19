@@ -166,6 +166,7 @@
     <ClCompile Include="Entity\Entity.cpp" />
     <ClCompile Include="Entity\Line.cpp" />
     <ClCompile Include="Entity\Plane.cpp" />
+    <ClCompile Include="Entity\Sphere.cpp" />
     <ClCompile Include="Game\Game.cpp" />
     <ClCompile Include="Camera\Camera.cpp" />
     <ClCompile Include="Graphics\Graphics.cpp" />
@@ -207,6 +208,7 @@
     <ClInclude Include="Common\Vertex.h" />
     <ClInclude Include="Entity\Line.h" />
     <ClInclude Include="Entity\Plane.h" />
+    <ClInclude Include="Entity\Sphere.h" />
     <ClInclude Include="Game\Game.h" />
     <ClInclude Include="Camera\Camera.h" />
     <ClInclude Include="Graphics\Graphics.h" />
@@ -238,6 +240,18 @@
     <ClInclude Include="WindowClass\Window.h" />
   </ItemGroup>
   <ItemGroup>
+    <FxCompile Include="Shader\BasicPixelShader.hlsl">
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Pixel</ShaderType>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Pixel</ShaderType>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Pixel</ShaderType>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Pixel</ShaderType>
+    </FxCompile>
+    <FxCompile Include="Shader\BasicVertexShader.hlsl">
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Vertex</ShaderType>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Vertex</ShaderType>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Vertex</ShaderType>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Vertex</ShaderType>
+    </FxCompile>
     <FxCompile Include="Shader\GouraudPixelShader.hlsl">
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Pixel</ShaderType>
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Pixel</ShaderType>
