@@ -6,7 +6,7 @@ class InputLayout : public GraphicsResource
 {
 public:
 	enum class LayoutType {
-		Basic, Texture, Shading
+		Basic, Texture, Shading, TextureShading
 	};
 
 public:
@@ -19,5 +19,6 @@ private:
 	Microsoft::WRL::ComPtr<ID3D11InputLayout> m_pInputLayout;
 	static const D3D11_INPUT_ELEMENT_DESC s_inputElementDesc[];
 	static const D3D11_INPUT_ELEMENT_DESC s_inputElementDescTextured[];
-	static const D3D11_INPUT_ELEMENT_DESC s_inputElementDescPhong[];
+	static const D3D11_INPUT_ELEMENT_DESC s_inputElementDescShading[];
+	static const D3D11_INPUT_ELEMENT_DESC s_inputElementDescTexturedShading[];
 };

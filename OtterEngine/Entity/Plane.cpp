@@ -9,10 +9,10 @@
 #include "OtterEngine/Graphics/Resource/Texture.h"
 
 const std::vector<VertexTexture> Plane::s_vertices = {
-	{DirectX::XMVectorSet(-0.5f, 0.0f,  0.5f,  1.0f), {1.0f, 1.0f}},
-	{DirectX::XMVectorSet(-0.5f, 0.0f, -0.5f,  1.0f), {1.0f, 0.0f}},
-	{DirectX::XMVectorSet( 0.5f, 0.0f, -0.5f,  1.0f), {0.0f, 0.0f}},
-	{DirectX::XMVectorSet( 0.5f, 0.0f,  0.5f,  1.0f), {0.0f, 1.0f}},
+	{DirectX::XMVectorSet(-0.5f, 0.0f,  0.5f,  1.0f), {1.0f, 1.0f}, {0.0f, 1.0f, 0.0f}},
+	{DirectX::XMVectorSet(-0.5f, 0.0f, -0.5f,  1.0f), {1.0f, 0.0f}, {0.0f, 1.0f, 0.0f}},
+	{DirectX::XMVectorSet( 0.5f, 0.0f, -0.5f,  1.0f), {0.0f, 0.0f}, {0.0f, 1.0f, 0.0f}},
+	{DirectX::XMVectorSet( 0.5f, 0.0f,  0.5f,  1.0f), {0.0f, 1.0f}, {0.0f, 1.0f, 0.0f}},
 };
 
 const std::vector<unsigned short> Plane::s_indices = {
@@ -27,11 +27,20 @@ Plane::Plane(const Graphics& graphics, const Vector3& translation, const Vector3
 
 	if (s_commonResources.empty()) {
 		// shaders & layout
-		std::unique_ptr<VertexShader> pVertexShader = std::make_unique<VertexShader>(graphics, L"TextureVertexShader.cso");
-		const std::vector<uint8_t> vertexShaderBlob = pVertexShader->GetVertexShaderBlob();
-		s_commonResources.push_back(std::move(pVertexShader));
-		s_commonResources.push_back(std::make_unique<PixelShader>(graphics, L"TexturePixelShader.cso"));
-		s_commonResources.push_back(std::make_unique<InputLayout>(graphics, vertexShaderBlob, InputLayout::LayoutType::Texture));
+		if (kRenderMethod == 0) {
+			std::unique_ptr<VertexShader> pVertexShader = std::make_unique<VertexShader>(graphics, L"TextureGouraudVertexShader.cso");
+			const std::vector<uint8_t> vertexShaderBlob = pVertexShader->GetVertexShaderBlob();
+			s_commonResources.push_back(std::move(pVertexShader));
+			s_commonResources.push_back(std::make_unique<PixelShader>(graphics, L"TextureGouraudPixelShader.cso"));
+			s_commonResources.push_back(std::make_unique<InputLayout>(graphics, vertexShaderBlob, InputLayout::LayoutType::TextureShading));
+		}
+		else if (kRenderMethod == 1) {
+			std::unique_ptr<VertexShader> pVertexShader = std::make_unique<VertexShader>(graphics, L"TexturePhongVertexShader.cso");
+			const std::vector<uint8_t> vertexShaderBlob = pVertexShader->GetVertexShaderBlob();
+			s_commonResources.push_back(std::move(pVertexShader));
+			s_commonResources.push_back(std::make_unique<PixelShader>(graphics, L"TexturePhongPixelShader.cso"));
+			s_commonResources.push_back(std::make_unique<InputLayout>(graphics, vertexShaderBlob, InputLayout::LayoutType::TextureShading));
+		}
 
 		// buffers
 		s_commonResources.push_back(std::make_unique<VertexBuffer>(graphics, 

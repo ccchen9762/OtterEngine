@@ -19,6 +19,7 @@ struct VertexTexture {
 	struct {
 		float u, v;
 	} m_texcoord;
+	Normal m_normal;
 };
 
 struct VertexBasic {
@@ -26,3 +27,9 @@ struct VertexBasic {
 	Color4 m_color;
 };
 
+struct VertexTextureBasic {
+	DirectX::XMVECTOR m_position;
+	struct {
+		float u, v;
+	} m_texcoord;
+};

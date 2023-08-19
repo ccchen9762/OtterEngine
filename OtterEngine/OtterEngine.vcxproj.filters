@@ -92,6 +92,10 @@
     <FxCompile Include="Shader\PhongPixelShader.hlsl" />
     <FxCompile Include="Shader\BasicVertexShader.hlsl" />
     <FxCompile Include="Shader\BasicPixelShader.hlsl" />
+    <FxCompile Include="Shader\TexturePhongPixelShader.hlsl" />
+    <FxCompile Include="Shader\TexturePhongVertexShader.hlsl" />
+    <FxCompile Include="Shader\TextureGouraudPixelShader.hlsl" />
+    <FxCompile Include="Shader\TextureGouraudVertexShader.hlsl" />
   </ItemGroup>
   <ItemGroup>
     <None Include="imgui.ini" />

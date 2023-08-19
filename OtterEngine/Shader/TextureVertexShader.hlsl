@@ -5,12 +5,12 @@ cbuffer transformation : register(b0) {
 
 struct Vertex {
 	float4 position	: SV_Position;
-	float4 texcoord : TEXCOORD0;
+	float2 texcoord : TEXCOORD0;
 };
 
 struct Interpolant {
 	float4 position	: SV_Position;
-	float4 texcoord : TEXCOORD0;
+	float2 texcoord : TEXCOORD0;
 };
 
 Interpolant main(Vertex input) {
