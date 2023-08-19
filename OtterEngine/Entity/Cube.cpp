@@ -20,12 +20,21 @@ Cube::Cube(const Graphics& graphics, const Vector3& translation, const Vector3& 
 		GenerateMesh(); // generate static vertices and indices
 		
 		// shaders & layout
-		std::unique_ptr<VertexShader> pVertexShader = std::make_unique<VertexShader>(graphics, L"PhongVertexShader.cso");
-		const std::vector<uint8_t> vertexShaderBlob = pVertexShader->GetVertexShaderBlob();
-		s_commonResources.push_back(std::move(pVertexShader));
-		s_commonResources.push_back(std::make_unique<PixelShader>(graphics, L"PhongPixelShader.cso"));
-		s_commonResources.push_back(std::make_unique<InputLayout>(graphics, vertexShaderBlob, InputLayout::LayoutType::Phong));
-
+		if (kRenderMethod == 0) {
+			std::unique_ptr<VertexShader> pVertexShader = std::make_unique<VertexShader>(graphics, L"GouraudVertexShader.cso");
+			const std::vector<uint8_t> vertexShaderBlob = pVertexShader->GetVertexShaderBlob();
+			s_commonResources.push_back(std::move(pVertexShader));
+			s_commonResources.push_back(std::make_unique<PixelShader>(graphics, L"GouraudPixelShader.cso"));
+			s_commonResources.push_back(std::make_unique<InputLayout>(graphics, vertexShaderBlob, InputLayout::LayoutType::Shading));
+		}
+		else if (kRenderMethod == 1) {
+			std::unique_ptr<VertexShader> pVertexShader = std::make_unique<VertexShader>(graphics, L"PhongVertexShader.cso");
+			const std::vector<uint8_t> vertexShaderBlob = pVertexShader->GetVertexShaderBlob();
+			s_commonResources.push_back(std::move(pVertexShader));
+			s_commonResources.push_back(std::make_unique<PixelShader>(graphics, L"PhongPixelShader.cso"));
+			s_commonResources.push_back(std::make_unique<InputLayout>(graphics, vertexShaderBlob, InputLayout::LayoutType::Shading));
+		}
+		
 		// buffers
 		s_commonResources.push_back(std::make_unique<VertexBuffer>(graphics, 
 			s_vertices.data(), static_cast<unsigned int>(sizeof(Vertex)), s_vertices.size()));
@@ -52,8 +61,8 @@ void Cube::GenerateMesh() {
 		6, 5, 4, 7, // front
 		7, 4, 0, 3, // left
 		2, 1, 5, 6, // right
-		2, 6, 7, 3, // top
 		4, 5, 1, 0, // bottom
+		2, 6, 7, 3, // top
 	};
 
 	const Color4 verticesColor[6] = {
@@ -86,8 +95,8 @@ void Cube::GenerateMesh() {
 		 4,  5,  6,   6,  7,  4, // front
 		 8,  9, 10,  10, 11,  8, // left
 		12, 13, 14,  14, 15, 12, // right
-		16, 17, 18,  18, 19, 16, // top
 		20, 21, 22,  22, 23, 20, // bottom
+		16, 17, 18,  18, 19, 16, // top
 	};
 }
 

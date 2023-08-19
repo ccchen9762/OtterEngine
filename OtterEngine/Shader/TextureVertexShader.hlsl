@@ -1,4 +1,4 @@
-cbuffer cbuf {
+cbuffer transformation : register(b0) {
     matrix model;
     matrix modelViewProjection;
 };

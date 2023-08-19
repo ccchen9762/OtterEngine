@@ -6,7 +6,7 @@ class InputLayout : public GraphicsResource
 {
 public:
 	enum class LayoutType {
-		Basic, Texture, Phong
+		Basic, Texture, Shading
 	};
 
 public:

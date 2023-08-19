@@ -1,4 +1,4 @@
-cbuffer cbuf {
+cbuffer transformation : register(b0) {
 	// matrix is default column major, need to transpose
 	// transpose on GPU side is slower than on CPU side
 	//		-> transpose on CPU side to get a normal effect

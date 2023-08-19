@@ -25,6 +25,7 @@ public:
 private:
 	LightBuffer m_lightBuffer;
 	float m_scale;
+	ConstantBufferVertex<LightBuffer> m_constantBufferVertex;
 	ConstantBufferPixel<LightBuffer> m_constantBufferPixel;
 	DebugSphere m_sphereMesh;
 };

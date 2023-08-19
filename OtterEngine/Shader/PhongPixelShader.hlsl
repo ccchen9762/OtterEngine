@@ -1,4 +1,4 @@
-cbuffer cbuf {
+cbuffer lights : register(b1) {
     float4 lightPosition;
     float4 lightColor;
 };
@@ -15,7 +15,6 @@ struct Pixel {
 };
 
 static const float3 ambient = { 0.15f, 0.15f, 0.15f };
-static const float3 diffuseColor = { 0.8f, 0.8f, 0.5f };
 static const float diffuseIntensity = 1.0f;
 static const float attenuationConst = 1.0f;
 static const float attenuationLinear = 0.045f;

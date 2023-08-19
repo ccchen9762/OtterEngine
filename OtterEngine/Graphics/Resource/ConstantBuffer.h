@@ -7,6 +7,14 @@
 #include "OtterEngine/Entity/Entity.h"
 #include "OtterEngine/Camera/Camera.h"
 
+enum class VertexConstantBufferType {
+	Transformation = 0, Light = 1,
+};
+
+enum class PixelConstantBufferType {
+	Transformation = 0, Light = 1,
+};
+
 class ConstantBufferTransformation : public GraphicsResource
 {
 private:
@@ -35,7 +43,8 @@ template <typename T>
 class ConstantBufferVertex : public GraphicsResource
 {
 public:
-	ConstantBufferVertex(const Graphics& graphics, const T& t) {
+	ConstantBufferVertex(const Graphics& graphics, const T& t, VertexConstantBufferType type) : m_slot(static_cast<int>(type)){
+
 		D3D11_BUFFER_DESC constantBufferDesc = {};
 		constantBufferDesc.ByteWidth = sizeof(T); // return total array size in bytes
 		constantBufferDesc.Usage = D3D11_USAGE_DYNAMIC;	// to be able to update every frame
@@ -49,9 +58,9 @@ public:
 	}
 	~ConstantBufferVertex() = default;
 
-	
+	// ==============================
 	void Bind(const Graphics& graphics) const override {
-		GetDeviceContext(graphics)->VSSetConstantBuffers(0u, 1u, m_pConstantBuffer.GetAddressOf());
+		GetDeviceContext(graphics)->VSSetConstantBuffers(m_slot, 1u, m_pConstantBuffer.GetAddressOf());
 	}
 
 	void Update(const Graphics& graphics, const T& t) const {
@@ -66,6 +75,7 @@ public:
 
 private:
 	Microsoft::WRL::ComPtr<ID3D11Buffer> m_pConstantBuffer;
+	unsigned int m_slot;
 };
 
 // ========================================
@@ -74,7 +84,8 @@ template <typename T>
 class ConstantBufferPixel : public GraphicsResource
 {
 public:
-	ConstantBufferPixel(const Graphics& graphics, const T& t) {
+	ConstantBufferPixel(const Graphics& graphics, const T& t, PixelConstantBufferType type) : m_slot(static_cast<int>(type)) {
+
 		D3D11_BUFFER_DESC constantBufferDesc = {};
 		constantBufferDesc.ByteWidth = sizeof(T); // return total array size in bytes
 		constantBufferDesc.Usage = D3D11_USAGE_DYNAMIC;	// to be able to update every frame
@@ -88,9 +99,9 @@ public:
 	}
 	~ConstantBufferPixel() = default;
 
-
+	// ==============================
 	void Bind(const Graphics& graphics) const override {
-		GetDeviceContext(graphics)->PSSetConstantBuffers(0u, 1u, m_pConstantBuffer.GetAddressOf());
+		GetDeviceContext(graphics)->PSSetConstantBuffers(m_slot, 1u, m_pConstantBuffer.GetAddressOf());
 	}
 
 	void Update(const Graphics& graphics, const T& t) const {
@@ -105,4 +116,5 @@ public:
 
 private:
 	Microsoft::WRL::ComPtr<ID3D11Buffer> m_pConstantBuffer;
+	unsigned int m_slot;
 };

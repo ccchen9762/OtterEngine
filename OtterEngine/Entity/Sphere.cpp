@@ -20,11 +20,20 @@ Sphere::Sphere(const Graphics& graphics, const Vector3& translation, const Vecto
 		GenerateMesh(20); // generate static vertices and indices
 
 		// shaders & layout
-		std::unique_ptr<VertexShader> pVertexShader = std::make_unique<VertexShader>(graphics, L"PhongVertexShader.cso");
-		const std::vector<uint8_t> vertexShaderBlob = pVertexShader->GetVertexShaderBlob();
-		s_commonResources.push_back(std::move(pVertexShader));
-		s_commonResources.push_back(std::make_unique<PixelShader>(graphics, L"PhongPixelShader.cso"));
-		s_commonResources.push_back(std::make_unique<InputLayout>(graphics, vertexShaderBlob, InputLayout::LayoutType::Phong));
+		if (kRenderMethod == 0) {
+			std::unique_ptr<VertexShader> pVertexShader = std::make_unique<VertexShader>(graphics, L"GouraudVertexShader.cso");
+			const std::vector<uint8_t> vertexShaderBlob = pVertexShader->GetVertexShaderBlob();
+			s_commonResources.push_back(std::move(pVertexShader));
+			s_commonResources.push_back(std::make_unique<PixelShader>(graphics, L"GouraudPixelShader.cso"));
+			s_commonResources.push_back(std::make_unique<InputLayout>(graphics, vertexShaderBlob, InputLayout::LayoutType::Shading));
+		}
+		else if (kRenderMethod == 1) {
+			std::unique_ptr<VertexShader> pVertexShader = std::make_unique<VertexShader>(graphics, L"PhongVertexShader.cso");
+			const std::vector<uint8_t> vertexShaderBlob = pVertexShader->GetVertexShaderBlob();
+			s_commonResources.push_back(std::move(pVertexShader));
+			s_commonResources.push_back(std::make_unique<PixelShader>(graphics, L"PhongPixelShader.cso"));
+			s_commonResources.push_back(std::make_unique<InputLayout>(graphics, vertexShaderBlob, InputLayout::LayoutType::Shading));
+		}
 
 		// buffers
 		s_commonResources.push_back(std::make_unique<VertexBuffer>(graphics,

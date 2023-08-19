@@ -31,7 +31,7 @@ InputLayout::InputLayout(const Graphics& graphics, const std::vector<uint8_t>& v
 			vertexShaderBlob.data(), vertexShaderBlob.size(), &m_pInputLayout));
 		break;
 	}
-	case InputLayout::LayoutType::Phong: {
+	case InputLayout::LayoutType::Shading: {
 		DX::ThrowIfFailed(GetDevice(graphics)->CreateInputLayout(s_inputElementDescPhong, sizeof(s_inputElementDescPhong) / sizeof(D3D11_INPUT_ELEMENT_DESC),
 			vertexShaderBlob.data(), vertexShaderBlob.size(), &m_pInputLayout));
 		break;
