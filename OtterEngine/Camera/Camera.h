@@ -1,7 +1,5 @@
 #pragma once
 
-#include <DirectXMath.h>
-
 #include "OtterEngine/Graphics/Resource/ConstantBuffer.h"
 #include "OtterEngine/Common/Math/MathUtils.h"
 
@@ -13,28 +11,29 @@ private:
 	};
 
 public:
-	Camera(const Graphics& graphics, const Vector3& position, const Vector3& orientation, const Vector3& up,
-		float fov, float ratio, float nearZ, float farZ, float speed, float angularSpeed);
+	Camera(const Graphics& graphics, const Vector3& position, const Vector3& orientation, const Vector3& up);
 	~Camera() = default;
 	
-	void Update(const Graphics& graphics) const;
+	// called every frame
+	void Update(const Graphics& graphics);
 
 	void TranslateCamera(const Vector3Int& position, const Vector3Int& prevPosition);
-	void TranslateCameraZ(bool wheelUp);
+	void TranslateCameraZ(int translateZ);
 	void RotateCamera(const Vector3Int& position, const Vector3Int& prevPosition);
-	void SetViewMatrix();
 	void SetProjectionMatrix(float fov, float ratio, float nearZ, float farZ);
 
-	const DirectX::XMMATRIX& GetViewMatrix() const;
-	const DirectX::XMMATRIX& GetViewProjectionMatrix() const;
+	const DirectX::XMMATRIX& GetViewMatrix() const { return m_viewMatrix; }
+	const DirectX::XMMATRIX& GetViewProjectionMatrix() const { return m_viewProjectionMatrix; }
 
 private:
-	float m_speed;
-	float m_angularSpeed;
+	void SetViewMatrix();
+
+private:
 	Vector3 m_position;
 	Vector3 m_orientation;
 	Vector3 m_up;
-	Vector3Int m_mousePositionX, m_mousePositionY;
+	float m_speed;
+	float m_angularSpeed;
 	DirectX::XMMATRIX m_viewMatrix;
 	DirectX::XMMATRIX m_projectionMatrix;
 	DirectX::XMMATRIX m_viewProjectionMatrix;

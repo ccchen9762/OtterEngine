@@ -20,8 +20,7 @@ Game::Game() :
     m_mainWindow(Window(kDefWndTitle, kRenderWidth, kRenderHeight)), 
     m_alive(true), 
     m_timer(Timer()),
-    m_camera(*(m_mainWindow.m_pGraphics), Vector3(5.0f, 4.0f, 10.0f), Vector3(-0.5f, -0.33f, -1.0f), Vector3(0.0f, 1.0f, 0.0f),
-        DirectX::XM_PIDIV4, kRenderRatio, 0.1f, 100.0f, 0.02f, 0.1f),
+    m_camera(*(m_mainWindow.m_pGraphics), Vector3(5.0f, 4.0f, 10.0f), Vector3(-0.5f, -0.33f, -1.0f), Vector3(0.0f, 1.0f, 0.0f)),
     showDebug(true) {
 
     Randomizer::Init();
@@ -141,14 +140,14 @@ void Game::HandleInput() {
                 --test;
                 const std::wstring title = std::to_wstring(test);
                 m_mainWindow.setTitle(title);
-                m_camera.TranslateCameraZ(false);
+                m_camera.TranslateCameraZ(-1);
                 break;
             }
             case Mouse::MouseEvent::Type::WheelUp: {
                 ++test;
                 const std::wstring title = std::to_wstring(test);
                 m_mainWindow.setTitle(title);
-                m_camera.TranslateCameraZ(true);
+                m_camera.TranslateCameraZ(1);
                 break;
             }
             case Mouse::MouseEvent::Type::Move: {

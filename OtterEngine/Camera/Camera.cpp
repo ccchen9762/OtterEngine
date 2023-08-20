@@ -1,19 +1,25 @@
 #include "Camera.h"
 
-Camera::Camera(const Graphics& graphics, const Vector3& position, const Vector3& orientation, const Vector3& up,
-	float fov, float ratio, float nearZ, float farZ, float speed, float angularSpeed) :
+#include "OtterEngine/Common/constants.h"
+
+Camera::Camera(const Graphics& graphics, const Vector3& position, const Vector3& orientation, const Vector3& up) :
 	m_position(position), m_orientation(orientation), m_up(up),
-	m_speed(speed), m_angularSpeed(angularSpeed),
+	m_speed(0.02f), m_angularSpeed(0.1f),
 	m_cameraBuffer({ DirectX::XMVECTOR{ m_position.x, m_position.y, m_position.z, 1.0f } }),
 	m_constantBufferVertex(graphics, m_cameraBuffer, VertexConstantBufferType::Camera),
 	m_constantBufferPixel(graphics, m_cameraBuffer, PixelConstantBufferType::Camera) {
 
 	SetViewMatrix();
-	SetProjectionMatrix(fov, ratio, nearZ, farZ);
+	SetProjectionMatrix(DirectX::XM_PIDIV4, kRenderRatio, 0.1f, 100.0f);
 	m_viewProjectionMatrix = m_viewMatrix * m_projectionMatrix;
 }
 
-void Camera::Update(const Graphics& graphics) const {
+void Camera::Update(const Graphics& graphics) {
+	// generate new viewProjectionMatrix
+	SetViewMatrix();
+
+	// update constant buffers
+	m_cameraBuffer.position = DirectX::XMVECTOR{ m_position.x, m_position.y, m_position.z, 1.0f };
 	m_constantBufferVertex.Update(graphics, m_cameraBuffer);
 	m_constantBufferPixel.Update(graphics, m_cameraBuffer);
 }
@@ -24,17 +30,12 @@ void Camera::TranslateCamera(const Vector3Int& position, const Vector3Int& prevP
 
 	m_position += translateX * CrossProduct(m_orientation, m_up);
 	m_position -= translateY * m_up;
-
-	SetViewMatrix();
 }
 
-void Camera::TranslateCameraZ(bool wheelUp) {
-	float translateZ = wheelUp ? 1.0f : -1.0f;
+void Camera::TranslateCameraZ(int translateZ) {
 	translateZ *= m_speed * 50.0f;
 
 	m_position += translateZ * m_orientation;
-
-	SetViewMatrix();
 }
 
 void Camera::RotateCamera(const Vector3Int& position, const Vector3Int& prevPosition) {
@@ -45,8 +46,6 @@ void Camera::RotateCamera(const Vector3Int& position, const Vector3Int& prevPosi
 	xAxis.normalize();
 	m_orientation = RotateAroundAxis(m_orientation, xAxis, DirectX::XMConvertToRadians(rotationX));
 	m_orientation = RotateAroundAxis(m_orientation, m_up, DirectX::XMConvertToRadians(rotationY));
-
-	SetViewMatrix();
 }
 
 void Camera::SetViewMatrix() {
@@ -55,20 +54,9 @@ void Camera::SetViewMatrix() {
 		DirectX::XMVECTOR{ m_orientation.x, m_orientation.y, m_orientation.z },
 		DirectX::XMVECTOR{ m_up.x, m_up.y, m_up.z });
 	m_viewProjectionMatrix = m_viewMatrix * m_projectionMatrix;
-
-	m_cameraBuffer.position = DirectX::XMVECTOR{ m_position.x, m_position.y, m_position.z, 1.0f };
 }
 
 void Camera::SetProjectionMatrix(float fov, float ratio, float nearZ, float farZ) {
 	assert("near & far must be greater than 0" && nearZ > 0 && farZ > 0);
 	m_projectionMatrix = DirectX::XMMatrixPerspectiveFovRH(fov, ratio, nearZ, farZ);
-	m_viewProjectionMatrix = m_viewMatrix * m_projectionMatrix;
-}
-
-const DirectX::XMMATRIX& Camera::GetViewMatrix() const {
-	return m_viewMatrix;
-}
-
-const DirectX::XMMATRIX& Camera::GetViewProjectionMatrix() const {
-	return m_viewProjectionMatrix;
 }
