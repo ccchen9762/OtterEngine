@@ -2,13 +2,13 @@
 
 #include "OtterEngine/Common/Randomizer.h"
 
-Entity::Entity(const Vector3& translation, const Vector3& rotation, const Vector3& scale, size_t indicesSize, 
-	const DirectX::XMMATRIX& viewProjectionMatrix, bool isStatic) :
+Entity::Entity(const Vector3& translation, const Vector3& rotation, const Vector3& scale, size_t indicesSize,
+	const Camera& camera, bool isStatic) :
 	m_translation(translation),
 	m_rotation(rotation),
 	m_scale(scale),
 	m_indicesSize(indicesSize),
-	m_viewProjectionMatrix(viewProjectionMatrix),
+	m_camera(camera),
 	m_isStatic(isStatic),
 	m_speed(0.0f) { //Randomizer::GetFloat(0.08f, 0.02f)
 }
@@ -43,6 +43,10 @@ DirectX::XMMATRIX Entity::GetTransformMatrix() const {
 		DirectX::XMMatrixTranslation(m_translation.x, m_translation.y, m_translation.z);
 }
 
+const DirectX::XMMATRIX& Entity::GetViewMatrix() const {
+	return m_camera.GetViewProjectionMatrix();
+}
+
 const DirectX::XMMATRIX& Entity::GetViewProjectionMatrix() const {
-	return m_viewProjectionMatrix;
+	return m_camera.GetViewProjectionMatrix();
 }

@@ -1,6 +1,6 @@
 #pragma once
 
-#include "Entity.h"
+#include "../Entity.h"
 
 class Plane : public Entity
 {
@@ -8,7 +8,7 @@ class Plane : public Entity
 
 public:
 	Plane(const Graphics& graphics, const Vector3& translation, const Vector3& rotation, const Vector3& scale,
-		const DirectX::XMMATRIX& viewProjectionMatrix, const std::wstring& path, bool isStatic);
+		const Camera& camera, const std::wstring& path, bool isStatic);
 	~Plane() = default;
 
 private:

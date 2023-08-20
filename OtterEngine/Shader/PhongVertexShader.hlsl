@@ -1,5 +1,5 @@
 cbuffer transformation : register(b0) {
-    matrix model;
+    matrix modelView;
     matrix modelViewProjection;
 };
 
@@ -20,9 +20,9 @@ Interpolant main(Vertex input)
 {
     Interpolant output;
     output.position = mul(input.position, modelViewProjection);
-    output.worldPosition = mul(input.position, model);
+    output.worldPosition = mul(input.position, modelView);
     output.color = input.color;
-    output.normal = mul(input.normal, (float3x3) model);
+    output.normal = mul(input.normal, (float3x3) modelView);
     
     return output;
 }

@@ -1,5 +1,6 @@
 #include "ConstantBuffer.h"
 
+#include "OtterEngine/Entity/Entity.h"
 #include "OtterEngine/Common/constants.h"
 
 ConstantBufferTransformation::ConstantBufferTransformation (const Graphics& graphics, const Entity& parentEntity)
@@ -8,6 +9,7 @@ ConstantBufferTransformation::ConstantBufferTransformation (const Graphics& grap
 	// in Left Hand System (LH) Z axis direction is away from screen, RH toward screen
 	// remember XMMatrixTranspose only need once
 	const CBuffer cBuffer = {
+		DirectX::XMMatrixTranspose(m_parentEntity.GetTransformMatrix()),
 		DirectX::XMMatrixTranspose(
 			m_parentEntity.GetTransformMatrix() *
 			m_parentEntity.GetViewProjectionMatrix()

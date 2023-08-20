@@ -8,7 +8,7 @@ class DebugSphere : public Entity
 
 public:
 	DebugSphere(const Graphics& graphics, const Vector3& translation, const Vector3& rotation, const Vector3& scale,
-		const DirectX::XMMATRIX& viewProjectionMatrix, bool isStatic);
+		const Camera& camera, bool isStatic);
 	~DebugSphere() = default;
 
 private:

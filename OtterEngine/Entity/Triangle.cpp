@@ -20,8 +20,8 @@ const std::vector<unsigned short> Triangle::s_indices = {
 std::vector<std::unique_ptr<GraphicsResource>> Triangle::s_commonResources;
 
 Triangle::Triangle(const Graphics& graphics, const Vector3& translation, const Vector3& rotation, const Vector3& scale,
-	const DirectX::XMMATRIX& viewProjectionMatrix, bool isStatic)
-	: Entity(translation, rotation, scale, s_indices.size(), viewProjectionMatrix, isStatic) {
+	const Camera& camera, bool isStatic)
+	: Entity(translation, rotation, scale, s_indices.size(), camera, isStatic) {
 
 	if (s_commonResources.empty()) {
 		// shaders & layout

@@ -10,13 +10,18 @@
 class PointLight {
 private:
 	struct LightBuffer {
-		DirectX::XMFLOAT4 m_position;
-		Color4 m_color;
+		DirectX::XMFLOAT4 position;
+		Color4 lightColor;
+		Color4 ambient;
+		float diffuseIntensity;
+		float attenuationConst;
+		float attenuationLinear;
+		float attenuationQuadratic;
 	};
 
 public:
 	PointLight(const Graphics& graphics, const DirectX::XMFLOAT4& position, const Color4& color, float scale,
-		const DirectX::XMMATRIX& viewProjectionMatrix);
+		const Camera& camera);
 
 	void Update(const Graphics& graphics) const;
 	void Render(const Graphics& graphics);

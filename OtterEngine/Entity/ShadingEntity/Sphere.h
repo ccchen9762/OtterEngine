@@ -1,6 +1,6 @@
 #pragma once
 
-#include "Entity.h"
+#include "../Entity.h"
 
 class Sphere : public Entity
 {
@@ -8,7 +8,7 @@ class Sphere : public Entity
 
 public:
 	Sphere(const Graphics& graphics, const Vector3& translation, const Vector3& rotation, const Vector3& scale,
-		const DirectX::XMMATRIX& viewProjectionMatrix, bool isStatic);
+		const Camera& camera, bool isStatic);
 	~Sphere()=default;
 
 private:

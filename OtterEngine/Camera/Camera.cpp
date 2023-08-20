@@ -1,13 +1,21 @@
 #include "Camera.h"
 
-Camera::Camera(const Vector3& position, const Vector3& orientation, const Vector3& up,
+Camera::Camera(const Graphics& graphics, const Vector3& position, const Vector3& orientation, const Vector3& up,
 	float fov, float ratio, float nearZ, float farZ, float speed, float angularSpeed) :
 	m_position(position), m_orientation(orientation), m_up(up),
-	m_speed(speed), m_angularSpeed(angularSpeed) {
+	m_speed(speed), m_angularSpeed(angularSpeed),
+	m_cameraBuffer({ DirectX::XMVECTOR{ m_position.x, m_position.y, m_position.z, 1.0f } }),
+	m_constantBufferVertex(graphics, m_cameraBuffer, VertexConstantBufferType::Camera),
+	m_constantBufferPixel(graphics, m_cameraBuffer, PixelConstantBufferType::Camera) {
 
 	SetViewMatrix();
 	SetProjectionMatrix(fov, ratio, nearZ, farZ);
 	m_viewProjectionMatrix = m_viewMatrix * m_projectionMatrix;
+}
+
+void Camera::Update(const Graphics& graphics) const {
+	m_constantBufferVertex.Update(graphics, m_cameraBuffer);
+	m_constantBufferPixel.Update(graphics, m_cameraBuffer);
 }
 
 void Camera::TranslateCamera(const Vector3Int& position, const Vector3Int& prevPosition) {
@@ -47,12 +55,18 @@ void Camera::SetViewMatrix() {
 		DirectX::XMVECTOR{ m_orientation.x, m_orientation.y, m_orientation.z },
 		DirectX::XMVECTOR{ m_up.x, m_up.y, m_up.z });
 	m_viewProjectionMatrix = m_viewMatrix * m_projectionMatrix;
+
+	m_cameraBuffer.position = DirectX::XMVECTOR{ m_position.x, m_position.y, m_position.z, 1.0f };
 }
 
-void Camera::SetProjectionMatrix(float fov, float ratio, float near, float far) {
-	assert("near & far must be greater than 0" && near > 0 && far > 0);
-	m_projectionMatrix = DirectX::XMMatrixPerspectiveFovRH(fov, ratio, near, far);
+void Camera::SetProjectionMatrix(float fov, float ratio, float nearZ, float farZ) {
+	assert("near & far must be greater than 0" && nearZ > 0 && farZ > 0);
+	m_projectionMatrix = DirectX::XMMatrixPerspectiveFovRH(fov, ratio, nearZ, farZ);
 	m_viewProjectionMatrix = m_viewMatrix * m_projectionMatrix;
+}
+
+const DirectX::XMMATRIX& Camera::GetViewMatrix() const {
+	return m_viewMatrix;
 }
 
 const DirectX::XMMATRIX& Camera::GetViewProjectionMatrix() const {

@@ -14,8 +14,8 @@ const std::vector<unsigned short> DebugLine::s_indices = {
 std::vector<std::unique_ptr<GraphicsResource>> DebugLine::s_commonResources;
 
 DebugLine::DebugLine(const Graphics& graphics, const Vector3& translation, const Vector3& rotation, const Vector3& scale,
-	const DirectX::XMMATRIX& viewProjectionMatrix, const Color4& color, bool isStatic)
-	: Entity(translation, rotation, scale, s_indices.size(), viewProjectionMatrix, isStatic) {
+	const Camera& camera, const Color4& color, bool isStatic)
+	: Entity(translation, rotation, scale, s_indices.size(), camera, isStatic) {
 
 	m_vertices = {
 		{DirectX::XMVectorSet(0.0f,  0.0f,  0.0f, 1.0f), {color.r, color.g, color.b, color.a}},

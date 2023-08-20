@@ -22,8 +22,8 @@ const std::vector<unsigned short> Plane::s_indices = {
 std::vector<std::unique_ptr<GraphicsResource>> Plane::s_commonResources;
 
 Plane::Plane(const Graphics& graphics, const Vector3& translation, const Vector3& rotation, const Vector3& scale,
-	const DirectX::XMMATRIX& viewProjectionMatrix, const std::wstring& path, bool isStatic)
-	: Entity(translation, rotation, scale, s_indices.size(), viewProjectionMatrix, isStatic) {
+	const Camera& camera, const std::wstring& path, bool isStatic)
+	: Entity(translation, rotation, scale, s_indices.size(), camera, isStatic) {
 
 	if (s_commonResources.empty()) {
 		// shaders & layout

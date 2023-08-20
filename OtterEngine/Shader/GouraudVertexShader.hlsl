@@ -6,7 +6,20 @@ cbuffer transformation : register(b0) {
 cbuffer lights : register(b1) {
     float4 lightPosition;
     float4 lightColor;
+    float4 ambient;
+    float diffuseIntensity;
+    float attenuationConst;
+    float attenuationLinear;
+    float attenuationQuadratic;
 };
+
+cbuffer camera : register(b2) {
+    float4 cameraPosition;
+}
+
+cbuffer attributes : register(b3) {
+    float shiness;
+}
 
 struct Vertex {
 	float4 position	: SV_Position;
@@ -18,12 +31,6 @@ struct Interpolant {
 	float4 position	: SV_Position;
 	float4 color	: COLOR0;
 };
-
-static const float3 ambient = { 0.15f, 0.15f, 0.15f };
-static const float diffuseIntensity = 1.0f;
-static const float attenuationConst = 1.0f;
-static const float attenuationLinear = 0.045f;
-static const float attenuationQuadratic = 0.0075f;
 
 Interpolant main (Vertex input) {
 	Interpolant output;

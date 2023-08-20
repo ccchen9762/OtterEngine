@@ -6,6 +6,11 @@ cbuffer transformation : register(b0) {
 cbuffer lights : register(b1) {
     float4 lightPosition;
     float4 lightColor;
+    float4 ambient;
+    float diffuseIntensity;
+    float attenuationConst;
+    float attenuationLinear;
+    float attenuationQuadratic;
 };
 
 struct Vertex {
@@ -19,12 +24,6 @@ struct Interpolant {
 	float2 texcoord : TEXCOORD0;
     float4 light    : COLOR0;
 };
-
-static const float3 ambient = { 0.15f, 0.15f, 0.15f };
-static const float diffuseIntensity = 1.0f;
-static const float attenuationConst = 1.0f;
-static const float attenuationLinear = 0.045f;
-static const float attenuationQuadratic = 0.0075f;
 
 Interpolant main(Vertex input) {
     Interpolant output;

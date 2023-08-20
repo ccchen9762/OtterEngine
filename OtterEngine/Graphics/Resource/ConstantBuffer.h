@@ -4,15 +4,14 @@
 
 #include <DirectXMath.h>
 
-#include "OtterEngine/Entity/Entity.h"
-#include "OtterEngine/Camera/Camera.h"
+class Entity;
 
 enum class VertexConstantBufferType {
-	Transformation = 0, Light = 1,
+	Transformation = 0, Light = 1, Camera = 2, Attributes=3
 };
 
 enum class PixelConstantBufferType {
-	Transformation = 0, Light = 1,
+	Transformation = 0, Light = 1, Camera = 2, Attributes = 3
 };
 
 class ConstantBufferTransformation : public GraphicsResource

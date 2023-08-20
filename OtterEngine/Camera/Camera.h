@@ -2,21 +2,30 @@
 
 #include <DirectXMath.h>
 
+#include "OtterEngine/Graphics/Resource/ConstantBuffer.h"
 #include "OtterEngine/Common/Math/MathUtils.h"
 
 class Camera
 {
+private:
+	struct CameraBuffer {
+		DirectX::XMVECTOR position;
+	};
+
 public:
-	Camera(const Vector3& position, const Vector3& orientation, const Vector3& up, 
+	Camera(const Graphics& graphics, const Vector3& position, const Vector3& orientation, const Vector3& up,
 		float fov, float ratio, float nearZ, float farZ, float speed, float angularSpeed);
 	~Camera() = default;
+	
+	void Update(const Graphics& graphics) const;
 
 	void TranslateCamera(const Vector3Int& position, const Vector3Int& prevPosition);
 	void TranslateCameraZ(bool wheelUp);
 	void RotateCamera(const Vector3Int& position, const Vector3Int& prevPosition);
 	void SetViewMatrix();
-	void SetProjectionMatrix(float fov, float ratio, float near, float far);
+	void SetProjectionMatrix(float fov, float ratio, float nearZ, float farZ);
 
+	const DirectX::XMMATRIX& GetViewMatrix() const;
 	const DirectX::XMMATRIX& GetViewProjectionMatrix() const;
 
 private:
@@ -29,4 +38,7 @@ private:
 	DirectX::XMMATRIX m_viewMatrix;
 	DirectX::XMMATRIX m_projectionMatrix;
 	DirectX::XMMATRIX m_viewProjectionMatrix;
+	CameraBuffer m_cameraBuffer;
+	ConstantBufferVertex<CameraBuffer> m_constantBufferVertex;
+	ConstantBufferPixel<CameraBuffer> m_constantBufferPixel;
 };

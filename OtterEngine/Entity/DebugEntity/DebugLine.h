@@ -8,7 +8,7 @@ class DebugLine : public Entity
 
 public:
 	DebugLine(const Graphics& graphics, const Vector3& translation, const Vector3& rotation, const Vector3& scale,
-		const DirectX::XMMATRIX& viewProjectionMatrix, const Color4& color, bool isStatic);
+		const Camera& camera, const Color4& color, bool isStatic);
 	~DebugLine() = default;
 
 private:

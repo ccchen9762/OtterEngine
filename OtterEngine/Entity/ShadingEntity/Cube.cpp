@@ -13,8 +13,8 @@ std::vector<unsigned short> Cube::s_indices;
 std::vector<std::unique_ptr<GraphicsResource>> Cube::s_commonResources;
 
 Cube::Cube(const Graphics& graphics, const Vector3& translation, const Vector3& rotation, const Vector3& scale,
-	const DirectX::XMMATRIX& viewProjectionMatrix, bool isStatic)
-	: Entity(translation, rotation, scale, s_indices.size(), viewProjectionMatrix, isStatic) {
+	const Camera& camera, bool isStatic)
+	: Entity(translation, rotation, scale, s_indices.size(), camera, isStatic), m_attributes({5.0f}) {
 
 	if (s_commonResources.empty()) {
 		GenerateMesh(); // generate static vertices and indices
@@ -41,6 +41,8 @@ Cube::Cube(const Graphics& graphics, const Vector3& translation, const Vector3& 
 		s_commonResources.push_back(std::make_unique<IndexBuffer>(graphics, s_indices));
 	}
 	
+	m_uniqueResources.push_back(std::make_unique<ConstantBufferVertex<Attributes>>(graphics, m_attributes, VertexConstantBufferType::Attributes));
+	m_uniqueResources.push_back(std::make_unique<ConstantBufferPixel<Attributes>>(graphics, m_attributes, PixelConstantBufferType::Attributes));
 	m_uniqueResources.push_back(std::make_unique<ConstantBufferTransformation>(graphics, *this));
 }
 

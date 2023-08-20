@@ -166,8 +166,8 @@
     <ClCompile Include="Entity\DebugEntity\DebugSphere.cpp" />
     <ClCompile Include="Entity\Entity.cpp" />
     <ClCompile Include="Entity\DebugEntity\DebugLine.cpp" />
-    <ClCompile Include="Entity\Plane.cpp" />
-    <ClCompile Include="Entity\Sphere.cpp" />
+    <ClCompile Include="Entity\ShadingEntity\Plane.cpp" />
+    <ClCompile Include="Entity\ShadingEntity\Sphere.cpp" />
     <ClCompile Include="Game\Game.cpp" />
     <ClCompile Include="Camera\Camera.cpp" />
     <ClCompile Include="Graphics\Graphics.cpp" />
@@ -191,7 +191,7 @@
     <ClCompile Include="Light\PointLight.cpp" />
     <ClCompile Include="Main.cpp" />
     <ClCompile Include="Common\Math\Vector3.cpp" />
-    <ClCompile Include="Entity\Cube.cpp" />
+    <ClCompile Include="Entity\ShadingEntity\Cube.cpp" />
     <ClCompile Include="Entity\Triangle.cpp" />
     <ClCompile Include="WindowClass\Window.cpp" />
   </ItemGroup>
@@ -209,8 +209,8 @@
     <ClInclude Include="Common\Vertex.h" />
     <ClInclude Include="Entity\DebugEntity\DebugSphere.h" />
     <ClInclude Include="Entity\DebugEntity\DebugLine.h" />
-    <ClInclude Include="Entity\Plane.h" />
-    <ClInclude Include="Entity\Sphere.h" />
+    <ClInclude Include="Entity\ShadingEntity\Plane.h" />
+    <ClInclude Include="Entity\ShadingEntity\Sphere.h" />
     <ClInclude Include="Game\Game.h" />
     <ClInclude Include="Camera\Camera.h" />
     <ClInclude Include="Graphics\Graphics.h" />
@@ -234,7 +234,7 @@
     <ClInclude Include="Input\Keyboard.h" />
     <ClInclude Include="Input\Mouse.h" />
     <ClInclude Include="Common\Math\Vector3.h" />
-    <ClInclude Include="Entity\Cube.h" />
+    <ClInclude Include="Entity\ShadingEntity\Cube.h" />
     <ClInclude Include="Entity\Entity.h" />
     <ClInclude Include="Entity\Triangle.h" />
     <ClInclude Include="Light\PointLight.h" />
