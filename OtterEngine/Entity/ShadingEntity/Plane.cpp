@@ -1,11 +1,7 @@
 #include "Plane.h"
 
-#include "OtterEngine/Graphics/Resource/VertexShader.h"
-#include "OtterEngine/Graphics/Resource/PixelShader.h"
-#include "OtterEngine/Graphics/Resource/InputLayout.h"
 #include "OtterEngine/Graphics/Resource/VertexBuffer.h"
 #include "OtterEngine/Graphics/Resource/IndexBuffer.h"
-#include "OtterEngine/Graphics/Resource/ConstantBuffer.h"
 #include "OtterEngine/Graphics/Resource/Texture.h"
 
 const std::vector<VertexTexture> Plane::s_vertices = {
@@ -23,25 +19,9 @@ std::vector<std::unique_ptr<GraphicsResource>> Plane::s_commonResources;
 
 Plane::Plane(const Graphics& graphics, const Vector3& translation, const Vector3& rotation, const Vector3& scale,
 	const Camera& camera, const std::wstring& path, bool isStatic)
-	: Entity(translation, rotation, scale, s_indices.size(), camera, isStatic) {
+	: ShadingTexture(graphics, translation, rotation, scale, s_indices.size(), camera, isStatic) {
 
 	if (s_commonResources.empty()) {
-		// shaders & layout
-		if (kRenderMethod == 0) {
-			std::unique_ptr<VertexShader> pVertexShader = std::make_unique<VertexShader>(graphics, L"TextureGouraudVertexShader.cso");
-			const std::vector<uint8_t> vertexShaderBlob = pVertexShader->GetVertexShaderBlob();
-			s_commonResources.push_back(std::move(pVertexShader));
-			s_commonResources.push_back(std::make_unique<PixelShader>(graphics, L"TextureGouraudPixelShader.cso"));
-			s_commonResources.push_back(std::make_unique<InputLayout>(graphics, vertexShaderBlob, InputLayout::LayoutType::TextureShading));
-		}
-		else if (kRenderMethod == 1) {
-			std::unique_ptr<VertexShader> pVertexShader = std::make_unique<VertexShader>(graphics, L"TexturePhongVertexShader.cso");
-			const std::vector<uint8_t> vertexShaderBlob = pVertexShader->GetVertexShaderBlob();
-			s_commonResources.push_back(std::move(pVertexShader));
-			s_commonResources.push_back(std::make_unique<PixelShader>(graphics, L"TexturePhongPixelShader.cso"));
-			s_commonResources.push_back(std::make_unique<InputLayout>(graphics, vertexShaderBlob, InputLayout::LayoutType::TextureShading));
-		}
-
 		// buffers
 		s_commonResources.push_back(std::make_unique<VertexBuffer>(graphics, 
 			s_vertices.data(), static_cast<unsigned int>(sizeof(VertexTexture)), s_vertices.size()));
@@ -49,9 +29,4 @@ Plane::Plane(const Graphics& graphics, const Vector3& translation, const Vector3
 	}
 
 	m_uniqueResources.push_back(std::make_unique<Texture>(graphics, path));
-	m_uniqueResources.push_back(std::make_unique<ConstantBufferTransformation>(graphics, *this));
-}
-
-const std::vector<std::unique_ptr<GraphicsResource>>& Plane::GetCommonResources() const {
-	return s_commonResources;
 }

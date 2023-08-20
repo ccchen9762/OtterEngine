@@ -20,4 +20,7 @@ inline bool kShowWindow = true, kShowAnotherWindow = true;
 // math
 inline const double kPI = 3.1415926;
 
-inline const unsigned int kRenderMethod = 1; // 0 for Gouraud Shading, 1 for Phong Shading
+enum class RenderMethod {
+	Gouraud = 0, Phong = 1
+};
+inline RenderMethod kRenderMethod = RenderMethod::Phong;

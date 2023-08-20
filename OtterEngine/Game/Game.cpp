@@ -7,7 +7,6 @@
 #include "OtterEngine/Imgui/imgui_impl_dx11.h"
 
 #include "OtterEngine/Entity/DebugEntity/DebugLine.h"
-#include "OtterEngine/Entity/Triangle.h"
 #include "OtterEngine/Entity/ShadingEntity/Cube.h"
 #include "OtterEngine/Entity/ShadingEntity/Sphere.h"
 #include "OtterEngine/Entity/ShadingEntity/Plane.h"
@@ -62,7 +61,7 @@ Game::Game() :
     for (int i = 0; i < 30; i++) {
         m_renderList.push_back(std::make_unique<Cube>(
             *(m_mainWindow.m_pGraphics),
-            Vector3(Randomizer::GetFloat(5.0f, -5.0f), Randomizer::GetFloat(10.0f, 0.0f), Randomizer::GetFloat(1.0f, -9.0f)),
+            Vector3(Randomizer::GetFloat(-5.0f, 5.0f), Randomizer::GetFloat(0.0f, 10.0f), Randomizer::GetFloat(-9.0f, 1.0f)),
             Vector3(Randomizer::GetFloat(static_cast<float>(kPI)), Randomizer::GetFloat(static_cast<float>(kPI)), 0.0f),
             Vector3(1.0f, 1.0f, 1.0f),
             m_camera,
@@ -70,16 +69,16 @@ Game::Game() :
         ));
     }
 
-    /*for (int i = 0; i < 10; i++) {
+    for (int i = 0; i < 10; i++) {
         m_renderList.push_back(std::make_unique<Sphere>(
             *(m_mainWindow.m_pGraphics),
-            Vector3(Randomizer::GetFloat(5.0f, -5.0f), Randomizer::GetFloat(10.0f, 0.0f), Randomizer::GetFloat(1.0f, -9.0f)),
+            Vector3(Randomizer::GetFloat(-5.0f, 5.0f), Randomizer::GetFloat(0.0f, 10.0f), Randomizer::GetFloat(-9.0f, 1.0f)),
             Vector3(Randomizer::GetFloat(static_cast<float>(kPI)), Randomizer::GetFloat(static_cast<float>(kPI)), 0.0f),
             Vector3(1.0f, 1.0f, 1.0f),
             m_camera,
             false
         ));
-    }*/
+    }
 
     m_renderList.push_back(std::make_unique<Plane>(
         *(m_mainWindow.m_pGraphics),

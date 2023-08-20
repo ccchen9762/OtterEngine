@@ -9,7 +9,7 @@
 
 class Timer {
 public:
-    Timer() : m_framesPerSecond(0.0), m_updateInterval(1.0) {
+    Timer() : m_framesThisInterval(0u), m_framesPerSecond(0.0), m_updateInterval(1.0) {
         // The frequency of the performance counter is fixed at system boot and is consistent across all processors
         // in counts per second
         if (!QueryPerformanceFrequency(&m_qpcFrequency))
@@ -22,6 +22,7 @@ public:
 
         m_currentTime = m_startTime;
         m_lastUpdate = m_startTime;
+        m_elapsedTime = m_startTime;
     };
 
     double GetElapsedTimeSecond() { return m_elapsedTime.QuadPart / static_cast<double>(m_qpcFrequency.QuadPart); }

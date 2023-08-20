@@ -1,12 +1,7 @@
 #pragma once
 
-struct Normal {
-	float x, y, z;
-};
-
-struct Color4 {
-	float r, g, b, a;
-};
+struct Color4 { float r, g, b, a; };
+struct Normal { float x, y, z; };
 
 struct Vertex {
 	DirectX::XMVECTOR m_position;

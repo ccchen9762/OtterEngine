@@ -36,10 +36,10 @@ void PointLight::ShowControlWindow() {
 
 		ImGui::ColorEdit3("light color", &m_lightBuffer.lightColor.r);
 
-		ImGui::SliderFloat("diffuse intensity", &m_lightBuffer.diffuseIntensity, 0.0f, 1.0f, "%.1f");
-		ImGui::SliderFloat("attenuation const", &m_lightBuffer.attenuationConst, 0.0f, 1.0f, "%.1f");
-		ImGui::SliderFloat("attenuation linear", &m_lightBuffer.attenuationLinear, 0.0f, 1.0f, "%.3f");
-		ImGui::SliderFloat("attenuation quadratic", &m_lightBuffer.attenuationQuadratic, 0.0f, 1.0f, "%.4f");
+		ImGui::SliderFloat("intensity", &m_lightBuffer.diffuseIntensity, 0.0f, 1.0f, "%.1f");
+		ImGui::SliderFloat("attenuation^0", &m_lightBuffer.attenuationConst, 0.0f, 1.0f, "%.1f");
+		ImGui::SliderFloat("attenuation^1", &m_lightBuffer.attenuationLinear, 0.0f, 1.0f, "%.3f");
+		ImGui::SliderFloat("attenuation^2", &m_lightBuffer.attenuationQuadratic, 0.0f, 1.0f, "%.4f");
 	}
 	ImGui::End();
 }

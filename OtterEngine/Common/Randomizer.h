@@ -13,9 +13,13 @@ public:
 		std::uniform_int_distribution<int> intDist;
 		return intDist(s_random);
 	}
-
+	// int [0, max]
+	static int GetInt(int max) {
+		std::uniform_int_distribution<int> intDist(0, max);
+		return intDist(s_random);
+	}
 	// int [min, max]
-	static int GetInt(int max, int min = 0) {
+	static int GetInt(int min, int max) {
 		std::uniform_int_distribution<int> intDist(min, max);
 		return intDist(s_random);
 	}
@@ -25,9 +29,13 @@ public:
 		std::uniform_real_distribution<float> distributionFloat;
 		return distributionFloat(s_random);
 	}
-
+	// float [0, max]
+	static float GetFloat(float max) {
+		std::uniform_real_distribution<float> distributionFloat(0, max);
+		return distributionFloat(s_random);
+	}
 	// float [min, max]
-	static float GetFloat(float max, float min = 0.0) {
+	static float GetFloat(float min, float max) {
 		std::uniform_real_distribution<float> distributionFloat(min, max);
 		return distributionFloat(s_random);
 	}

@@ -10,7 +10,7 @@ Entity::Entity(const Vector3& translation, const Vector3& rotation, const Vector
 	m_indicesSize(indicesSize),
 	m_camera(camera),
 	m_isStatic(isStatic),
-	m_speed(0.0f) { //Randomizer::GetFloat(0.08f, 0.02f)
+	m_speed(Randomizer::GetFloat(0.02f, 0.08f)) { //Randomizer::GetFloat(0.02f, 0.08f)
 }
 
 void Entity::Update() {
@@ -22,8 +22,14 @@ void Entity::Update() {
 }
 
 void Entity::Render(const Graphics& graphics) const {
-	// need to use reference for unique pointer
-	for (const std::unique_ptr<GraphicsResource>& resource : GetCommonResources()) {
+	// use reference for unique pointer
+	const std::vector<std::unique_ptr<GraphicsResource>>& shadingResource = GetShadingResources();
+	for (const std::unique_ptr<GraphicsResource>& resource : shadingResource) {
+		resource->Bind(graphics);
+	}
+
+	const std::vector<std::unique_ptr<GraphicsResource>>& commonResource = GetCommonResources();
+	for (const std::unique_ptr<GraphicsResource>& resource : commonResource) {
 		resource->Bind(graphics);
 	}
 
@@ -34,7 +40,7 @@ void Entity::Render(const Graphics& graphics) const {
 	graphics.RenderIndexed(m_indicesSize);
 }
 
-DirectX::XMMATRIX Entity::GetTransformMatrix() const {
+const DirectX::XMMATRIX Entity::GetTransformMatrix() const {
 
 	// transformation sequence: scale -> rotate -> translate
 

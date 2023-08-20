@@ -2,8 +2,6 @@
 
 #include <cmath>
 
-#include "Matrix3x3.h"
-
 struct Vector3 {
 public:
 	Vector3() = default;

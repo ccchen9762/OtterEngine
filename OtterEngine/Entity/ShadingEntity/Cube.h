@@ -1,15 +1,10 @@
 #pragma once
 
-#include "../Entity.h"
+#include "../ShadingEntity.h"
 
-class Cube : public Entity
+class Cube : public ShadingEntity
 {
 	friend class Entity;
-
-private:
-	struct Attributes {
-		alignas(16) float shiness;
-	};
 
 public:
 	Cube(const Graphics& graphics, const Vector3& translation, const Vector3& rotation, const Vector3& scale,
@@ -18,11 +13,9 @@ public:
 
 private:
 	void static GenerateMesh();
-	const std::vector<std::unique_ptr<GraphicsResource>>& GetCommonResources() const override;
+	const std::vector<std::unique_ptr<GraphicsResource>>& GetCommonResources() const override { return s_commonResources; }
 
 private:
-	Attributes m_attributes;
-
 	static std::vector<Vertex> s_vertices;
 	static std::vector<unsigned short> s_indices;
 

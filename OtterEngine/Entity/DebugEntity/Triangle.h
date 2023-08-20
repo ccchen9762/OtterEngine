@@ -1,8 +1,8 @@
 #pragma once
 
-#include "Entity.h"
+#include "../DebugEntity.h"
 
-class Triangle : public Entity
+class Triangle : public DebugEntity
 {
 	friend class Entity;
 

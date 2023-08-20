@@ -1,11 +1,7 @@
 #include "DebugSphere.h"
 
-#include "OtterEngine/Graphics/Resource/VertexShader.h"
-#include "OtterEngine/Graphics/Resource/PixelShader.h"
-#include "OtterEngine/Graphics/Resource/InputLayout.h"
 #include "OtterEngine/Graphics/Resource/VertexBuffer.h"
 #include "OtterEngine/Graphics/Resource/IndexBuffer.h"
-#include "OtterEngine/Graphics/Resource/ConstantBuffer.h"
 
 std::vector<VertexBasic> DebugSphere::s_vertices;
 std::vector<unsigned short> DebugSphere::s_indices;
@@ -14,25 +10,15 @@ std::vector<std::unique_ptr<GraphicsResource>> DebugSphere::s_commonResources;
 
 DebugSphere::DebugSphere(const Graphics& graphics, const Vector3& translation, const Vector3& rotation, const Vector3& scale,
 	const Camera& camera, bool isStatic)
-	: Entity(translation, rotation, scale, s_indices.size(), camera, isStatic) {
+	: DebugEntity(graphics, translation, rotation, scale, s_indices.size(), camera, isStatic) {
 
 	if (s_commonResources.empty()) {
 		GenerateMesh(20); // generate static vertices and indices
-
-		// shaders & layout
-		std::unique_ptr<VertexShader> pVertexShader = std::make_unique<VertexShader>(graphics, L"BasicVertexShader.cso");
-		const std::vector<uint8_t> vertexShaderBlob = pVertexShader->GetVertexShaderBlob();
-		s_commonResources.push_back(std::move(pVertexShader));
-		s_commonResources.push_back(std::make_unique<PixelShader>(graphics, L"BasicPixelShader.cso"));
-		s_commonResources.push_back(std::make_unique<InputLayout>(graphics, vertexShaderBlob));
-
 		// buffers
 		s_commonResources.push_back(std::make_unique<VertexBuffer>(graphics,
 			s_vertices.data(), static_cast<unsigned int>(sizeof(VertexBasic)), s_vertices.size()));
 		s_commonResources.push_back(std::make_unique<IndexBuffer>(graphics, s_indices));
 	}
-
-	m_uniqueResources.push_back(std::make_unique<ConstantBufferTransformation>(graphics, *this));
 }
 
 void DebugSphere::GenerateMesh(int division) {
@@ -84,8 +70,4 @@ void DebugSphere::GenerateMesh(int division) {
 
 	// remember to change the size
 	m_indicesSize = s_indices.size();
-}
-
-const std::vector<std::unique_ptr<GraphicsResource>>& DebugSphere::GetCommonResources() const {
-	return s_commonResources;
 }
