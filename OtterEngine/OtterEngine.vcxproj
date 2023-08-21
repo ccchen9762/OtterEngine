@@ -167,6 +167,7 @@
     <ClCompile Include="Entity\DebugEntity\DebugSphere.cpp" />
     <ClCompile Include="Entity\Entity.cpp" />
     <ClCompile Include="Entity\DebugEntity\DebugLine.cpp" />
+    <ClCompile Include="Entity\ShadingEntity\Character.cpp" />
     <ClCompile Include="Entity\ShadingEntity\Plane.cpp" />
     <ClCompile Include="Entity\ShadingEntity.cpp" />
     <ClCompile Include="Entity\ShadingTexture.cpp" />
@@ -213,6 +214,7 @@
     <ClInclude Include="Entity\DebugEntity.h" />
     <ClInclude Include="Entity\DebugEntity\DebugSphere.h" />
     <ClInclude Include="Entity\DebugEntity\DebugLine.h" />
+    <ClInclude Include="Entity\ShadingEntity\Character.h" />
     <ClInclude Include="Entity\ShadingEntity\Plane.h" />
     <ClInclude Include="Entity\ShadingEntity.h" />
     <ClInclude Include="Entity\ShadingTexture.h" />

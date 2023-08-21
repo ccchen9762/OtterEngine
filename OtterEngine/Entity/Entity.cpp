@@ -10,7 +10,7 @@ Entity::Entity(const Vector3& translation, const Vector3& rotation, const Vector
 	m_indicesSize(indicesSize),
 	m_camera(camera),
 	m_isStatic(isStatic),
-	m_speed(Randomizer::GetFloat(0.02f, 0.08f)) { //Randomizer::GetFloat(0.02f, 0.08f)
+	m_speed(0.0f) { //Randomizer::GetFloat(0.02f, 0.08f)
 }
 
 void Entity::Update() {

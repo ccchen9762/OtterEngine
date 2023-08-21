@@ -1,11 +1,6 @@
 #pragma once
 
-#include <DirectXMath.h>
-
-#include "OtterEngine/Graphics/Graphics.h"
-#include "OtterEngine/Graphics/Resource/ConstantBuffer.h"
 #include "OtterEngine/Entity/DebugEntity/DebugSphere.h"
-#include "OtterEngine/Common/Vertex.h"
 
 class PointLight {
 private:
@@ -20,8 +15,7 @@ private:
 	};
 
 public:
-	PointLight(const Graphics& graphics, const DirectX::XMFLOAT4& position, const Color4& color, float scale,
-		const Camera& camera);
+	PointLight(const Graphics& graphics, const DirectX::XMFLOAT4& position, const Color4& color, float scale, const Camera& camera);
 
 	void Update(const Graphics& graphics) const;
 	void Render(const Graphics& graphics);

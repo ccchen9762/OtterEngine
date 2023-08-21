@@ -20,6 +20,7 @@ Cube::Cube(const Graphics& graphics, const Vector3& translation, const Vector3& 
 			s_vertices.data(), static_cast<unsigned int>(sizeof(Vertex)), s_vertices.size()));
 		s_commonResources.push_back(std::make_unique<IndexBuffer>(graphics, s_indices));
 	}
+	m_indicesSize = s_indices.size(); // make sure size in Entity changes
 }
 
 void Cube::GenerateMesh() {

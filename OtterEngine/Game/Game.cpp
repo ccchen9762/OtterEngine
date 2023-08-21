@@ -10,6 +10,7 @@
 #include "OtterEngine/Entity/ShadingEntity/Cube.h"
 #include "OtterEngine/Entity/ShadingEntity/Sphere.h"
 #include "OtterEngine/Entity/ShadingEntity/Plane.h"
+#include "OtterEngine/Entity/ShadingEntity/Character.h"
 
 #include "OtterEngine/Common/Randomizer.h"
 #include "OtterEngine/Common/constants.h"
@@ -54,11 +55,11 @@ Game::Game() :
     ));
 
     m_lightList.push_back(std::make_unique<PointLight>(*(m_mainWindow.m_pGraphics), 
-        DirectX::XMFLOAT4{ 0.0f, 2.0f, 0.0f, 1.0f }, 
-        Color4{ 1.0f, 0.5f, 0.8f, 1.0f }, 
+        DirectX::XMFLOAT4{ 0.0f, 8.0f, 4.0f, 1.0f }, 
+        Color4{ 1.0f, 0.7f, 0.7f, 1.0f }, 
         1.0f, m_camera));
 
-    for (int i = 0; i < 30; i++) {
+    /*for (int i = 0; i < 30; i++) {
         m_renderList.push_back(std::make_unique<Cube>(
             *(m_mainWindow.m_pGraphics),
             Vector3(Randomizer::GetFloat(-5.0f, 5.0f), Randomizer::GetFloat(0.0f, 10.0f), Randomizer::GetFloat(-9.0f, 1.0f)),
@@ -78,7 +79,17 @@ Game::Game() :
             m_camera,
             false
         ));
-    }
+    }*/
+
+    m_renderList.push_back(std::make_unique<Character>(
+        *(m_mainWindow.m_pGraphics),
+        Vector3(0.0f, 0.0f, -4.0f),
+        Vector3(0.0f, 0.0f, 0.0f),
+        Vector3(1.0f, 1.0f, 1.0f),
+        m_camera,
+        "",
+        false
+    ));
 
     m_renderList.push_back(std::make_unique<Plane>(
         *(m_mainWindow.m_pGraphics),
@@ -86,7 +97,7 @@ Game::Game() :
         Vector3(0.0f, 0.0f, 0.0f),
         Vector3(10.0f, 1.0f, 10.0f),
         m_camera,
-        L"Texture\\wood.jpg",
+        L"Assets\\Texture\\wood.jpg",
         true
     ));
 }
