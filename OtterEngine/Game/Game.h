@@ -9,6 +9,8 @@
 #include "OtterEngine/Entity/Entity.h"
 #include "OtterEngine/Camera/Camera.h"
 
+#include "OtterEngine/Entity/Model/Model.h"
+
 class Game {
 	
 	friend class ImguiManager;
@@ -37,4 +39,6 @@ private:
 	std::vector<std::unique_ptr<Entity>> m_renderList;
 	Camera m_camera;
 	bool showDebug;
+
+	Model m_model;
 };

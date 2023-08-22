@@ -13,18 +13,18 @@ public:
 		const Camera& camera, bool isStatic);
 	virtual ~Entity() = default; // use virtual make sure derived class destructors are called properly
 
-	virtual void Update();
-	virtual void Render(const Graphics& graphics) const;
+	virtual void Update(const Graphics& graphics);	// will can render at the end
 
-	const DirectX::XMMATRIX GetTransformMatrix() const;
-	const DirectX::XMMATRIX& GetViewMatrix() const;
-	const DirectX::XMMATRIX& GetViewProjectionMatrix() const;
+	const DirectX::XMMATRIX& GetTransformMatrix() const { return m_transformation; }
+	const DirectX::XMMATRIX& GetViewMatrix() const { return m_camera.GetViewProjectionMatrix(); }
+	const DirectX::XMMATRIX& GetViewProjectionMatrix() const { return m_camera.GetViewProjectionMatrix(); }
 	
 	void Translate(const Vector3& translation) { m_translation = translation; }
 	
 private:
 	virtual const std::vector<std::unique_ptr<GraphicsResource>>& GetShadingResources() const = 0;
 	virtual const std::vector<std::unique_ptr<GraphicsResource>>& GetCommonResources() const = 0;
+	virtual void Render(const Graphics& graphics) const;
 
 protected:
 	Vector3 m_translation;
@@ -34,6 +34,7 @@ protected:
 	const Camera& m_camera;
 	bool m_isStatic;
 
+	DirectX::XMMATRIX m_transformation;
 	std::vector<std::unique_ptr<GraphicsResource>> m_uniqueResources;
 	
 	float m_speed; // for testing

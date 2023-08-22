@@ -31,7 +31,7 @@ void ImguiManager::Update(Game& game) {
     
 
     if (kShowWindow) {
-        ImGui::Begin("Control Panel", &kShowWindow);
+        ImGui::Begin("System Panel", &kShowWindow, ImGuiWindowFlags_NoMove | ImGuiWindowFlags_NoResize);
 
         ImGuiIO& io = ImGui::GetIO(); (void)io;
         ImGui::Text("Application average %.3f ms/frame (%.1f FPS)", 1000.0f / io.Framerate, io.Framerate);

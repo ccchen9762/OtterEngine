@@ -10,7 +10,7 @@
 #include "OtterEngine/Entity/ShadingEntity/Cube.h"
 #include "OtterEngine/Entity/ShadingEntity/Sphere.h"
 #include "OtterEngine/Entity/ShadingEntity/Plane.h"
-#include "OtterEngine/Entity/ShadingEntity/Character.h"
+#include "OtterEngine/Entity/Model/Character.h"
 
 #include "OtterEngine/Common/Randomizer.h"
 #include "OtterEngine/Common/constants.h"
@@ -20,8 +20,15 @@ Game::Game() :
     m_mainWindow(Window(kDefWndTitle, kRenderWidth, kRenderHeight)), 
     m_alive(true), 
     m_timer(Timer()),
-    m_camera(*(m_mainWindow.m_pGraphics), Vector3(5.0f, 4.0f, 10.0f), Vector3(-0.5f, -0.33f, -1.0f), Vector3(0.0f, 1.0f, 0.0f)),
-    showDebug(true) {
+    m_camera(*(m_mainWindow.m_pGraphics), Vector3(10.0f, 8.0f, 15.0f), Vector3(-0.5f, -0.33f, -1.0f), Vector3(0.0f, 1.0f, 0.0f)),
+    showDebug(true),
+    m_model(*(m_mainWindow.m_pGraphics),
+        Vector3(8.0f, 0.0f, -4.0f),
+        Vector3(0.0f, 0.0f, 0.0f),
+        Vector3(5.0f, 5.0f, 5.0f),
+        m_camera,
+        false,
+        "Assets/Model/benz.obj"){
 
     Randomizer::Init();
 
@@ -83,7 +90,7 @@ Game::Game() :
 
     m_renderList.push_back(std::make_unique<Character>(
         *(m_mainWindow.m_pGraphics),
-        Vector3(0.0f, 0.0f, -4.0f),
+        Vector3(-8.0f, 0.0f, -4.0f),
         Vector3(0.0f, 0.0f, 0.0f),
         Vector3(1.0f, 1.0f, 1.0f),
         m_camera,
@@ -91,15 +98,20 @@ Game::Game() :
         false
     ));
 
-    m_renderList.push_back(std::make_unique<Plane>(
-        *(m_mainWindow.m_pGraphics),
-        Vector3(0.0f, 0.0f, -4.0f),
-        Vector3(0.0f, 0.0f, 0.0f),
-        Vector3(10.0f, 1.0f, 10.0f),
-        m_camera,
-        L"Assets\\Texture\\wood.jpg",
-        true
-    ));
+    // floor
+    for (int i = 0; i < 8; i++) {
+        for (int j = 0; j < 8; j++) {
+            m_renderList.push_back(std::make_unique<Plane>(
+                *(m_mainWindow.m_pGraphics),
+                Vector3(-14.0f + i*4, 0.0f, -14.0f + j*4),
+                Vector3(0.0f, 0.0f, 0.0f),
+                Vector3(4.0f, 1.0f, 4.0f),
+                m_camera,
+                L"Assets\\Texture\\wood.jpg",
+                true
+            ));
+        }
+    }
 }
 
 int Game::Start() {
@@ -191,18 +203,15 @@ void Game::Update() {
 
     if(showDebug) {
         for (int i = 0; i < m_debugList.size(); i++) {
-            m_debugList[i]->Update();
-            m_debugList[i]->Render(*(m_mainWindow.m_pGraphics));
+            m_debugList[i]->Update(*(m_mainWindow.m_pGraphics));
         }
     }
 
     for (int i = 0; i < m_renderList.size(); i++) {
-        m_renderList[i]->Update();
-        m_renderList[i]->Render(*(m_mainWindow.m_pGraphics));
+        m_renderList[i]->Update(*(m_mainWindow.m_pGraphics));
     }
 
-    m_lightList[0]->Render(*(m_mainWindow.m_pGraphics));
-
+    m_model.Update(*(m_mainWindow.m_pGraphics));
 
     // Start the Dear ImGui frame
     ImGui_ImplDX11_NewFrame();

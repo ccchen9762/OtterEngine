@@ -26,7 +26,6 @@ Plane::Plane(const Graphics& graphics, const Vector3& translation, const Vector3
 		s_commonResources.push_back(std::make_unique<VertexBuffer>(graphics, 
 			s_vertices.data(), static_cast<unsigned int>(sizeof(VertexTexture)), s_vertices.size()));
 		s_commonResources.push_back(std::make_unique<IndexBuffer>(graphics, s_indices));
+		s_commonResources.push_back(std::make_unique<Texture>(graphics, path));
 	}
-
-	m_uniqueResources.push_back(std::make_unique<Texture>(graphics, path));
 }

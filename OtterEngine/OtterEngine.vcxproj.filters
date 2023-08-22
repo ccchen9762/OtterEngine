@@ -39,7 +39,8 @@
     <ClCompile Include="Entity\ShadingEntity.cpp" />
     <ClCompile Include="Entity\ShadingTexture.cpp" />
     <ClCompile Include="Entity\DebugEntity.cpp" />
-    <ClCompile Include="Entity\ShadingEntity\Character.cpp" />
+    <ClCompile Include="Entity\Model\Character.cpp" />
+    <ClCompile Include="Entity\Model\Model.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="WindowClass\Window.h" />
@@ -89,7 +90,8 @@
     <ClInclude Include="Entity\ShadingEntity.h" />
     <ClInclude Include="Entity\ShadingTexture.h" />
     <ClInclude Include="Entity\DebugEntity.h" />
-    <ClInclude Include="Entity\ShadingEntity\Character.h" />
+    <ClInclude Include="Entity\Model\Character.h" />
+    <ClInclude Include="Entity\Model\Model.h" />
   </ItemGroup>
   <ItemGroup>
     <FxCompile Include="Shader\GouraudPixelShader.hlsl" />

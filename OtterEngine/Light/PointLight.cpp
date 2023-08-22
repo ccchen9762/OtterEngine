@@ -18,21 +18,19 @@ PointLight::PointLight(const Graphics& graphics, const DirectX::XMFLOAT4& positi
 	}) {
 }
 
-void PointLight::Update(const Graphics& graphics) const {
+void PointLight::Update(const Graphics& graphics) {
 	m_constantBufferVertex.Update(graphics, m_lightBuffer);
 	m_constantBufferPixel.Update(graphics, m_lightBuffer);
-}
-
-void PointLight::Render(const Graphics& graphics) {
+	
 	m_sphereMesh.Translate({ m_lightBuffer.position.x, m_lightBuffer.position.y, m_lightBuffer.position.z });
-	m_sphereMesh.Render(graphics);
+	m_sphereMesh.Update(graphics);
 }
 
 void PointLight::ShowControlWindow() {
-	if(ImGui::Begin("Light control")){
-		ImGui::SliderFloat("x", &m_lightBuffer.position.x, -10.0f, 10.0f, "%.1f");
-		ImGui::SliderFloat("y", &m_lightBuffer.position.y, -10.0f, 10.0f, "%.1f");
-		ImGui::SliderFloat("z", &m_lightBuffer.position.z, -10.0f, 10.0f, "%.1f");
+	if(ImGui::Begin("Light control", 0, ImGuiWindowFlags_NoMove | ImGuiWindowFlags_NoResize)){
+		ImGui::SliderFloat("x", &m_lightBuffer.position.x, -20.0f, 20.0f, "%.1f");
+		ImGui::SliderFloat("y", &m_lightBuffer.position.y, -20.0f, 20.0f, "%.1f");
+		ImGui::SliderFloat("z", &m_lightBuffer.position.z, -20.0f, 20.0f, "%.1f");
 
 		ImGui::ColorEdit3("light color", &m_lightBuffer.lightColor.r);
 
