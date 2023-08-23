@@ -25,10 +25,10 @@ Game::Game() :
     m_model(*(m_mainWindow.m_pGraphics),
         Vector3(8.0f, 0.0f, -4.0f),
         Vector3(0.0f, 0.0f, 0.0f),
-        Vector3(5.0f, 5.0f, 5.0f),
+        Vector3(1.0f, 1.0f, 1.0f),
         m_camera,
         false,
-        "Assets/Model/benz.obj"){
+        "Assets/Model/test.glb"){ //"Assets/Model/nano_hierarchy.gltf"
 
     Randomizer::Init();
 
@@ -198,20 +198,24 @@ void Game::Update() {
 
     m_mainWindow.m_pGraphics->ClearBuffer(0.1f, 0.1f, 0.1f);
     
-    m_lightList[0]->Update(*(m_mainWindow.m_pGraphics));
     m_camera.Update(*(m_mainWindow.m_pGraphics));
+
+    m_lightList[0]->Update(*(m_mainWindow.m_pGraphics));
+    m_lightList[0]->Render(*(m_mainWindow.m_pGraphics));
 
     if(showDebug) {
         for (int i = 0; i < m_debugList.size(); i++) {
-            m_debugList[i]->Update(*(m_mainWindow.m_pGraphics));
+            m_debugList[i]->Update();
+            m_debugList[i]->Render(*(m_mainWindow.m_pGraphics));
         }
     }
 
     for (int i = 0; i < m_renderList.size(); i++) {
-        m_renderList[i]->Update(*(m_mainWindow.m_pGraphics));
+        m_renderList[i]->Update();
+        m_renderList[i]->Render(*(m_mainWindow.m_pGraphics));
     }
 
-    m_model.Update(*(m_mainWindow.m_pGraphics));
+    m_model.Render(*(m_mainWindow.m_pGraphics));
 
     // Start the Dear ImGui frame
     ImGui_ImplDX11_NewFrame();
@@ -220,6 +224,7 @@ void Game::Update() {
 
     m_imguiManager.Update(*this);
     m_lightList[0]->ShowControlWindow();
+    m_model.ShowControlWindow();
 
     ImGui::Render();
     ImGui_ImplDX11_RenderDrawData(ImGui::GetDrawData());

@@ -13,7 +13,8 @@ public:
 		const Camera& camera, bool isStatic);
 	virtual ~Entity() = default; // use virtual make sure derived class destructors are called properly
 
-	virtual void Update(const Graphics& graphics);	// will can render at the end
+	virtual void Update();
+	virtual void Render(const Graphics& graphics) const;
 
 	const DirectX::XMMATRIX& GetTransformMatrix() const { return m_transformation; }
 	const DirectX::XMMATRIX& GetViewMatrix() const { return m_camera.GetViewProjectionMatrix(); }
@@ -24,7 +25,6 @@ public:
 private:
 	virtual const std::vector<std::unique_ptr<GraphicsResource>>& GetShadingResources() const = 0;
 	virtual const std::vector<std::unique_ptr<GraphicsResource>>& GetCommonResources() const = 0;
-	virtual void Render(const Graphics& graphics) const;
 
 protected:
 	Vector3 m_translation;

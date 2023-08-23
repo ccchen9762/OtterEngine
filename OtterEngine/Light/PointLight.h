@@ -18,6 +18,7 @@ public:
 	PointLight(const Graphics& graphics, const DirectX::XMFLOAT4& position, const Color4& color, float scale, const Camera& camera);
 
 	void Update(const Graphics& graphics);
+	void Render(const Graphics& graphics) const;
 	void ShowControlWindow();
 
 private:

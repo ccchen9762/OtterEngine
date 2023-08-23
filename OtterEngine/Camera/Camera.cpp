@@ -10,7 +10,7 @@ Camera::Camera(const Graphics& graphics, const Vector3& position, const Vector3&
 	m_constantBufferPixel(graphics, m_cameraBuffer, PixelConstantBufferType::Camera) {
 
 	SetViewMatrix();
-	SetProjectionMatrix(DirectX::XM_PIDIV4, kRenderRatio, 0.1f, 100.0f);
+	SetProjectionMatrix(DirectX::XM_PIDIV4, kRenderRatio, kNearZ, kFarZ);
 	m_viewProjectionMatrix = m_viewMatrix * m_projectionMatrix;
 }
 

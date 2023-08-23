@@ -23,7 +23,11 @@ void PointLight::Update(const Graphics& graphics) {
 	m_constantBufferPixel.Update(graphics, m_lightBuffer);
 	
 	m_sphereMesh.Translate({ m_lightBuffer.position.x, m_lightBuffer.position.y, m_lightBuffer.position.z });
-	m_sphereMesh.Update(graphics);
+	m_sphereMesh.Update();
+}
+
+void PointLight::Render(const Graphics& graphics) const {
+	m_sphereMesh.Render(graphics);
 }
 
 void PointLight::ShowControlWindow() {

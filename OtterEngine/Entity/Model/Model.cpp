@@ -4,6 +4,8 @@
 #include <assimp/scene.h>
 #include <assimp/postprocess.h>
 
+#include "OtterEngine/Imgui/imgui.h"
+
 #include "OtterEngine/Graphics/Resource/VertexBuffer.h"
 #include "OtterEngine/Graphics/Resource/IndexBuffer.h"
 
@@ -43,32 +45,39 @@ void Mesh::LoadMesh(unsigned int meshIndex, const aiMesh* mesh) {
 		assert("Model face are not all triangles" && face.mNumIndices == 3);
 
 		s_indices[meshIndex].push_back(face.mIndices[0]);
-		s_indices[meshIndex].push_back(face.mIndices[2]);
 		s_indices[meshIndex].push_back(face.mIndices[1]);
+		s_indices[meshIndex].push_back(face.mIndices[2]);
 	}
-}
-
-void Mesh::ApplyWorldTransformation(const DirectX::XMMATRIX& worldTransformation) {
-	m_transformation = worldTransformation;
 }
 
 // ========================= Node =========================
 
-Node::Node(std::vector<std::shared_ptr<Mesh>>& meshes, const DirectX::XMMATRIX& localTransformation)
-	: m_pMeshes(std::move(meshes)), m_localTransformation(localTransformation) {
+Node::Node(int nodeIndex, const std::string& name, std::vector<std::shared_ptr<Mesh>>& meshes, const DirectX::XMMATRIX& localTransformation)
+	:m_nodeIndex(nodeIndex), m_nodeName(name), m_pMeshes(std::move(meshes)), m_localTransformation(localTransformation) {
 }
 
-void Node::Update(const Graphics& graphics, const DirectX::XMMATRIX& parentTransformation) {
+void Node::UpdateTree(const Graphics& graphics, const DirectX::XMMATRIX& parentTransformation,
+	std::vector<Vector3> translations, std::vector<Vector3> rotations) {
 
-	const DirectX::XMMATRIX worldTransformation = m_localTransformation * parentTransformation;
+	const DirectX::XMMATRIX controlTransformation =
+		DirectX::XMMatrixRotationRollPitchYaw(rotations[m_nodeIndex].x, rotations[m_nodeIndex].y, rotations[m_nodeIndex].z) *
+		DirectX::XMMatrixTranslation(translations[m_nodeIndex].x, translations[m_nodeIndex].y, translations[m_nodeIndex].z);
+	const DirectX::XMMATRIX worldTransformation = controlTransformation * m_localTransformation * parentTransformation;
+	m_localTransformation.r[0];
+	m_localTransformation.r[1];
+	m_localTransformation.r[2];
+	m_localTransformation.r[3];
+
 
 	for (const std::shared_ptr<Mesh>& mesh : m_pMeshes) {
+		mesh->Update();
+		
 		mesh->ApplyWorldTransformation(worldTransformation);
-		mesh->Update(graphics);
+		mesh->Render(graphics);
 	}
 
 	for (const std::unique_ptr<Node>& node : m_pChildren) {
-		node->Update(graphics, worldTransformation);
+		node->UpdateTree(graphics, worldTransformation, translations, rotations);
 	}
 }
 
@@ -77,13 +86,32 @@ void Node::AppendChild(std::unique_ptr<Node> pChild) {
 	m_pChildren.push_back(std::move(pChild));
 }
 
+void Node::ShowTreeWindow(int& selectIndex) {
+	const auto flags = ImGuiTreeNodeFlags_OpenOnArrow | ImGuiTreeNodeFlags_OpenOnDoubleClick |
+		((m_nodeIndex == selectIndex) ? ImGuiTreeNodeFlags_Selected : 0) |
+		(m_pChildren.empty() ? ImGuiTreeNodeFlags_Leaf : 0);
+	
+	const bool imguiNode = ImGui::TreeNodeEx(std::to_string(m_nodeIndex).c_str(), flags, m_nodeName.c_str());
+	selectIndex = ImGui::IsItemClicked() ? m_nodeIndex : selectIndex;
+
+	if (imguiNode) {
+		for (const std::unique_ptr<Node>& pChild : m_pChildren) {
+			pChild->ShowTreeWindow(selectIndex);
+		}
+		ImGui::TreePop();
+	}
+}
+
 // ========================= Model =========================
 
 Model::Model(const Graphics& graphics, const Vector3& translation, const Vector3& rotation, const Vector3& scale,
-	const Camera& camera, bool isStatic, const std::string& path) {
+	const Camera& camera, bool isStatic, const std::string& path) : 
+	m_modelName(path), m_selectIndex(-1) {
 	Assimp::Importer imp;
-	const aiScene* pModel = imp.ReadFile(path, 
-		aiProcess_Triangulate | aiProcess_JoinIdenticalVertices);
+	const aiScene* pModel = imp.ReadFile(path,
+		aiProcess_Triangulate | aiProcess_JoinIdenticalVertices | aiProcess_GenNormals | aiProcess_FlipWindingOrder);
+
+	assert("Model file not found" && pModel);
 
 	size_t numMeshes = pModel->mNumMeshes;
 	Mesh::s_vertices.resize(numMeshes);
@@ -96,14 +124,22 @@ Model::Model(const Graphics& graphics, const Vector3& translation, const Vector3
 		));
 	}
 
-	m_pRoot = ParseNode(pModel->mRootNode);
+	int index = 0;
+	m_pRoot = ParseNode(index, pModel->mRootNode);
+
+	m_translations.resize(m_totalNodes);
+	m_rotations.resize(m_totalNodes);
+
+	m_translations[0] = translation;
+	m_rotations[0] = rotation;
 }
 
-void Model::Update(const Graphics& graphics) const {
-	m_pRoot->Update(graphics, DirectX::XMMatrixIdentity());
+void Model::Render(const Graphics& graphics) const {
+	m_pRoot->UpdateTree(graphics, DirectX::XMMatrixIdentity(), m_translations, m_rotations);
 }
 
-std::unique_ptr<Node> Model::ParseNode(const aiNode* node) {
+std::unique_ptr<Node> Model::ParseNode(int& nodeIndex, const aiNode* node) {
+	++m_totalNodes;
 
 	std::vector<std::shared_ptr<Mesh>> pMeshes;
 	pMeshes.reserve(node->mNumMeshes);
@@ -114,10 +150,32 @@ std::unique_ptr<Node> Model::ParseNode(const aiNode* node) {
 
 	const DirectX::XMMATRIX localTransformation = DirectX::XMMatrixTranspose(
 		DirectX::XMLoadFloat4x4(reinterpret_cast<const DirectX::XMFLOAT4X4*>(&node->mTransformation)));
-	std::unique_ptr<Node> pNode = std::make_unique<Node>(pMeshes, localTransformation);
+	std::unique_ptr<Node> pNode = std::make_unique<Node>(m_totalNodes-1, node->mName.C_Str(), pMeshes, localTransformation);
 	for (size_t i = 0; i < node->mNumChildren; i++) {
-		pNode->AppendChild(ParseNode(node->mChildren[i]));
+		pNode->AppendChild(ParseNode(nodeIndex, node->mChildren[i]));
 	}
 
 	return pNode;
+}
+
+void Model::ShowControlWindow() {
+	//ImGuiWindowFlags_NoMove | ImGuiWindowFlags_NoResize
+	if (ImGui::Begin(m_modelName.c_str(), 0)) {
+		ImGui::Columns(2, nullptr, true);
+		int nodeIndex = 0;
+		m_pRoot->ShowTreeWindow(m_selectIndex);
+		
+		ImGui::NextColumn();
+		if (m_selectIndex > -1) {
+			ImGui::Text("Orientation");
+			ImGui::SliderAngle("Roll", &m_rotations[m_selectIndex].x, -180.0f, 180.0f);
+			ImGui::SliderAngle("Pitch", &m_rotations[m_selectIndex].y, -180.0f, 180.0f);
+			ImGui::SliderAngle("Yaw", &m_rotations[m_selectIndex].z, -180.0f, 180.0f);
+			ImGui::Text("Position");
+			ImGui::SliderFloat("X", &m_translations[m_selectIndex].x, -20.0f, 20.0f);
+			ImGui::SliderFloat("Y", &m_translations[m_selectIndex].y, -20.0f, 20.0f);
+			ImGui::SliderFloat("Z", &m_translations[m_selectIndex].z, -20.0f, 20.0f);
+		}
+	}
+	ImGui::End();
 }

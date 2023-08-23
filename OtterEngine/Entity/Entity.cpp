@@ -10,10 +10,11 @@ Entity::Entity(const Vector3& translation, const Vector3& rotation, const Vector
 	m_indicesSize(indicesSize),
 	m_camera(camera),
 	m_isStatic(isStatic),
-	m_speed(0.0f) { //Randomizer::GetFloat(0.02f, 0.08f)
+	m_speed(0.0f),
+	m_transformation(DirectX::XMMatrixIdentity()){ //Randomizer::GetFloat(0.02f, 0.08f)
 }
 
-void Entity::Update(const Graphics& graphics) {
+void Entity::Update() {
 	if (!m_isStatic) {
 		m_rotation.x += m_speed;
 		m_rotation.y += m_speed;
@@ -24,8 +25,6 @@ void Entity::Update(const Graphics& graphics) {
 	m_transformation = DirectX::XMMatrixScaling(m_scale.x, m_scale.y, m_scale.z) *
 		DirectX::XMMatrixRotationRollPitchYaw(m_rotation.x, m_rotation.y, m_rotation.z) *
 		DirectX::XMMatrixTranslation(m_translation.x, m_translation.y, m_translation.z);
-
-	Render(graphics);
 }
 
 void Entity::Render(const Graphics& graphics) const {
