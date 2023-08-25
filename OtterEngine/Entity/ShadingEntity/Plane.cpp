@@ -19,13 +19,16 @@ std::vector<std::unique_ptr<GraphicsResource>> Plane::s_commonResources;
 
 Plane::Plane(const Graphics& graphics, const Vector3& translation, const Vector3& rotation, const Vector3& scale,
 	const Camera& camera, const std::wstring& path, bool isStatic)
-	: ShadingTexture(graphics, translation, rotation, scale, s_indices.size(), camera, isStatic) {
+	: ShadingTexture(graphics, translation, rotation, scale, s_indices.size(), camera, isStatic, {5.0f, false}) {
 
 	if (s_commonResources.empty()) {
 		// buffers
 		s_commonResources.push_back(std::make_unique<VertexBuffer>(graphics, 
 			s_vertices.data(), static_cast<unsigned int>(sizeof(VertexTexture)), s_vertices.size()));
 		s_commonResources.push_back(std::make_unique<IndexBuffer>(graphics, s_indices));
-		s_commonResources.push_back(std::make_unique<Texture>(graphics, path));
+		s_commonResources.push_back(std::make_unique<Texture>(graphics, path, 0u));
 	}
+
+	m_uniqueResources.push_back(std::make_unique<ConstantBufferVertex<Attributes>>(graphics, m_attributes, VertexConstantBufferType::Attributes));
+	m_uniqueResources.push_back(std::make_unique<ConstantBufferPixel<Attributes>>(graphics, m_attributes, PixelConstantBufferType::Attributes));
 }

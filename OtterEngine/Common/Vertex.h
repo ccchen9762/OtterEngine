@@ -11,9 +11,7 @@ struct Vertex {
 
 struct VertexTexture {
 	DirectX::XMVECTOR m_position;
-	struct {
-		float u, v;
-	} m_texcoord;
+	DirectX::XMFLOAT2 m_texcoord;
 	Normal m_normal;
 };
 

@@ -7,8 +7,8 @@
 std::vector<std::unique_ptr<GraphicsResource>> ShadingTexture::s_shadingResources;
 
 ShadingTexture::ShadingTexture(const Graphics& graphics, const Vector3& translation, const Vector3& rotation, const Vector3& scale,
-	size_t indiceSize, const Camera& camera, bool isStatic)
-	: Entity(translation, rotation, scale, indiceSize, camera, isStatic), m_attributes({ 5.0f }) {
+	size_t indiceSize, const Camera& camera, bool isStatic, Attributes attributes)
+	: Entity(translation, rotation, scale, indiceSize, camera, isStatic), m_attributes(attributes) {
 
 	if (s_shadingResources.empty()) {
 		// shaders & layout

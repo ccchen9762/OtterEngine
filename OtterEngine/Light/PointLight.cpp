@@ -21,6 +21,9 @@ PointLight::PointLight(const Graphics& graphics, const DirectX::XMFLOAT4& positi
 void PointLight::Update(const Graphics& graphics) {
 	m_constantBufferVertex.Update(graphics, m_lightBuffer);
 	m_constantBufferPixel.Update(graphics, m_lightBuffer);
+
+	m_constantBufferVertex.Bind(graphics);
+	m_constantBufferPixel.Bind(graphics);
 	
 	m_sphereMesh.Translate({ m_lightBuffer.position.x, m_lightBuffer.position.y, m_lightBuffer.position.z });
 	m_sphereMesh.Update();

@@ -28,7 +28,7 @@ ShadingEntity::ShadingEntity(const Graphics& graphics, const Vector3& translatio
 		}
 	}
 
-	m_uniqueResources.push_back(std::make_unique<ConstantBufferVertex<Attributes>>(graphics, m_attributes, VertexConstantBufferType::Attributes));
-	m_uniqueResources.push_back(std::make_unique<ConstantBufferPixel<Attributes>>(graphics, m_attributes, PixelConstantBufferType::Attributes));
+	//m_uniqueResources.push_back(std::make_unique<ConstantBufferVertex<Attributes>>(graphics, m_attributes, VertexConstantBufferType::Attributes));
+	//m_uniqueResources.push_back(std::make_unique<ConstantBufferPixel<Attributes>>(graphics, m_attributes, PixelConstantBufferType::Attributes));
 	m_uniqueResources.push_back(std::make_unique<ConstantBufferTransformation>(graphics, *this));
 }

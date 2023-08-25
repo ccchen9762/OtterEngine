@@ -6,20 +6,24 @@
 
 #include "OtterEngine/Imgui/imgui.h"
 
+#include "OtterEngine/Graphics/Resource/VertexShader.h"
+#include "OtterEngine/Graphics/Resource/PixelShader.h"
+#include "OtterEngine/Graphics/Resource/InputLayout.h"
 #include "OtterEngine/Graphics/Resource/VertexBuffer.h"
 #include "OtterEngine/Graphics/Resource/IndexBuffer.h"
+#include "OtterEngine/Graphics/Resource/Texture.h"
 
-std::vector<std::vector<Vertex>> Mesh::s_vertices;
+std::vector<std::vector<VertexTexture>> Mesh::s_vertices;
 std::vector<std::vector<unsigned short>> Mesh::s_indices;
 
 std::vector<std::vector<std::unique_ptr<GraphicsResource>>> Mesh::s_commonResources;
 
 Mesh::Mesh(const Graphics& graphics, const Vector3& translation, const Vector3& rotation, const Vector3& scale, 
-	const Camera& camera, bool isStatic, unsigned int meshIndex, const aiMesh* mesh)
-	: ShadingEntity(graphics, translation, rotation, scale, 0, camera, isStatic), m_meshIndex(meshIndex) {
+	const Camera& camera, bool isStatic, unsigned int meshIndex, const aiMesh* pMesh, const aiMaterial* const* ppMaterials)
+	: ShadingTexture(graphics, translation, rotation, scale, 0, camera, isStatic, {5.0, true}), m_meshIndex(meshIndex) {
 
 	if (s_commonResources[meshIndex].empty()) {
-		LoadMesh(meshIndex, mesh);
+		LoadMesh(graphics, meshIndex, pMesh, ppMaterials);
 
 		// buffers
 		s_commonResources[meshIndex].push_back(std::make_unique<VertexBuffer>(graphics,
@@ -29,24 +33,60 @@ Mesh::Mesh(const Graphics& graphics, const Vector3& translation, const Vector3& 
 	m_indicesSize = s_indices[meshIndex].size(); // make sure size in Entity changes
 }
 
-void Mesh::LoadMesh(unsigned int meshIndex, const aiMesh* mesh) {
-	s_vertices[meshIndex].reserve(mesh->mNumVertices);
-	for (unsigned int i = 0; i < mesh->mNumVertices; i++) {
+void Mesh::LoadMesh(const Graphics& graphics, unsigned int meshIndex, const aiMesh* pMesh, const aiMaterial* const* ppMaterials) {
+	s_vertices[meshIndex].reserve(pMesh->mNumVertices);
+	for (unsigned int i = 0; i < pMesh->mNumVertices; i++) {
 		s_vertices[meshIndex].emplace_back(
-			DirectX::XMVECTOR{ mesh->mVertices[i].x, mesh->mVertices[i].y, mesh->mVertices[i].z, 1.0f },
-			Color4{ 1.0f, 1.0f, 1.0f, 1.0f },
-			Normal{ mesh->mNormals[i].x, mesh->mNormals[i].y, mesh->mNormals[i].z }
+			DirectX::XMVECTOR{ pMesh->mVertices[i].x, pMesh->mVertices[i].y, pMesh->mVertices[i].z, 1.0f },
+			DirectX::XMFLOAT2{ pMesh->mTextureCoords[0][i].x, pMesh->mTextureCoords[0][i].y },
+			Normal{ pMesh->mNormals[i].x, pMesh->mNormals[i].y, pMesh->mNormals[i].z }
 		);
 	}
 
-	s_indices[meshIndex].reserve(mesh->mNumFaces * 3);
-	for (unsigned int i = 0; i < mesh->mNumFaces; i++) {
-		const aiFace& face = mesh->mFaces[i];
+	s_indices[meshIndex].reserve(pMesh->mNumFaces * 3);
+	for (unsigned int i = 0; i < pMesh->mNumFaces; i++) {
+		const aiFace& face = pMesh->mFaces[i];
 		assert("Model face are not all triangles" && face.mNumIndices == 3);
 
 		s_indices[meshIndex].push_back(face.mIndices[0]);
 		s_indices[meshIndex].push_back(face.mIndices[1]);
 		s_indices[meshIndex].push_back(face.mIndices[2]);
+	}
+
+	const aiMaterial* pMaterial = ppMaterials[pMesh->mMaterialIndex];
+	aiString textureName;
+	// load diffuse map
+	if (pMaterial->GetTexture(aiTextureType_DIFFUSE, 0, &textureName) == aiReturn_SUCCESS) {
+		std::string location = "Assets\\Model\\nanosuit\\";
+		location += textureName.C_Str();
+		std::wstring fileLocation(location.begin(), location.end());
+		s_commonResources[meshIndex].push_back(std::make_unique<Texture>(graphics, fileLocation, 0u));
+	}
+	// load specular map
+	if(pMaterial->GetTexture(aiTextureType_SPECULAR, 0, &textureName) == aiReturn_SUCCESS) {
+		std::string location = "Assets\\Model\\nanosuit\\";
+		location += textureName.C_Str();
+		std::wstring fileLocation(location.begin(), location.end());
+		s_commonResources[meshIndex].push_back(std::make_unique<Texture>(graphics, fileLocation, 1u));
+	}
+	else {
+		pMaterial->Get(AI_MATKEY_SHININESS, m_attributes.shiness);
+		m_attributes.hasSpecularMap = false;
+		
+		m_uniqueResources.push_back(std::make_unique<ConstantBufferVertex<Attributes>>(graphics, m_attributes, VertexConstantBufferType::Attributes));
+		m_uniqueResources.push_back(std::make_unique<ConstantBufferPixel<Attributes>>(graphics, m_attributes, PixelConstantBufferType::Attributes));
+		/*for (std::unique_ptr<GraphicsResource>& resource : m_uniqueResources) {
+			if (typeid(*resource.get()) == typeid(ConstantBufferPixel<Attributes>)) {
+				ConstantBufferPixel<Attributes>* constantBufferPixel = static_cast<ConstantBufferPixel<Attributes>*>(resource.get());
+				constantBufferPixel->Update(graphics, m_attributes);
+			}
+			else if (typeid(*resource.get()) == typeid(ConstantBufferVertex<Attributes>)) {
+				ConstantBufferVertex<Attributes>* constantBufferVertex = static_cast<ConstantBufferVertex<Attributes>*>(resource.get());
+				constantBufferVertex->Update(graphics, m_attributes);
+			}
+		}*/
+		
+		s_commonResources[meshIndex].push_back(std::make_unique<Texture>(graphics, L"", 1u));
 	}
 }
 
@@ -63,11 +103,6 @@ void Node::UpdateTree(const Graphics& graphics, const DirectX::XMMATRIX& parentT
 		DirectX::XMMatrixRotationRollPitchYaw(rotations[m_nodeIndex].x, rotations[m_nodeIndex].y, rotations[m_nodeIndex].z) *
 		DirectX::XMMatrixTranslation(translations[m_nodeIndex].x, translations[m_nodeIndex].y, translations[m_nodeIndex].z);
 	const DirectX::XMMATRIX worldTransformation = controlTransformation * m_localTransformation * parentTransformation;
-	m_localTransformation.r[0];
-	m_localTransformation.r[1];
-	m_localTransformation.r[2];
-	m_localTransformation.r[3];
-
 
 	for (const std::shared_ptr<Mesh>& mesh : m_pMeshes) {
 		mesh->Update();
@@ -120,7 +155,7 @@ Model::Model(const Graphics& graphics, const Vector3& translation, const Vector3
 
 	for (size_t i = 0; i < numMeshes; i++) {
 		m_pAllMeshes.push_back(std::make_unique<Mesh>(
-			graphics, translation, rotation, scale, camera, isStatic, i, pModel->mMeshes[i]
+			graphics, translation, rotation, scale, camera, isStatic, i, pModel->mMeshes[i], pModel->mMaterials
 		));
 	}
 

@@ -1,18 +1,18 @@
 #pragma once
 
-#include "../ShadingEntity.h"
+#include "../ShadingTexture.h"
 #include <assimp/scene.h>
 
-class Mesh : public ShadingEntity
+class Mesh : public ShadingTexture
 {
 	friend class Model;
 
 public:
 	Mesh(const Graphics& graphics, const Vector3& translation, const Vector3& rotation, const Vector3& scale,
-		const Camera& camera, bool isStatic, unsigned int meshIndex, const aiMesh* mesh);
+		const Camera& camera, bool isStatic, unsigned int meshIndex, const aiMesh* mesh, const aiMaterial* const* materials);
 	~Mesh() = default;
 
-	static void LoadMesh(unsigned int meshIndex, const aiMesh* mesh);
+	void LoadMesh(const Graphics& graphics, unsigned int meshIndex, const aiMesh* mesh, const aiMaterial* const* materials);
 	void ApplyWorldTransformation(const DirectX::XMMATRIX& worldTransformation) { m_transformation = worldTransformation; }
 
 	const std::vector<std::unique_ptr<GraphicsResource>>& GetCommonResources() const override { return s_commonResources[m_meshIndex]; }
@@ -20,7 +20,7 @@ public:
 private:
 	unsigned int m_meshIndex;
 
-	static std::vector<std::vector<Vertex>> s_vertices;
+	static std::vector<std::vector<VertexTexture>> s_vertices;
 	static std::vector<std::vector<unsigned short>> s_indices;
 
 	static std::vector<std::vector<std::unique_ptr<GraphicsResource>>> s_commonResources;

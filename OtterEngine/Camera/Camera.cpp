@@ -22,6 +22,9 @@ void Camera::Update(const Graphics& graphics) {
 	m_cameraBuffer.position = DirectX::XMVECTOR{ m_position.x, m_position.y, m_position.z, 1.0f };
 	m_constantBufferVertex.Update(graphics, m_cameraBuffer);
 	m_constantBufferPixel.Update(graphics, m_cameraBuffer);
+
+	m_constantBufferVertex.Bind(graphics);
+	m_constantBufferPixel.Bind(graphics);
 }
 
 void Camera::TranslateCamera(float translateX, float translateY) {

@@ -6,14 +6,15 @@ class ShadingTexture : public Entity
 {
 	friend class Entity;
 
-protected:
+public:
 	struct Attributes {
 		alignas(16) float shiness;
+		BOOL hasSpecularMap;
 	};
 
 public:
 	ShadingTexture(const Graphics& graphics, const Vector3& translation, const Vector3& rotation, const Vector3& scale,
-		size_t indiceSize, const Camera& camera, bool isStatic);
+		size_t indiceSize, const Camera& camera, bool isStatic, Attributes attributes);
 	virtual ~ShadingTexture() = default;
 
 private:

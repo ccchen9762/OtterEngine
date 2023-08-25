@@ -28,7 +28,7 @@ Game::Game() :
         Vector3(1.0f, 1.0f, 1.0f),
         m_camera,
         false,
-        "Assets/Model/nano_hierarchy.glb"){ //"Assets/Model/nano_hierarchy.gltf"
+        "Assets/Model/nanosuit/nanosuit.obj"){ //"Assets/Model/nano_hierarchy.gltf"
 
     Randomizer::Init();
 

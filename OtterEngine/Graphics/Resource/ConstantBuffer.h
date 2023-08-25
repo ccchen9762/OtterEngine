@@ -68,8 +68,6 @@ public:
 			D3D11_MAP_WRITE_DISCARD, 0u, &mappedSubResource));
 		memcpy(mappedSubResource.pData, &t, sizeof(T));
 		GetDeviceContext(graphics)->Unmap(m_pConstantBuffer.Get(), 0u);
-
-		Bind(graphics);
 	}
 
 private:
@@ -109,8 +107,6 @@ public:
 			D3D11_MAP_WRITE_DISCARD, 0u, &mappedSubResource));
 		memcpy(mappedSubResource.pData, &t, sizeof(T));
 		GetDeviceContext(graphics)->Unmap(m_pConstantBuffer.Get(), 0u);
-
-		Bind(graphics);
 	}
 
 private:
