@@ -17,9 +17,9 @@ public:
 	// called every frame
 	void Update(const Graphics& graphics);
 
-	void TranslateCamera(const Vector3Int& position, const Vector3Int& prevPosition);
+	void TranslateCamera(float translateX, float translateY);
 	void TranslateCameraZ(int translateZ);
-	void RotateCamera(const Vector3Int& position, const Vector3Int& prevPosition);
+	void RotateCamera(float rotationY, float rotationX);
 	void SetProjectionMatrix(float fov, float ratio, float nearZ, float farZ);
 
 	const DirectX::XMMATRIX& GetViewMatrix() const { return m_viewMatrix; }

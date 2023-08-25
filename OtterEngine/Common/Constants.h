@@ -22,6 +22,9 @@ inline bool kShowWindow = true, kShowAnotherWindow = true;
 // math
 inline const double kPI = 3.1415926;
 
+// rendering settings
+inline unsigned int kVSync = 1u;
+
 enum class RenderMethod {
 	Gouraud = 0, Phong = 1
 };

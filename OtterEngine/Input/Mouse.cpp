@@ -2,11 +2,11 @@
 
 #include "OtterEngine/Common/pch.h"
 
-Mouse::MouseEvent::MouseEvent(Type type, Vector3Int pos) : m_type(type), m_position(pos) {
+Mouse::MouseEvent::MouseEvent(Type type, const Vector3Int& pos) : m_type(type), m_position(pos) {
 }
 
 Mouse::MouseEvent Mouse::ReadFirstEvent() {
-	if (m_mouseEventBuffer.size() > 0) {
+	if (!m_mouseEventBuffer.empty()) {
 		MouseEvent mouseEvent = m_mouseEventBuffer.front();
 		m_mouseEventBuffer.pop();
 		return mouseEvent;

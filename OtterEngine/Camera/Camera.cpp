@@ -24,23 +24,18 @@ void Camera::Update(const Graphics& graphics) {
 	m_constantBufferPixel.Update(graphics, m_cameraBuffer);
 }
 
-void Camera::TranslateCamera(const Vector3Int& position, const Vector3Int& prevPosition) {
-	float translateX = m_speed * (position.x - prevPosition.x);
-	float translateY = m_speed * (position.y - prevPosition.y);
-
-	m_position += translateX * CrossProduct(m_orientation, m_up);
-	m_position -= translateY * m_up;
+void Camera::TranslateCamera(float translateX, float translateY) {
+	m_position += translateX * m_speed * CrossProduct(m_orientation, m_up);
+	m_position -= translateY * m_speed * m_up;
 }
 
 void Camera::TranslateCameraZ(int translateZ) {
-	translateZ *= m_speed * 50.0f;
-
-	m_position += translateZ * m_orientation;
+	m_position += translateZ * m_speed * m_orientation;
 }
 
-void Camera::RotateCamera(const Vector3Int& position, const Vector3Int& prevPosition) {
-	float rotationX = m_angularSpeed * (position.y - prevPosition.y);
-	float rotationY = m_angularSpeed * (position.x - prevPosition.x);
+void Camera::RotateCamera(float rotationY, float rotationX) {
+	rotationX *= m_angularSpeed;
+	rotationY *= m_angularSpeed;
 
 	Vector3 xAxis = CrossProduct(m_orientation, m_up);
 	xAxis.normalize();

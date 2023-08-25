@@ -20,7 +20,7 @@ Game::Game() :
     m_mainWindow(Window(kDefWndTitle, kRenderWidth, kRenderHeight)), 
     m_alive(true), 
     m_timer(Timer()),
-    m_camera(*(m_mainWindow.m_pGraphics), Vector3(10.0f, 8.0f, 15.0f), Vector3(-0.5f, -0.33f, -1.0f), Vector3(0.0f, 1.0f, 0.0f)),
+    m_camera(*(m_mainWindow.m_pGraphics), Vector3(10.0f, 15.0f, 25.0f), Vector3(-0.5f, -0.33f, -1.0f), Vector3(0.0f, 1.0f, 0.0f)),
     showDebug(true),
     m_model(*(m_mainWindow.m_pGraphics),
         Vector3(8.0f, 0.0f, -4.0f),
@@ -28,7 +28,7 @@ Game::Game() :
         Vector3(1.0f, 1.0f, 1.0f),
         m_camera,
         false,
-        "Assets/Model/test.glb"){ //"Assets/Model/nano_hierarchy.gltf"
+        "Assets/Model/nano_hierarchy.glb"){ //"Assets/Model/nano_hierarchy.gltf"
 
     Randomizer::Init();
 
@@ -88,7 +88,7 @@ Game::Game() :
         ));
     }*/
 
-    m_renderList.push_back(std::make_unique<Character>(
+    /*m_renderList.push_back(std::make_unique<Character>(
         *(m_mainWindow.m_pGraphics),
         Vector3(-8.0f, 0.0f, -4.0f),
         Vector3(0.0f, 0.0f, 0.0f),
@@ -96,7 +96,7 @@ Game::Game() :
         m_camera,
         "",
         false
-    ));
+    ));*/
 
     // floor
     for (int i = 0; i < 8; i++) {
@@ -116,37 +116,67 @@ Game::Game() :
 
 int Game::Start() {
     // message loop
-    MSG msg = {};
+    int wParam = 0;
     while (m_alive) {
+        // move message handling loop outside the main loop
+        // so it will handle pending messages but not wait for new messages
+        if (!ProcessMessages(wParam))
+            break;
 
-        /*  nullptr in GetMessage() / PeekMessage() means to retrieve messages from any window belongs to current thread
+        double deltaTime = m_timer.Update();
+        HandleInput(deltaTime);
+        Update(deltaTime);
+    }
+
+    return wParam;
+    // wParam of WM_QUIT is parameter of PostQuitMessage
+	//return static_cast<int>(msg.wParam);
+}
+
+bool Game::ProcessMessages(int& wParam) {
+
+    /*  nullptr in GetMessage() / PeekMessage() means to retrieve messages from any window belongs to current thread
             GetMessage() waits until a message comes in, return 0 means WM_QUIT, return -1 means error
             PeekMessage() always tries to get message, return bool */
-        
-        if (PeekMessage(&msg, nullptr, 0, 0, PM_REMOVE)) {
-            TranslateMessage(&msg);
-            DispatchMessage(&msg);
 
-            HandleInput();
+    MSG msg = {};
+    while (PeekMessage(&msg, nullptr, 0, 0, PM_REMOVE)) {
+        TranslateMessage(&msg);
+        DispatchMessage(&msg);
 
-            if (msg.message == WM_QUIT) {
-                m_alive = false;
-            }
-        }
-        else {  // Magic!!! "else" prevents slow down when large amount of inputs come in
-            Update();
+        if (msg.message == WM_QUIT) {
+            wParam = msg.wParam;
+            m_alive = false;
+            break;
         }
     }
 
-    // wParam of WM_QUIT is parameter of PostQuitMessage
-	return static_cast<int>(msg.wParam);
+    return m_alive;
 }
 
-void Game::HandleInput() {
+
+void Game::HandleInput(double deltaTime) {
     if (m_mainWindow.m_keyboard.IsKeyPressed(VK_TAB) || m_mainWindow.m_keyboard.IsKeyPressed(VK_MENU)) {
         unsigned int result = MessageBox(nullptr, L"HIHIHI", L"TMEPY", MB_OK);
         if (result == IDOK)
             m_mainWindow.CaptureWindow();
+    }
+
+    // W
+    if (m_mainWindow.m_keyboard.IsKeyPressed(0x57)) {
+        m_camera.TranslateCameraZ(deltaTime * 3000.0f);
+    }
+    // S
+    if (m_mainWindow.m_keyboard.IsKeyPressed(0x53)) {
+        m_camera.TranslateCameraZ(-deltaTime * 3000.0f);
+    }
+    // A
+    if (m_mainWindow.m_keyboard.IsKeyPressed(0x41)) {
+        m_camera.TranslateCamera(-deltaTime * 1000.0f, 0.0f);
+    }
+    // D
+    if (m_mainWindow.m_keyboard.IsKeyPressed(0x44)) {
+        m_camera.TranslateCamera(deltaTime * 1000.0f, 0.0f);
     }
 
     while (!m_mainWindow.m_mouse.MouseEventBufferEmpty()) {
@@ -162,27 +192,29 @@ void Game::HandleInput() {
                 --test;
                 const std::wstring title = std::to_wstring(test);
                 m_mainWindow.setTitle(title);
-                m_camera.TranslateCameraZ(-1);
+                m_camera.TranslateCameraZ(-100.0f);
                 break;
             }
             case Mouse::MouseEvent::Type::WheelUp: {
                 ++test;
                 const std::wstring title = std::to_wstring(test);
                 m_mainWindow.setTitle(title);
-                m_camera.TranslateCameraZ(1);
+                m_camera.TranslateCameraZ(100.0f);
                 break;
             }
             case Mouse::MouseEvent::Type::Move: {
-                Vector3Int pos = mouseEvent.getPosition();
+                const Vector3Int& pos = mouseEvent.getPosition();
                 const std::wstring title = L"X: " + std::to_wstring(pos.x) + L", Y: " + std::to_wstring(pos.y);
                 m_mainWindow.setTitle(title);
 
                 static Vector3Int prevPos = pos; // static will only be initialized once
+                float translateX = pos.x - prevPos.x;
+                float translateY = pos.y - prevPos.y;
                 if (m_mainWindow.m_mouse.IsMButtonPressed()) {
-                    m_camera.TranslateCamera(pos, prevPos);
+                    m_camera.TranslateCamera(translateX, translateY);
                 }
                 if (m_mainWindow.m_mouse.IsRButtonPressed()) {
-                    m_camera.RotateCamera(pos, prevPos);
+                    m_camera.RotateCamera(translateX, translateY);
                 }
                 prevPos = pos;
                 break;
@@ -192,9 +224,7 @@ void Game::HandleInput() {
     }
 }
 
-void Game::Update() {
-
-    m_timer.Update();
+void Game::Update(double deltaTime) {
 
     m_mainWindow.m_pGraphics->ClearBuffer(0.1f, 0.1f, 0.1f);
     

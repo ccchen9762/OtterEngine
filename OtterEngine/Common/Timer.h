@@ -29,7 +29,8 @@ public:
     double GetElapsedTimeMilliSecond() { return m_elapsedTime.QuadPart * 1000 / static_cast<double>(m_qpcFrequency.QuadPart); }
     double GetFramesPerSecond() { return m_framesPerSecond; }
 
-    void Update() {
+    double Update() {
+        LARGE_INTEGER previousFrame = m_currentTime;
         if (!QueryPerformanceCounter(&m_currentTime))
             throw std::exception("QueryPerformanceCounter");
 
@@ -44,6 +45,8 @@ public:
             m_lastUpdate = m_currentTime;
             m_framesThisInterval = 0;
         }
+
+        return (m_currentTime.QuadPart - previousFrame.QuadPart) / static_cast<double>(m_qpcFrequency.QuadPart);
     }
 
     void Reset() {

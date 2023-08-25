@@ -9,7 +9,7 @@ class Keyboard {
 
 	friend class Window;
 
-private:
+public:
 	struct KeyEvent {
 	public:
 		enum class Type {Empty, KeyDown, KeyUp};
@@ -18,6 +18,7 @@ private:
 		~KeyEvent() = default;
 
 		Type getEventType() const { return m_type; }
+		unsigned char getKey() const { return m_keyCode; }
 
 	private:
 		Type m_type;

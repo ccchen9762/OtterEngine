@@ -22,11 +22,11 @@ public:
 		};
 
 	public:
-		MouseEvent(Type type, Vector3Int pos);
+		MouseEvent(Type type, const Vector3Int& pos);
 		~MouseEvent() = default;
 
 		Type getEventType() const { return m_type; }
-		Vector3Int getPosition() const { return m_position; }
+		const Vector3Int& getPosition() const { return m_position; }
 
 	private:
 		Type m_type;

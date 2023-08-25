@@ -24,10 +24,11 @@ public:
 	Game& operator= (const Game&) = delete;
 
 	int Start();
+	bool ProcessMessages(int& wParam);
 
 private:
-	void HandleInput();
-	void Update();
+	void HandleInput(double deltaTime);
+	void Update(double deltaTime);
 
 private:
 	ImguiManager m_imguiManager; // order matters!! Imgui must be initialized before Window

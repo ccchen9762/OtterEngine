@@ -12,7 +12,7 @@ std::vector<unsigned short> Character::s_indices;
 
 std::vector<std::unique_ptr<GraphicsResource>> Character::s_commonResources;
 
-std::string Character::s_modelPath = "Assets/Model/nanosuit.obj";
+std::string Character::s_modelPath = "Assets/Model/benz.obj";
 
 Character::Character(const Graphics& graphics, const Vector3& translation, const Vector3& rotation, const Vector3& scale,
 	const Camera& camera, const std::string& path, bool isStatic)

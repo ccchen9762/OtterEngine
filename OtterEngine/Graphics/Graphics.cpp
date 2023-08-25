@@ -125,5 +125,5 @@ void Graphics::Update() {
 }
 
 void Graphics::PostUpdate() {
-	m_pSwapChain->Present(1u, 0u); // swapchain present need to be call at the end of frame
+	m_pSwapChain->Present(kVSync, 0u); // swapchain present need to be call at the end of frame
 }
