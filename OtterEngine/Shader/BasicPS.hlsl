@@ -1,6 +1,9 @@
+cbuffer color : register(b3) {
+    float4 objectColor;
+};
+
 struct Interpolant {
     float4 position : SV_Position;
-    float4 color : COLOR0;
 };
 
 struct Pixel {
@@ -9,6 +12,6 @@ struct Pixel {
 
 Pixel main(Interpolant input) {
     Pixel output;
-    output.color = input.color;
+    output.color = objectColor;
     return output;
 }

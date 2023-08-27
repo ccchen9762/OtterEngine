@@ -1,6 +1,6 @@
 #pragma once
 
-#include "VertexShader.h"
+#include "GraphicsResource.h"
 
 class InputLayout : public GraphicsResource
 {
@@ -12,6 +12,10 @@ public:
 public:
 	InputLayout(const Graphics& graphics, const std::vector<uint8_t>& vertexShaderBlob, LayoutType type = LayoutType::Basic);
 	~InputLayout() = default;
+
+	static std::wstring GenerateUID(const std::vector<uint8_t>& vertexShaderBlob, LayoutType type = LayoutType::Basic) { 
+		return L"InputLayout#" + std::to_wstring(static_cast<int>(type)); 
+	}
 
 	void Bind(const Graphics& graphics) const override;
 

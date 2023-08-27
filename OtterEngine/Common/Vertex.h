@@ -17,7 +17,6 @@ struct VertexTexture {
 
 struct VertexBasic {
 	DirectX::XMVECTOR m_position;
-	Color4 m_color;
 };
 
 struct VertexTextureBasic {
@@ -25,4 +24,9 @@ struct VertexTextureBasic {
 	struct {
 		float u, v;
 	} m_texcoord;
+};
+
+struct Attributes {
+	alignas(16) float shiness;
+	BOOL hasSpecularMap;
 };

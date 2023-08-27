@@ -5,8 +5,10 @@
 class Texture : public GraphicsResource
 {
 public:
-	Texture(const Graphics& graphics, const std::wstring& path, const unsigned int slot);
+	Texture(const Graphics& graphics, const std::wstring& path, unsigned int slot);
 	~Texture() = default;
+
+	static std::wstring GenerateUID(const std::wstring& path, unsigned int slot) { return L"Texture#" + path + L"#" + std::to_wstring(slot); }
 
 	void Bind(const Graphics& graphics) const override;
 	void UnBind(const Graphics& graphics) const;

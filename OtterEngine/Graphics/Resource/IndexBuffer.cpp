@@ -1,6 +1,7 @@
 #include "IndexBuffer.h"
 
-IndexBuffer::IndexBuffer(const Graphics& graphics, const std::vector<unsigned short>& indices) {
+IndexBuffer::IndexBuffer(const Graphics& graphics, const std::vector<unsigned short>& indices, const std::wstring& tag) :
+	GraphicsResource(GenerateUID(indices, tag)) {
 
 	D3D11_BUFFER_DESC indexBufferDesc = {};
 	indexBufferDesc.ByteWidth = static_cast<UINT>(sizeof(unsigned short) * indices.size()); // return total array size in bytes

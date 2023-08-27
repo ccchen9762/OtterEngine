@@ -1,8 +1,8 @@
 #pragma once
 
-#include "../DebugEntity.h"
+#include "Entity.h"
 
-class DebugLine : public DebugEntity
+class DebugLine : public Entity
 {
 	friend class Entity;
 
@@ -12,11 +12,6 @@ public:
 	~DebugLine() = default;
 
 private:
-	const std::vector<std::unique_ptr<GraphicsResource>>& GetCommonResources() const override { return s_commonResources; }
-
-private:
 	std::vector<VertexBasic> m_vertices;
 	static const std::vector<unsigned short> s_indices;
-
-	static std::vector<std::unique_ptr<GraphicsResource>> s_commonResources;
 };

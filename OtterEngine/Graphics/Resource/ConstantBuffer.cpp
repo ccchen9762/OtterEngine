@@ -4,7 +4,7 @@
 #include "OtterEngine/Common/constants.h"
 
 ConstantBufferTransformation::ConstantBufferTransformation (const Graphics& graphics, const Entity& parentEntity)
-	: m_parentEntity(parentEntity) {
+	: GraphicsResource(GenerateUID(parentEntity)), m_parentEntity(parentEntity) {
 
 	// in Left Hand System (LH) Z axis direction is away from screen, RH toward screen
 	// remember XMMatrixTranspose only need once
@@ -26,6 +26,10 @@ ConstantBufferTransformation::ConstantBufferTransformation (const Graphics& grap
 	D3D11_SUBRESOURCE_DATA constantSubResourceData = {};
 	constantSubResourceData.pSysMem = &cBuffer;
 	DX::ThrowIfFailed(GetDevice(graphics)->CreateBuffer(&constantBufferDesc, &constantSubResourceData, &m_pConstantBuffer));
+}
+
+std::wstring ConstantBufferTransformation::GenerateUID(const Entity& entity) {
+	return L"ConstantBufferTransformation#" + entity.GetUID();
 }
 
 void ConstantBufferTransformation::Bind(const Graphics& graphics) const {

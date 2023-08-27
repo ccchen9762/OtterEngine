@@ -7,7 +7,7 @@
 class Entity;
 
 enum class VertexConstantBufferType {
-	Transformation = 0, Light = 1, Camera = 2, Attributes=3
+	Transformation = 0, Light = 1, Camera = 2, Attributes = 3
 };
 
 enum class PixelConstantBufferType {
@@ -26,10 +26,12 @@ public:
 	ConstantBufferTransformation(const Graphics& graphics, const Entity& parentEntity);
 	~ConstantBufferTransformation() = default;
 
+	static std::wstring GenerateUID(const Entity& entity);
+
 	virtual void Bind(const Graphics& graphics) const override;
 
 private:
-	virtual void Update(const Graphics& graphics) const;
+	void Update(const Graphics& graphics) const;
 
 private:
 	Microsoft::WRL::ComPtr<ID3D11Buffer> m_pConstantBuffer;
@@ -42,7 +44,8 @@ template <typename T>
 class ConstantBufferVertex : public GraphicsResource
 {
 public:
-	ConstantBufferVertex(const Graphics& graphics, const T& t, VertexConstantBufferType type) : m_slot(static_cast<int>(type)){
+	ConstantBufferVertex(const Graphics& graphics, const T& t, VertexConstantBufferType type, const std::wstring& tag) 
+		: GraphicsResource(GenerateUID(t, type, tag)), m_slot(static_cast<int>(type)){
 
 		D3D11_BUFFER_DESC constantBufferDesc = {};
 		constantBufferDesc.ByteWidth = sizeof(T); // return total array size in bytes
@@ -56,6 +59,8 @@ public:
 		DX::ThrowIfFailed(GetDevice(graphics)->CreateBuffer(&constantBufferDesc, &constantSubResourceData, &m_pConstantBuffer));
 	}
 	~ConstantBufferVertex() = default;
+
+	static std::wstring GenerateUID(const T& t, VertexConstantBufferType type, const std::wstring& tags) { return L"ConstantBufferVertex#" + tags; }
 
 	// ==============================
 	void Bind(const Graphics& graphics) const override {
@@ -81,7 +86,8 @@ template <typename T>
 class ConstantBufferPixel : public GraphicsResource
 {
 public:
-	ConstantBufferPixel(const Graphics& graphics, const T& t, PixelConstantBufferType type) : m_slot(static_cast<int>(type)) {
+	ConstantBufferPixel(const Graphics& graphics, const T& t, PixelConstantBufferType type, const std::wstring& tag) 
+		: GraphicsResource(GenerateUID(t, type, tag)), m_slot(static_cast<int>(type)) {
 
 		D3D11_BUFFER_DESC constantBufferDesc = {};
 		constantBufferDesc.ByteWidth = sizeof(T); // return total array size in bytes
@@ -95,6 +101,8 @@ public:
 		DX::ThrowIfFailed(GetDevice(graphics)->CreateBuffer(&constantBufferDesc, &constantSubResourceData, &m_pConstantBuffer));
 	}
 	~ConstantBufferPixel() = default;
+
+	static std::wstring GenerateUID(const T& t, PixelConstantBufferType type, const std::wstring& tags) { return L"ConstantBufferPixel#" + tags; }
 
 	// ==============================
 	void Bind(const Graphics& graphics) const override {

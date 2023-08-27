@@ -8,6 +8,8 @@ public:
 	PixelShader(const Graphics& graphics, const std::wstring& filename);
 	~PixelShader() = default;
 
+	static std::wstring GenerateUID(const std::wstring& filename) { return L"PixelShader#" + filename; }
+
 	void Bind(const Graphics& graphics) const override;
 
 private:

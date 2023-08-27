@@ -19,8 +19,6 @@
     <ClCompile Include="Graphics\Resource\VertexShader.cpp" />
     <ClCompile Include="Graphics\Resource\PixelShader.cpp" />
     <ClCompile Include="Graphics\Resource\InputLayout.cpp" />
-    <ClCompile Include="Entity\ShadingEntity\Cube.cpp" />
-    <ClCompile Include="Entity\DebugEntity\Triangle.cpp" />
     <ClCompile Include="Graphics\Resource\VertexBuffer.cpp" />
     <ClCompile Include="Graphics\Resource\IndexBuffer.cpp" />
     <ClCompile Include="Graphics\Resource\ConstantBuffer.cpp" />
@@ -29,18 +27,13 @@
     <ClCompile Include="Common\Math\Matrix3x3.cpp" />
     <ClCompile Include="Common\Math\MathUtils.cpp" />
     <ClCompile Include="Graphics\Resource\Texture.cpp" />
-    <ClCompile Include="Entity\ShadingEntity\Plane.cpp" />
+    <ClCompile Include="Entity\Plane.cpp" />
     <ClCompile Include="Common\External\LoadImage.cpp" />
-    <ClCompile Include="Entity\DebugEntity\DebugLine.cpp" />
     <ClCompile Include="Common\Randomizer.cpp" />
     <ClCompile Include="Light\PointLight.cpp" />
-    <ClCompile Include="Entity\ShadingEntity\Sphere.cpp" />
-    <ClCompile Include="Entity\DebugEntity\DebugSphere.cpp" />
-    <ClCompile Include="Entity\ShadingEntity.cpp" />
-    <ClCompile Include="Entity\ShadingTexture.cpp" />
-    <ClCompile Include="Entity\DebugEntity.cpp" />
-    <ClCompile Include="Entity\Model\Character.cpp" />
-    <ClCompile Include="Entity\Model\Model.cpp" />
+    <ClCompile Include="Entity\DebugSphere.cpp" />
+    <ClCompile Include="Entity\Model.cpp" />
+    <ClCompile Include="Entity\DebugLine.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="WindowClass\Window.h" />
@@ -66,9 +59,7 @@
     <ClInclude Include="Graphics\Resource\VertexShader.h" />
     <ClInclude Include="Graphics\Resource\PixelShader.h" />
     <ClInclude Include="Graphics\Resource\GraphicsResource.h" />
-    <ClInclude Include="Entity\ShadingEntity\Cube.h" />
     <ClInclude Include="Entity\Entity.h" />
-    <ClInclude Include="Entity\DebugEntity\Triangle.h" />
     <ClInclude Include="Graphics\Resource\ConstantBuffer.h" />
     <ClInclude Include="Graphics\Resource\IndexBuffer.h" />
     <ClInclude Include="Graphics\Resource\VertexBuffer.h" />
@@ -76,36 +67,33 @@
     <ClInclude Include="Common\Math\Matrix3x3.h" />
     <ClInclude Include="Common\Math\MathUtils.h" />
     <ClInclude Include="Graphics\Resource\Texture.h" />
-    <ClInclude Include="Entity\ShadingEntity\Plane.h" />
+    <ClInclude Include="Entity\Plane.h" />
     <ClInclude Include="Common\Vertex.h" />
     <ClInclude Include="Common\External\ReadData.h" />
     <ClInclude Include="Common\External\LoadImage.h" />
     <ClInclude Include="Common\External\FindMedia.h" />
-    <ClInclude Include="Entity\DebugEntity\DebugLine.h" />
     <ClInclude Include="Imgui\imstb_rectpack.h" />
     <ClInclude Include="Imgui\imstb_truetype.h" />
     <ClInclude Include="Light\PointLight.h" />
-    <ClInclude Include="Entity\ShadingEntity\Sphere.h" />
-    <ClInclude Include="Entity\DebugEntity\DebugSphere.h" />
-    <ClInclude Include="Entity\ShadingEntity.h" />
-    <ClInclude Include="Entity\ShadingTexture.h" />
-    <ClInclude Include="Entity\DebugEntity.h" />
-    <ClInclude Include="Entity\Model\Character.h" />
-    <ClInclude Include="Entity\Model\Model.h" />
+    <ClInclude Include="Graphics\ResourcePool.h" />
+    <ClInclude Include="Common\Utils.h" />
+    <ClInclude Include="Entity\DebugSphere.h" />
+    <ClInclude Include="Entity\Model.h" />
+    <ClInclude Include="Entity\DebugLine.h" />
   </ItemGroup>
   <ItemGroup>
-    <FxCompile Include="Shader\GouraudPixelShader.hlsl" />
-    <FxCompile Include="Shader\GouraudVertexShader.hlsl" />
-    <FxCompile Include="Shader\TextureVertexShader.hlsl" />
-    <FxCompile Include="Shader\TexturePixelShader.hlsl" />
-    <FxCompile Include="Shader\PhongVertexShader.hlsl" />
-    <FxCompile Include="Shader\PhongPixelShader.hlsl" />
-    <FxCompile Include="Shader\BasicVertexShader.hlsl" />
-    <FxCompile Include="Shader\BasicPixelShader.hlsl" />
-    <FxCompile Include="Shader\TexturePhongPixelShader.hlsl" />
-    <FxCompile Include="Shader\TexturePhongVertexShader.hlsl" />
-    <FxCompile Include="Shader\TextureGouraudPixelShader.hlsl" />
-    <FxCompile Include="Shader\TextureGouraudVertexShader.hlsl" />
+    <FxCompile Include="Shader\GouraudPS.hlsl" />
+    <FxCompile Include="Shader\GouraudVS.hlsl" />
+    <FxCompile Include="Shader\TextureVS.hlsl" />
+    <FxCompile Include="Shader\TexturePS.hlsl" />
+    <FxCompile Include="Shader\PhongVS.hlsl" />
+    <FxCompile Include="Shader\PhongPS.hlsl" />
+    <FxCompile Include="Shader\BasicVS.hlsl" />
+    <FxCompile Include="Shader\BasicPS.hlsl" />
+    <FxCompile Include="Shader\TexturePhongPS.hlsl" />
+    <FxCompile Include="Shader\TexturePhongVS.hlsl" />
+    <FxCompile Include="Shader\TextureGouraudPS.hlsl" />
+    <FxCompile Include="Shader\TextureGouraudVS.hlsl" />
   </ItemGroup>
   <ItemGroup>
     <None Include="imgui.ini" />

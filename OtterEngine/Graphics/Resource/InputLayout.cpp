@@ -24,7 +24,8 @@ const D3D11_INPUT_ELEMENT_DESC InputLayout::s_inputElementDescTexturedShading[] 
 };
 
 
-InputLayout::InputLayout(const Graphics& graphics, const std::vector<uint8_t>& vertexShaderBlob, LayoutType type) {
+InputLayout::InputLayout(const Graphics& graphics, const std::vector<uint8_t>& vertexShaderBlob, LayoutType type) :
+	GraphicsResource(GenerateUID(vertexShaderBlob, type)) {
 
 	switch (type)
 	{

@@ -2,7 +2,8 @@
 
 #include "OtterEngine/Common/External/ReadData.h"
 
-PixelShader::PixelShader(const Graphics& graphics, const std::wstring& filename) {
+PixelShader::PixelShader(const Graphics& graphics, const std::wstring& filename) :
+	GraphicsResource(GenerateUID(filename)) {
 
 	m_pixelShaderBlob = DX::ReadData(filename.c_str());
 	

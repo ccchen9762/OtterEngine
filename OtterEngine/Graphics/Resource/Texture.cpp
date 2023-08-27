@@ -1,10 +1,10 @@
 #include "Texture.h"
 
-#include "OtterEngine/Common/constants.h"
 #include "OtterEngine/Common/External/FindMedia.h"
 #include "OtterEngine/Common/External/LoadImage.h"
 
-Texture::Texture(const Graphics& graphics, const std::wstring& path, const unsigned int slot) : m_slot(slot) {
+Texture::Texture(const Graphics& graphics, const std::wstring& path, unsigned int slot) : 
+	GraphicsResource(GenerateUID(path, slot)), m_slot(slot) {
 
 	if (!path.empty()) {
 		D3D11_SAMPLER_DESC samplerDesc = {};
@@ -45,7 +45,7 @@ Texture::Texture(const Graphics& graphics, const std::wstring& path, const unsig
 		shaderResourceViewDesc.Texture2D.MipLevels = 1;
 		DX::ThrowIfFailed(GetDevice(graphics)->CreateShaderResourceView(pTexture.Get(), &shaderResourceViewDesc, &m_pTextureView));
 	}
-	else {
+	else { // for model parts that don't have specific texture
 		m_pSampler = { nullptr };
 		m_pTextureView = { nullptr };
 	}

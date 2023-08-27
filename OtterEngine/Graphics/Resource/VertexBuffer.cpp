@@ -1,7 +1,9 @@
 #include "VertexBuffer.h"
 
-VertexBuffer::VertexBuffer(const Graphics& graphics, const void* verticesData, unsigned int stride, size_t size, bool isTriangle) :
-	m_vertexBufferStride(stride), m_vertexBufferoffset(0u), m_isTriangle(isTriangle) {
+VertexBuffer::VertexBuffer(const Graphics& graphics, const void* verticesData, 
+	unsigned int stride, size_t size, Topology topology, const std::wstring& tag) :
+	GraphicsResource(GenerateUID(verticesData, stride, size, topology, tag)),
+	m_stride(stride), m_offset(0u), m_topology(topology) {
 	
 	D3D11_BUFFER_DESC vertexBufferDesc = {};
 	vertexBufferDesc.ByteWidth = static_cast<UINT>(stride * size); // return total array size in bytes
@@ -9,7 +11,7 @@ VertexBuffer::VertexBuffer(const Graphics& graphics, const void* verticesData, u
 	vertexBufferDesc.BindFlags = D3D11_BIND_VERTEX_BUFFER;
 	vertexBufferDesc.CPUAccessFlags = 0u;
 	vertexBufferDesc.MiscFlags = 0u;
-	vertexBufferDesc.StructureByteStride = m_vertexBufferStride;
+	vertexBufferDesc.StructureByteStride = m_stride;
 	D3D11_SUBRESOURCE_DATA vertexSubResourceData = {};
 	vertexSubResourceData.pSysMem = verticesData;
 	
@@ -19,9 +21,15 @@ VertexBuffer::VertexBuffer(const Graphics& graphics, const void* verticesData, u
 void VertexBuffer::Bind(const Graphics& graphics) const {
 	
 	GetDeviceContext(graphics)->IASetVertexBuffers(0u, 1u,
-		m_pVertexBuffer.GetAddressOf(), &m_vertexBufferStride, &m_vertexBufferoffset);
-	if(m_isTriangle)
-		GetDeviceContext(graphics)->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
-	else
+		m_pVertexBuffer.GetAddressOf(), &m_stride, &m_offset);
+
+	switch (m_topology)
+	{
+	case VertexBuffer::Topology::Line:
 		GetDeviceContext(graphics)->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_LINELIST);
+		break;
+	case VertexBuffer::Topology::Triangle:
+		GetDeviceContext(graphics)->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
+		break;
+	}
 }

@@ -1,17 +1,25 @@
 #include "Entity.h"
 
+#include <string>
+
+#include "OtterEngine/Graphics/ResourcePool.h"
+#include "OtterEngine/Graphics/Resource/VertexShader.h"
+#include "OtterEngine/Graphics/Resource/PixelShader.h"
+#include "OtterEngine/Graphics/Resource/InputLayout.h"
+#include "OtterEngine/Common/constants.h"
 #include "OtterEngine/Common/Randomizer.h"
 
 Entity::Entity(const Vector3& translation, const Vector3& rotation, const Vector3& scale, size_t indicesSize,
 	const Camera& camera, bool isStatic) :
-	m_translation(translation),
-	m_rotation(rotation),
-	m_scale(scale),
+	m_translation(translation), m_rotation(rotation), m_scale(scale),
 	m_indicesSize(indicesSize),
 	m_camera(camera),
 	m_isStatic(isStatic),
-	m_speed(0.0f),
-	m_transformation(DirectX::XMMatrixIdentity()){ //Randomizer::GetFloat(0.02f, 0.08f)
+	m_speed(0.0f), //Randomizer::GetFloat(0.02f, 0.08f)
+	m_transformation(DirectX::XMMatrixIdentity()){ 
+
+	static unsigned int numEntities = 0;
+	m_UID = L"Entity#" + std::to_wstring(numEntities++);
 }
 
 void Entity::Update() {
@@ -29,19 +37,41 @@ void Entity::Update() {
 
 void Entity::Render(const Graphics& graphics) const {
 	// use reference for unique pointer
-	const std::vector<std::unique_ptr<GraphicsResource>>& shadingResource = GetShadingResources();
-	for (const std::unique_ptr<GraphicsResource>& resource : shadingResource) {
-		resource->Bind(graphics);
-	}
-
-	const std::vector<std::unique_ptr<GraphicsResource>>& commonResource = GetCommonResources();
-	for (const std::unique_ptr<GraphicsResource>& resource : commonResource) {
-		resource->Bind(graphics);
-	}
-
-	for (const std::unique_ptr<GraphicsResource>& resource : m_uniqueResources) {
+	for (const std::shared_ptr<GraphicsResource>& resource : m_graphicsResources) {
 		resource->Bind(graphics);
 	}
 
 	graphics.RenderIndexed(m_indicesSize);
+}
+
+void Entity::AddTextureShadingResource(const Graphics& graphics) {
+	// shaders & layout
+	if (kRenderMethod == RenderMethod::Gouraud) {
+		std::shared_ptr<GraphicsResource> pVertexShader = ResourcePool::GetResource<VertexShader>(
+			graphics, L"TextureGouraudVS.cso");
+		const std::vector<uint8_t> vertexShaderBlob = static_cast<VertexShader*>(pVertexShader.get())->GetVertexShaderBlob();
+		m_graphicsResources.push_back(std::move(pVertexShader));
+
+		std::shared_ptr<GraphicsResource> pPixelShader = ResourcePool::GetResource<PixelShader>(
+			graphics, L"TextureGouraudPS.cso");
+		m_graphicsResources.push_back(std::move(pPixelShader));
+
+		std::shared_ptr<GraphicsResource> pInputLayout = ResourcePool::GetResource<InputLayout>(
+			graphics, vertexShaderBlob, InputLayout::LayoutType::TextureShading);
+		m_graphicsResources.push_back(std::move(pInputLayout));
+	}
+	else if (kRenderMethod == RenderMethod::Phong) {
+		std::shared_ptr<GraphicsResource> pVertexShader = ResourcePool::GetResource<VertexShader>(
+			graphics, L"TexturePhongVS.cso");
+		const std::vector<uint8_t> vertexShaderBlob = static_cast<VertexShader*>(pVertexShader.get())->GetVertexShaderBlob();
+		m_graphicsResources.push_back(std::move(pVertexShader));
+
+		std::shared_ptr<GraphicsResource> pPixelShader = ResourcePool::GetResource<PixelShader>(
+			graphics, L"TexturePhongPS.cso");
+		m_graphicsResources.push_back(std::move(pPixelShader));
+
+		std::shared_ptr<GraphicsResource> pInputLayout = ResourcePool::GetResource<InputLayout>(
+			graphics, vertexShaderBlob, InputLayout::LayoutType::TextureShading);
+		m_graphicsResources.push_back(std::move(pInputLayout));
+	}
 }

@@ -1,8 +1,8 @@
 #pragma once
 
-#include "../DebugEntity.h"
+#include "Entity.h"
 
-class DebugSphere : public DebugEntity
+class DebugSphere : public Entity
 {
 	friend class Entity;
 
@@ -13,11 +13,8 @@ public:
 
 private:
 	void GenerateMesh(int division);
-	const std::vector<std::unique_ptr<GraphicsResource>>& GetCommonResources() const override { return s_commonResources; }
 
 private:
 	static std::vector<VertexBasic> s_vertices;
 	static std::vector<unsigned short> s_indices;
-
-	static std::vector<std::unique_ptr<GraphicsResource>> s_commonResources;
 };

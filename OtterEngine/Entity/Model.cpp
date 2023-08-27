@@ -6,31 +6,46 @@
 
 #include "OtterEngine/Imgui/imgui.h"
 
-#include "OtterEngine/Graphics/Resource/VertexShader.h"
-#include "OtterEngine/Graphics/Resource/PixelShader.h"
-#include "OtterEngine/Graphics/Resource/InputLayout.h"
+#include "OtterEngine/Graphics/ResourcePool.h"
 #include "OtterEngine/Graphics/Resource/VertexBuffer.h"
 #include "OtterEngine/Graphics/Resource/IndexBuffer.h"
 #include "OtterEngine/Graphics/Resource/Texture.h"
+#include "OtterEngine/Common/constants.h"
+#include "OtterEngine/Common/Utils.h"
 
 std::vector<std::vector<VertexTexture>> Mesh::s_vertices;
 std::vector<std::vector<unsigned short>> Mesh::s_indices;
-
-std::vector<std::vector<std::unique_ptr<GraphicsResource>>> Mesh::s_commonResources;
+std::wstring Mesh::s_path;
 
 Mesh::Mesh(const Graphics& graphics, const Vector3& translation, const Vector3& rotation, const Vector3& scale, 
 	const Camera& camera, bool isStatic, unsigned int meshIndex, const aiMesh* pMesh, const aiMaterial* const* ppMaterials)
-	: ShadingTexture(graphics, translation, rotation, scale, 0, camera, isStatic, {5.0, true}), m_meshIndex(meshIndex) {
+	: Entity(translation, rotation, scale, 0, camera, isStatic), m_meshIndex(meshIndex), m_attributes({ 5.0, true }) {
 
-	if (s_commonResources[meshIndex].empty()) {
+	if (s_indices[meshIndex].empty()) {
 		LoadMesh(graphics, meshIndex, pMesh, ppMaterials);
 
-		// buffers
-		s_commonResources[meshIndex].push_back(std::make_unique<VertexBuffer>(graphics,
-			s_vertices[meshIndex].data(), static_cast<unsigned int>(sizeof(Vertex)), s_vertices[meshIndex].size()));
-		s_commonResources[meshIndex].push_back(std::make_unique<IndexBuffer>(graphics, s_indices[meshIndex]));
+		// remember to set indice size!!!!!!!!!!!!!!!!!!
+		m_indicesSize = s_indices[meshIndex].size();
 	}
-	m_indicesSize = s_indices[meshIndex].size(); // make sure size in Entity changes
+
+	std::wstring meshName;
+	StringToWString(pMesh->mName.C_Str(), meshName);
+
+	// buffers & textures
+	std::shared_ptr<GraphicsResource> pVertexBuffer = ResourcePool::GetResource<VertexBuffer>(
+		graphics, s_vertices[meshIndex].data(), sizeof(VertexTexture), s_vertices[meshIndex].size(),
+		VertexBuffer::Topology::Triangle, L"#Mesh#" + s_path + meshName);
+	m_graphicsResources.push_back(std::move(pVertexBuffer));
+
+	std::shared_ptr<GraphicsResource> pIndexBuffer = ResourcePool::GetResource<IndexBuffer>(
+		graphics, s_indices[meshIndex], L"#Mesh#" + s_path + meshName);
+	m_graphicsResources.push_back(std::move(pIndexBuffer));
+
+	std::shared_ptr<GraphicsResource> pConstantBufferTransformation = ResourcePool::GetResource<ConstantBufferTransformation>(
+		graphics, *this);
+	m_graphicsResources.push_back(std::move(pConstantBufferTransformation));
+
+	AddTextureShadingResource(graphics);
 }
 
 void Mesh::LoadMesh(const Graphics& graphics, unsigned int meshIndex, const aiMesh* pMesh, const aiMaterial* const* ppMaterials) {
@@ -57,43 +72,46 @@ void Mesh::LoadMesh(const Graphics& graphics, unsigned int meshIndex, const aiMe
 	aiString textureName;
 	// load diffuse map
 	if (pMaterial->GetTexture(aiTextureType_DIFFUSE, 0, &textureName) == aiReturn_SUCCESS) {
-		std::string location = "Assets\\Model\\nanosuit\\";
-		location += textureName.C_Str();
-		std::wstring fileLocation(location.begin(), location.end());
-		s_commonResources[meshIndex].push_back(std::make_unique<Texture>(graphics, fileLocation, 0u));
+		std::wstring materialName;
+		StringToWString(textureName.C_Str(), materialName);
+		std::wstring fileLocation = s_path + materialName;
+
+		std::shared_ptr<GraphicsResource> pTexture = ResourcePool::GetResource<Texture>(
+			graphics, fileLocation, 0u);
+		m_graphicsResources.push_back(std::move(pTexture));
 	}
 	// load specular map
-	if(pMaterial->GetTexture(aiTextureType_SPECULAR, 0, &textureName) == aiReturn_SUCCESS) {
-		std::string location = "Assets\\Model\\nanosuit\\";
-		location += textureName.C_Str();
-		std::wstring fileLocation(location.begin(), location.end());
-		s_commonResources[meshIndex].push_back(std::make_unique<Texture>(graphics, fileLocation, 1u));
+	if (pMaterial->GetTexture(aiTextureType_SPECULAR, 0, &textureName) == aiReturn_SUCCESS) {
+		std::wstring materialName;
+		StringToWString(textureName.C_Str(), materialName);
+		std::wstring fileLocation = s_path + materialName;
+
+		std::shared_ptr<GraphicsResource> pTexture = ResourcePool::GetResource<Texture>(
+			graphics, fileLocation, 1u);
+		m_graphicsResources.push_back(std::move(pTexture));
 	}
 	else {
 		pMaterial->Get(AI_MATKEY_SHININESS, m_attributes.shiness);
 		m_attributes.hasSpecularMap = false;
 		
-		m_uniqueResources.push_back(std::make_unique<ConstantBufferVertex<Attributes>>(graphics, m_attributes, VertexConstantBufferType::Attributes));
-		m_uniqueResources.push_back(std::make_unique<ConstantBufferPixel<Attributes>>(graphics, m_attributes, PixelConstantBufferType::Attributes));
-		/*for (std::unique_ptr<GraphicsResource>& resource : m_uniqueResources) {
-			if (typeid(*resource.get()) == typeid(ConstantBufferPixel<Attributes>)) {
-				ConstantBufferPixel<Attributes>* constantBufferPixel = static_cast<ConstantBufferPixel<Attributes>*>(resource.get());
-				constantBufferPixel->Update(graphics, m_attributes);
-			}
-			else if (typeid(*resource.get()) == typeid(ConstantBufferVertex<Attributes>)) {
-				ConstantBufferVertex<Attributes>* constantBufferVertex = static_cast<ConstantBufferVertex<Attributes>*>(resource.get());
-				constantBufferVertex->Update(graphics, m_attributes);
-			}
-		}*/
+		std::shared_ptr<GraphicsResource> pConstantBufferVertex = ResourcePool::GetResource<ConstantBufferVertex<Attributes>>(
+			graphics, m_attributes, VertexConstantBufferType::Attributes, GetUID());
+		m_graphicsResources.push_back(std::move(pConstantBufferVertex));
+
+		std::shared_ptr<GraphicsResource> pConstantBufferPixel = ResourcePool::GetResource<ConstantBufferPixel<Attributes>>(
+			graphics, m_attributes, PixelConstantBufferType::Attributes, GetUID());
+		m_graphicsResources.push_back(std::move(pConstantBufferPixel));
 		
-		s_commonResources[meshIndex].push_back(std::make_unique<Texture>(graphics, L"", 1u));
+		std::shared_ptr<GraphicsResource> pTexture = ResourcePool::GetResource<Texture>(
+			graphics, L"", 1u);
+		m_graphicsResources.push_back(std::move(pTexture));
 	}
 }
 
 // ========================= Node =========================
 
 Node::Node(int nodeIndex, const std::string& name, std::vector<std::shared_ptr<Mesh>>& meshes, const DirectX::XMMATRIX& localTransformation)
-	:m_nodeIndex(nodeIndex), m_nodeName(name), m_pMeshes(std::move(meshes)), m_localTransformation(localTransformation) {
+	:m_nodeIndex(nodeIndex), m_nodeName(name), m_pMeshes(meshes), m_localTransformation(localTransformation) {
 }
 
 void Node::UpdateTree(const Graphics& graphics, const DirectX::XMMATRIX& parentTransformation,
@@ -142,6 +160,7 @@ void Node::ShowTreeWindow(int& selectIndex) {
 Model::Model(const Graphics& graphics, const Vector3& translation, const Vector3& rotation, const Vector3& scale,
 	const Camera& camera, bool isStatic, const std::string& path) : 
 	m_modelName(path), m_selectIndex(-1) {
+
 	Assimp::Importer imp;
 	const aiScene* pModel = imp.ReadFile(path,
 		aiProcess_Triangulate | aiProcess_JoinIdenticalVertices | aiProcess_GenNormals | aiProcess_FlipWindingOrder);
@@ -151,7 +170,9 @@ Model::Model(const Graphics& graphics, const Vector3& translation, const Vector3
 	size_t numMeshes = pModel->mNumMeshes;
 	Mesh::s_vertices.resize(numMeshes);
 	Mesh::s_indices.resize(numMeshes);
-	Mesh::s_commonResources.resize(numMeshes);
+	StringToWString(path.c_str(), Mesh::s_path);
+	while (Mesh::s_path.back() != '\\' && Mesh::s_path.back() != '/')	// cut the last part of path
+		Mesh::s_path.pop_back();
 
 	for (size_t i = 0; i < numMeshes; i++) {
 		m_pAllMeshes.push_back(std::make_unique<Mesh>(

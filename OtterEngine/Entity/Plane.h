@@ -1,8 +1,8 @@
 #pragma once
 
-#include "../ShadingTexture.h"
+#include "Entity.h"
 
-class Plane : public ShadingTexture
+class Plane : public Entity
 {
 	friend class Entity;
 
@@ -12,11 +12,8 @@ public:
 	~Plane() = default;
 
 private:
-	const std::vector<std::unique_ptr<GraphicsResource>>& GetCommonResources() const override { return s_commonResources; }
+	Attributes m_attributes;
 
-private:
 	static const std::vector<VertexTexture> s_vertices;
 	static const std::vector<unsigned short> s_indices;
-
-	static std::vector<std::unique_ptr<GraphicsResource>> s_commonResources;
 };

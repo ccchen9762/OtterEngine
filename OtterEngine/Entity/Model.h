@@ -1,9 +1,9 @@
 #pragma once
 
-#include "../ShadingTexture.h"
+#include "Entity.h"
 #include <assimp/scene.h>
 
-class Mesh : public ShadingTexture
+class Mesh : public Entity
 {
 	friend class Model;
 
@@ -15,15 +15,13 @@ public:
 	void LoadMesh(const Graphics& graphics, unsigned int meshIndex, const aiMesh* mesh, const aiMaterial* const* materials);
 	void ApplyWorldTransformation(const DirectX::XMMATRIX& worldTransformation) { m_transformation = worldTransformation; }
 
-	const std::vector<std::unique_ptr<GraphicsResource>>& GetCommonResources() const override { return s_commonResources[m_meshIndex]; }
-
 private:
 	unsigned int m_meshIndex;
+	Attributes m_attributes;
 
 	static std::vector<std::vector<VertexTexture>> s_vertices;
 	static std::vector<std::vector<unsigned short>> s_indices;
-
-	static std::vector<std::vector<std::unique_ptr<GraphicsResource>>> s_commonResources;
+	static std::wstring s_path;
 };
 
 class Node

@@ -40,4 +40,6 @@ private:
 	CameraBuffer m_cameraBuffer;
 	ConstantBufferVertex<CameraBuffer> m_constantBufferVertex;
 	ConstantBufferPixel<CameraBuffer> m_constantBufferPixel;
+
+	static int s_numCamera;
 };

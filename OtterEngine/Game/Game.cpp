@@ -6,11 +6,11 @@
 #include "OtterEngine/Imgui/imgui_impl_win32.h"
 #include "OtterEngine/Imgui/imgui_impl_dx11.h"
 
-#include "OtterEngine/Entity/DebugEntity/DebugLine.h"
-#include "OtterEngine/Entity/ShadingEntity/Cube.h"
-#include "OtterEngine/Entity/ShadingEntity/Sphere.h"
-#include "OtterEngine/Entity/ShadingEntity/Plane.h"
-#include "OtterEngine/Entity/Model/Character.h"
+#include "OtterEngine/Entity/DebugLine.h"
+#include "OtterEngine/Entity/Plane.h"
+//#include "OtterEngine/Entity/ShadingEntity/Cube.h"
+//#include "OtterEngine/Entity/ShadingEntity/Sphere.h"
+//#include "OtterEngine/Entity/Model/Character.h"
 
 #include "OtterEngine/Common/Randomizer.h"
 #include "OtterEngine/Common/constants.h"
@@ -28,7 +28,7 @@ Game::Game() :
         Vector3(1.0f, 1.0f, 1.0f),
         m_camera,
         false,
-        "Assets/Model/nanosuit/nanosuit.obj"){ //"Assets/Model/nano_hierarchy.gltf"
+        "Assets/Model/nanosuit/nanosuit.obj") { //"Assets/Model/nano_hierarchy.gltf"
 
     Randomizer::Init();
 

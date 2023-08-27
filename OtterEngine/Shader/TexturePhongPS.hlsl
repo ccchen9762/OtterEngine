@@ -63,9 +63,7 @@ Pixel main(Interpolant input)
 
     specular *= attenuation;
      
-    output.color = float4(saturate(tex.Sample(sam, input.texcoord) * 
-        (ambient + diffuse * intensity) + specular * intensity),
-    1.0f); // saturate: Clamps x to the range [0, 1]
+    output.color = float4(saturate(tex.Sample(sam, input.texcoord) * (ambient + diffuse * intensity) + specular * intensity), 1.0f); // saturate: Clamps x to the range [0, 1]
         
 	return output;
 }

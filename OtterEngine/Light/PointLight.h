@@ -1,6 +1,6 @@
 #pragma once
 
-#include "OtterEngine/Entity/DebugEntity/DebugSphere.h"
+#include "OtterEngine/Entity/DebugSphere.h"
 
 class PointLight {
 private:
@@ -27,4 +27,6 @@ private:
 	ConstantBufferVertex<LightBuffer> m_constantBufferVertex;
 	ConstantBufferPixel<LightBuffer> m_constantBufferPixel;
 	DebugSphere m_sphereMesh;
+
+	static int s_numLight;
 };

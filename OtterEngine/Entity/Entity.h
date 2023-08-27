@@ -1,10 +1,8 @@
 #pragma once
 
-#include "OtterEngine/Graphics/Resource/GraphicsResource.h"
 #include "OtterEngine/Camera/Camera.h"
 #include "OtterEngine/Common/Vertex.h"
 #include "OtterEngine/Common/Math/MathUtils.h"
-#include "OtterEngine/Common/constants.h"
 
 class Entity
 {
@@ -12,6 +10,11 @@ public:
 	Entity(const Vector3& translation, const Vector3& rotation, const Vector3& scale, size_t indicesSize,
 		const Camera& camera, bool isStatic);
 	virtual ~Entity() = default; // use virtual make sure derived class destructors are called properly
+
+	const std::wstring& GetUID() const {
+		assert("Entity UID not generated." && !m_UID.empty());
+		return m_UID;
+	}
 
 	virtual void Update();
 	virtual void Render(const Graphics& graphics) const;
@@ -21,12 +24,12 @@ public:
 	const DirectX::XMMATRIX& GetViewProjectionMatrix() const { return m_camera.GetViewProjectionMatrix(); }
 	
 	void Translate(const Vector3& translation) { m_translation = translation; }
-	
-private:
-	virtual const std::vector<std::unique_ptr<GraphicsResource>>& GetShadingResources() const = 0;
-	virtual const std::vector<std::unique_ptr<GraphicsResource>>& GetCommonResources() const = 0;
 
 protected:
+	void AddTextureShadingResource(const Graphics& graphics);
+
+protected:
+	std::wstring m_UID;
 	Vector3 m_translation;
 	Vector3 m_rotation;
 	Vector3 m_scale;
@@ -35,7 +38,7 @@ protected:
 	bool m_isStatic;
 
 	DirectX::XMMATRIX m_transformation;
-	std::vector<std::unique_ptr<GraphicsResource>> m_uniqueResources;
+	std::vector<std::shared_ptr<GraphicsResource>> m_graphicsResources;
 	
 	float m_speed; // for testing
 };

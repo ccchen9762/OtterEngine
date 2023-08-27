@@ -2,7 +2,8 @@
 
 #include "OtterEngine/Common/External/ReadData.h"
 
-VertexShader::VertexShader(const Graphics& graphics, const std::wstring& filename) {
+VertexShader::VertexShader(const Graphics& graphics, const std::wstring& filename) : 
+	GraphicsResource(GenerateUID(filename)) {
 
 	m_vertexShaderBlob = DX::ReadData(filename.c_str());
 
