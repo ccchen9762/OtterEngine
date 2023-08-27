@@ -10,8 +10,8 @@ Camera::Camera(const Graphics& graphics, const Vector3& position, const Vector3&
 	m_position(position), m_orientation(orientation), m_up(up),
 	m_speed(0.02f), m_angularSpeed(0.1f),
 	m_cameraBuffer({ DirectX::XMVECTOR{ m_position.x, m_position.y, m_position.z, 1.0f } }),
-	m_constantBufferVertex(graphics, m_cameraBuffer, VertexConstantBufferType::Camera, L"Camera" + std::to_wstring(s_numCamera)),
-	m_constantBufferPixel(graphics, m_cameraBuffer, PixelConstantBufferType::Camera, L"Camera" + std::to_wstring(s_numCamera)) {
+	m_constantBufferVertex(graphics, m_cameraBuffer, VertexConstantBufferType::Camera, L"Camera#" + std::to_wstring(s_numCamera)),
+	m_constantBufferPixel(graphics, m_cameraBuffer, PixelConstantBufferType::Camera, L"Camera#" + std::to_wstring(s_numCamera)) {
 
 	++s_numCamera;
 

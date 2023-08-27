@@ -19,14 +19,13 @@ std::wstring Mesh::s_path;
 
 Mesh::Mesh(const Graphics& graphics, const Vector3& translation, const Vector3& rotation, const Vector3& scale, 
 	const Camera& camera, bool isStatic, unsigned int meshIndex, const aiMesh* pMesh, const aiMaterial* const* ppMaterials)
-	: Entity(translation, rotation, scale, 0, camera, isStatic), m_meshIndex(meshIndex), m_attributes({ 5.0, true }) {
+	: Entity(translation, rotation, scale, 0, camera, isStatic), m_meshIndex(meshIndex), m_attributes({ 0.0, true }) {
 
 	if (s_indices[meshIndex].empty()) {
 		LoadMesh(graphics, meshIndex, pMesh, ppMaterials);
-
-		// remember to set indice size!!!!!!!!!!!!!!!!!!
-		m_indicesSize = s_indices[meshIndex].size();
 	}
+	// remember to set indice size!!!!!!!!!!!!!!!!!!
+	m_indicesSize = s_indices[meshIndex].size();
 
 	std::wstring meshName;
 	StringToWString(pMesh->mName.C_Str(), meshName);
@@ -94,18 +93,19 @@ void Mesh::LoadMesh(const Graphics& graphics, unsigned int meshIndex, const aiMe
 		pMaterial->Get(AI_MATKEY_SHININESS, m_attributes.shiness);
 		m_attributes.hasSpecularMap = false;
 		
-		std::shared_ptr<GraphicsResource> pConstantBufferVertex = ResourcePool::GetResource<ConstantBufferVertex<Attributes>>(
-			graphics, m_attributes, VertexConstantBufferType::Attributes, GetUID());
-		m_graphicsResources.push_back(std::move(pConstantBufferVertex));
-
-		std::shared_ptr<GraphicsResource> pConstantBufferPixel = ResourcePool::GetResource<ConstantBufferPixel<Attributes>>(
-			graphics, m_attributes, PixelConstantBufferType::Attributes, GetUID());
-		m_graphicsResources.push_back(std::move(pConstantBufferPixel));
-		
 		std::shared_ptr<GraphicsResource> pTexture = ResourcePool::GetResource<Texture>(
 			graphics, L"", 1u);
 		m_graphicsResources.push_back(std::move(pTexture));
 	}
+
+	// setup constant buffers (specualr loading check)
+	std::shared_ptr<GraphicsResource> pConstantBufferVertex = ResourcePool::GetResource<ConstantBufferVertex<Attributes>>(
+		graphics, m_attributes, VertexConstantBufferType::Attributes, GetUID());
+	m_graphicsResources.push_back(std::move(pConstantBufferVertex));
+
+	std::shared_ptr<GraphicsResource> pConstantBufferPixel = ResourcePool::GetResource<ConstantBufferPixel<Attributes>>(
+		graphics, m_attributes, PixelConstantBufferType::Attributes, GetUID());
+	m_graphicsResources.push_back(std::move(pConstantBufferPixel));
 }
 
 // ========================= Node =========================

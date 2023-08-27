@@ -28,4 +28,4 @@ inline unsigned int kVSync = 1u;
 enum class RenderMethod {
 	Gouraud = 0, Phong = 1
 };
-inline RenderMethod kRenderMethod = RenderMethod::Phong;
+inline RenderMethod kRenderMethod = RenderMethod::Gouraud;

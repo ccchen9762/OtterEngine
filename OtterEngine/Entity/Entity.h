@@ -20,7 +20,6 @@ public:
 	virtual void Render(const Graphics& graphics) const;
 
 	const DirectX::XMMATRIX& GetTransformMatrix() const { return m_transformation; }
-	const DirectX::XMMATRIX& GetViewMatrix() const { return m_camera.GetViewProjectionMatrix(); }
 	const DirectX::XMMATRIX& GetViewProjectionMatrix() const { return m_camera.GetViewProjectionMatrix(); }
 	
 	void Translate(const Vector3& translation) { m_translation = translation; }
