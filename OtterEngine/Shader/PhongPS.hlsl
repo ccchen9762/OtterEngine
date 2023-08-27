@@ -14,6 +14,8 @@ cbuffer camera : register(b2) {
 
 cbuffer attributes : register(b3) {
     float shiness;
+    bool hasSpecularMap;
+    float2 padding;
 }
 
 struct Interpolant {
@@ -29,21 +31,26 @@ struct Pixel {
 
 Pixel main(Interpolant input) {
     
+    Pixel output;
+    
+    input.normal = normalize(input.normal);
+    
     const float3 lightVector = (lightPosition - input.worldPosition).xyz;
     const float distance = length(lightVector);
-    const float3 direction = lightVector / distance;
+    const float3 lightUnitVector = lightVector / distance;
     
     // diffuse
-    const float3 diffuse = (lightColor.xyz * max(0.0f, dot(direction, input.normal)));
+    const float3 diffuse = input.color.rgb * lightColor.rgb * max(0.0f, dot(lightUnitVector, input.normal));
     
     // specular
-    const float3 reflection = 2 * input.normal * dot(lightVector, input.normal) - lightVector;
-    const float3 specular = (lightColor.xyz * pow(max(0.0f, dot(normalize(cameraPosition - input.worldPosition), normalize(reflection))), shiness));
+    const float3 reflection = 2 * dot(lightUnitVector, input.normal) * input.normal - lightUnitVector;
+    const float3 specular = lightColor.rgb * pow(max(0.0f, dot(normalize(cameraPosition - input.worldPosition), reflection)), shiness);
     
     const float attenuation = 1.0f / (attenuationConst + attenuationLinear * distance + attenuationQuadratic * (distance * distance));
     
-    Pixel output;
-    output.color = input.color * float4(saturate(ambient + (diffuse + specular) * intensity * attenuation), 1.0f); // saturate: Clamps x to the range [0, 1]
+    output.color = float4(saturate(
+        ambient.rgb * input.color + attenuation * intensity * (diffuse + specular)),
+        1.0f); // saturate: Clamps x to the range [0, 1]
     
     return output;
 }

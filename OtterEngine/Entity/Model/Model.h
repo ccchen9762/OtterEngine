@@ -1,6 +1,6 @@
 #pragma once
 
-#include "Entity.h"
+#include "../Entity.h"
 #include <assimp/scene.h>
 
 class Mesh : public Entity

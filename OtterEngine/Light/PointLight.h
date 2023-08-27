@@ -1,6 +1,6 @@
 #pragma once
 
-#include "OtterEngine/Entity/DebugSphere.h"
+#include "OtterEngine/Entity/DebugEntity/DebugSphere.h"
 
 class PointLight {
 private:

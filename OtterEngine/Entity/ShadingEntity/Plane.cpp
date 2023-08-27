@@ -1,9 +1,6 @@
 #include "Plane.h"
 
 #include "OtterEngine/Graphics/ResourcePool.h"
-#include "OtterEngine/Graphics/Resource/VertexShader.h"
-#include "OtterEngine/Graphics/Resource/PixelShader.h"
-#include "OtterEngine/Graphics/Resource/InputLayout.h"
 #include "OtterEngine/Graphics/Resource/VertexBuffer.h"
 #include "OtterEngine/Graphics/Resource/IndexBuffer.h"
 #include "OtterEngine/Graphics/Resource/Texture.h"
@@ -48,10 +45,6 @@ Plane::Plane(const Graphics& graphics, const Vector3& translation, const Vector3
 	std::shared_ptr<GraphicsResource> pConstantBufferPixel = ResourcePool::GetResource<ConstantBufferPixel<Attributes>>(
 		graphics, m_attributes, PixelConstantBufferType::Attributes, GetUID());
 	m_graphicsResources.push_back(std::move(pConstantBufferPixel));
-
-	std::shared_ptr<GraphicsResource> pSpecular = ResourcePool::GetResource<Texture>(
-		graphics, L"", 1u);
-	m_graphicsResources.push_back(std::move(pSpecular));
 
 	AddTextureShadingResource(graphics);
 }

@@ -16,8 +16,7 @@ struct Interpolant {
     float3 normal : NORMAL0;
 };
 
-Interpolant main(Vertex input)
-{
+Interpolant main(Vertex input) {
     Interpolant output;
     output.position = mul(input.position, modelViewProjection);
     output.worldPosition = mul(input.position, model);

@@ -1,8 +1,8 @@
 #pragma once
 
-#include "../ShadingEntity.h"
+#include "../Entity.h"
 
-class Sphere : public ShadingEntity
+class Sphere : public Entity
 {
 	friend class Entity;
 
@@ -13,11 +13,10 @@ public:
 
 private:
 	void GenerateMesh(int division);
-	const std::vector<std::unique_ptr<GraphicsResource>>& GetCommonResources() const override { return s_commonResources; }
 
 private:
+	Attributes m_attributes;
+
 	static std::vector<Vertex> s_vertices;
 	static std::vector<unsigned short> s_indices;
-
-	static std::vector<std::unique_ptr<GraphicsResource>> s_commonResources;
 };

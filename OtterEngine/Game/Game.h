@@ -9,7 +9,7 @@
 #include "OtterEngine/Entity/Entity.h"
 #include "OtterEngine/Camera/Camera.h"
 
-#include "OtterEngine/Entity/Model.h"
+#include "OtterEngine/Entity/Model/Model.h"
 
 class Game {
 	

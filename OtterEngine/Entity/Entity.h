@@ -25,6 +25,7 @@ public:
 	void Translate(const Vector3& translation) { m_translation = translation; }
 
 protected:
+	void AddShadingResource(const Graphics& graphics);
 	void AddTextureShadingResource(const Graphics& graphics);
 
 protected:

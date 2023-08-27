@@ -1,26 +1,43 @@
 #include "Cube.h"
 
+#include "OtterEngine/Graphics/ResourcePool.h"
 #include "OtterEngine/Graphics/Resource/VertexBuffer.h"
 #include "OtterEngine/Graphics/Resource/IndexBuffer.h"
 
 std::vector<Vertex> Cube::s_vertices;
 std::vector<unsigned short> Cube::s_indices;
 
-std::vector<std::unique_ptr<GraphicsResource>> Cube::s_commonResources;
-
 Cube::Cube(const Graphics& graphics, const Vector3& translation, const Vector3& rotation, const Vector3& scale,
 	const Camera& camera, bool isStatic)
-	: ShadingEntity(graphics, translation, rotation, scale, s_indices.size(), camera, isStatic) {
+	: Entity(translation, rotation, scale, s_indices.size(), camera, isStatic), m_attributes{ 5.0f, false } {
 
-	if (s_commonResources.empty()) {
+	if (s_indices.empty()) {
 		GenerateMesh(); // generate static vertices and indices
-		
-		// buffers
-		s_commonResources.push_back(std::make_unique<VertexBuffer>(graphics, 
-			s_vertices.data(), static_cast<unsigned int>(sizeof(Vertex)), s_vertices.size()));
-		s_commonResources.push_back(std::make_unique<IndexBuffer>(graphics, s_indices));
 	}
 	m_indicesSize = s_indices.size(); // make sure size in Entity changes
+
+	// buffers & textures
+	std::shared_ptr<GraphicsResource> pVertexBuffer = ResourcePool::GetResource<VertexBuffer>(
+		graphics, s_vertices.data(), sizeof(VertexTexture), s_vertices.size(), VertexBuffer::Topology::Triangle, L"Cube");
+	m_graphicsResources.push_back(std::move(pVertexBuffer));
+
+	std::shared_ptr<GraphicsResource> pIndexBuffer = ResourcePool::GetResource<IndexBuffer>(
+		graphics, s_indices, L"Cube");
+	m_graphicsResources.push_back(std::move(pIndexBuffer));
+
+	std::shared_ptr<GraphicsResource> pConstantBufferTransformation = ResourcePool::GetResource<ConstantBufferTransformation>(
+		graphics, *this);
+	m_graphicsResources.push_back(std::move(pConstantBufferTransformation));
+
+	std::shared_ptr<GraphicsResource> pConstantBufferVertex = ResourcePool::GetResource<ConstantBufferVertex<Attributes>>(
+		graphics, m_attributes, VertexConstantBufferType::Attributes, GetUID());
+	m_graphicsResources.push_back(std::move(pConstantBufferVertex));
+
+	std::shared_ptr<GraphicsResource> pConstantBufferPixel = ResourcePool::GetResource<ConstantBufferPixel<Attributes>>(
+		graphics, m_attributes, PixelConstantBufferType::Attributes, GetUID());
+	m_graphicsResources.push_back(std::move(pConstantBufferPixel));
+
+	AddShadingResource(graphics);
 }
 
 void Cube::GenerateMesh() {

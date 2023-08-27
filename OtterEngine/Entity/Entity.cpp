@@ -44,6 +44,38 @@ void Entity::Render(const Graphics& graphics) const {
 	graphics.RenderIndexed(m_indicesSize);
 }
 
+void Entity::AddShadingResource(const Graphics& graphics) {
+	// shaders & layout
+	if (kRenderMethod == RenderMethod::Gouraud) {
+		std::shared_ptr<GraphicsResource> pVertexShader = ResourcePool::GetResource<VertexShader>(
+			graphics, L"GouraudVS.cso");
+		const std::vector<uint8_t> vertexShaderBlob = static_cast<VertexShader*>(pVertexShader.get())->GetVertexShaderBlob();
+		m_graphicsResources.push_back(std::move(pVertexShader));
+
+		std::shared_ptr<GraphicsResource> pPixelShader = ResourcePool::GetResource<PixelShader>(
+			graphics, L"GouraudPS.cso");
+		m_graphicsResources.push_back(std::move(pPixelShader));
+
+		std::shared_ptr<GraphicsResource> pInputLayout = ResourcePool::GetResource<InputLayout>(
+			graphics, vertexShaderBlob, InputLayout::LayoutType::Shading);
+		m_graphicsResources.push_back(std::move(pInputLayout));
+	}
+	else if (kRenderMethod == RenderMethod::Phong) {
+		std::shared_ptr<GraphicsResource> pVertexShader = ResourcePool::GetResource<VertexShader>(
+			graphics, L"PhongVS.cso");
+		const std::vector<uint8_t> vertexShaderBlob = static_cast<VertexShader*>(pVertexShader.get())->GetVertexShaderBlob();
+		m_graphicsResources.push_back(std::move(pVertexShader));
+
+		std::shared_ptr<GraphicsResource> pPixelShader = ResourcePool::GetResource<PixelShader>(
+			graphics, L"PhongPS.cso");
+		m_graphicsResources.push_back(std::move(pPixelShader));
+
+		std::shared_ptr<GraphicsResource> pInputLayout = ResourcePool::GetResource<InputLayout>(
+			graphics, vertexShaderBlob, InputLayout::LayoutType::Shading);
+		m_graphicsResources.push_back(std::move(pInputLayout));
+	}
+}
+
 void Entity::AddTextureShadingResource(const Graphics& graphics) {
 	// shaders & layout
 	if (kRenderMethod == RenderMethod::Gouraud) {
