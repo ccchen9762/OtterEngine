@@ -8,8 +8,8 @@ class Mesh : public Entity
 	friend class Model;
 
 public:
-	Mesh(const Graphics& graphics, const Vector3& translation, const Vector3& rotation, const Vector3& scale,
-		const Camera& camera, bool isStatic, unsigned int meshIndex, const aiMesh* mesh, const aiMaterial* const* materials);
+	Mesh(const Game& game, const Graphics& graphics, const Vector3& translation, const Vector3& rotation, const Vector3& scale,
+		bool isStatic, unsigned int meshIndex, const aiMesh* mesh, const aiMaterial* const* materials);
 	~Mesh() = default;
 
 	void LoadMesh(const Graphics& graphics, unsigned int meshIndex, const aiMesh* mesh, const aiMaterial* const* materials);
@@ -50,8 +50,8 @@ private:
 class Model
 {
 public:
-	Model(const Graphics& graphics, const Vector3& translation, const Vector3& rotation, const Vector3& scale,
-		const Camera& camera, bool isStatic, const std::string& path);
+	Model(const Game& game, const Graphics& graphics, const Vector3& translation, const Vector3& rotation, const Vector3& scale,
+		bool isStatic, const std::string& path);
 	~Model()=default;
 
 	void Render(const Graphics& graphics) const;

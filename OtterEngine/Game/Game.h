@@ -26,6 +26,8 @@ public:
 	int Start();
 	bool ProcessMessages(int& wParam);
 
+	const Camera& GetCurrentCamera() const { return m_camera; }
+
 private:
 	void HandleInput(double deltaTime);
 	void Update(double deltaTime);

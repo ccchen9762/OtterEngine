@@ -4,11 +4,13 @@
 #include "OtterEngine/Common/Vertex.h"
 #include "OtterEngine/Common/Math/MathUtils.h"
 
+class Game;
+
 class Entity
 {
 public:
-	Entity(const Vector3& translation, const Vector3& rotation, const Vector3& scale, size_t indicesSize,
-		const Camera& camera, bool isStatic);
+	Entity(const Game& game, const Vector3& translation, const Vector3& rotation, const Vector3& scale, 
+		size_t indicesSize, bool isStatic);
 	virtual ~Entity() = default; // use virtual make sure derived class destructors are called properly
 
 	const std::wstring& GetUID() const {
@@ -20,7 +22,7 @@ public:
 	virtual void Render(const Graphics& graphics) const;
 
 	const DirectX::XMMATRIX& GetTransformMatrix() const { return m_transformation; }
-	const DirectX::XMMATRIX& GetViewProjectionMatrix() const { return m_camera.GetViewProjectionMatrix(); }
+	const DirectX::XMMATRIX& GetViewProjectionMatrix() const;
 	
 	void Translate(const Vector3& translation) { m_translation = translation; }
 
@@ -34,8 +36,8 @@ protected:
 	Vector3 m_rotation;
 	Vector3 m_scale;
 	size_t m_indicesSize;
-	const Camera& m_camera;
 	bool m_isStatic;
+	const Game& m_parentGame;
 
 	DirectX::XMMATRIX m_transformation;
 	std::vector<std::shared_ptr<GraphicsResource>> m_graphicsResources;

@@ -2,6 +2,8 @@
 
 #include <string>
 
+#include "OtterEngine/Game/Game.h"
+
 #include "OtterEngine/Graphics/ResourcePool.h"
 #include "OtterEngine/Graphics/Resource/VertexShader.h"
 #include "OtterEngine/Graphics/Resource/PixelShader.h"
@@ -9,11 +11,11 @@
 #include "OtterEngine/Common/constants.h"
 #include "OtterEngine/Common/Randomizer.h"
 
-Entity::Entity(const Vector3& translation, const Vector3& rotation, const Vector3& scale, size_t indicesSize,
-	const Camera& camera, bool isStatic) :
+Entity::Entity(const Game& game, const Vector3& translation, const Vector3& rotation, const Vector3& scale, 
+	size_t indicesSize, bool isStatic) :
 	m_translation(translation), m_rotation(rotation), m_scale(scale),
 	m_indicesSize(indicesSize),
-	m_camera(camera),
+	m_parentGame(game),
 	m_isStatic(isStatic),
 	m_speed(0.0f), //Randomizer::GetFloat(0.02f, 0.08f)
 	m_transformation(DirectX::XMMatrixIdentity()){ 
@@ -42,6 +44,10 @@ void Entity::Render(const Graphics& graphics) const {
 	}
 
 	graphics.RenderIndexed(m_indicesSize);
+}
+
+const DirectX::XMMATRIX& Entity::GetViewProjectionMatrix() const {
+	return m_parentGame.GetCurrentCamera().GetViewProjectionMatrix();
 }
 
 void Entity::AddShadingResource(const Graphics& graphics) {

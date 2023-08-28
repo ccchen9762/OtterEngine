@@ -21,11 +21,10 @@ Game::Game() :
     m_timer(Timer()),
     m_camera(*(m_mainWindow.m_pGraphics), Vector3(10.0f, 15.0f, 25.0f), Vector3(-0.5f, -0.33f, -1.0f), Vector3(0.0f, 1.0f, 0.0f)),
     showDebug(true),
-    m_model(*(m_mainWindow.m_pGraphics),
+    m_model(*this, *(m_mainWindow.m_pGraphics),
         Vector3(8.0f, 0.0f, -4.0f),
         Vector3(0.0f, 0.0f, 0.0f),
         Vector3(1.0f, 1.0f, 1.0f),
-        m_camera,
         false,
         "Assets/Model/nanosuit/nanosuit.obj") { //"Assets/Model/nano_hierarchy.gltf"
 
@@ -33,56 +32,58 @@ Game::Game() :
 
     // render debug axis
     m_debugList.push_back(std::make_unique<DebugLine>(
+        *this,
         *(m_mainWindow.m_pGraphics),
         Vector3(0.0f, 0.0f, 0.0f),
         Vector3(0.0f, 0.0f, 0.0f),
         Vector3(2.0f, 2.0f, 2.0f),
-        m_camera,
         Color4{1.0f, 0.0f, 0.0f, 1.0f},
         true
         ));
     m_debugList.push_back(std::make_unique<DebugLine>(
+        *this,
         *(m_mainWindow.m_pGraphics),
         Vector3(0.0f, 0.0f, 0.0f),
         Vector3(0.0f, 0.0f, static_cast<float>(kPI/2)),
         Vector3(2.0f, 2.0f, 2.0f),
-        m_camera,
         Color4{ 0.0f, 1.0f, 0.0f, 1.0f },
         true
     ));
     m_debugList.push_back(std::make_unique<DebugLine>(
+        *this,
         *(m_mainWindow.m_pGraphics),
         Vector3(0.0f, 0.0f, 0.0f),
         Vector3(0.0f, static_cast<float>(-kPI/2), 0.0f),
         Vector3(2.0f, 2.0f, 2.0f),
-        m_camera,
         Color4{ 0.0f, 0.0f, 1.0f, 1.0f },
         true
     ));
 
-    m_lightList.push_back(std::make_unique<PointLight>(*(m_mainWindow.m_pGraphics), 
+    m_lightList.push_back(std::make_unique<PointLight>(
+        *this,
+        *(m_mainWindow.m_pGraphics), 
         DirectX::XMFLOAT4{ 0.0f, 8.0f, 4.0f, 1.0f }, 
         Color4{ 1.0f, 0.7f, 0.7f, 1.0f }, 
-        1.0f, m_camera));
+        1.0f));
 
     for (int i = 0; i < 30; i++) {
         m_renderList.push_back(std::make_unique<Cube>(
+            *this,
             *(m_mainWindow.m_pGraphics),
             Vector3(Randomizer::GetFloat(-5.0f, 5.0f), Randomizer::GetFloat(0.0f, 10.0f), Randomizer::GetFloat(-9.0f, 1.0f)),
             Vector3(Randomizer::GetFloat(static_cast<float>(kPI)), Randomizer::GetFloat(static_cast<float>(kPI)), 0.0f),
             Vector3(1.0f, 1.0f, 1.0f),
-            m_camera,
             false
         ));
     }
 
     for (int i = 0; i < 10; i++) {
         m_renderList.push_back(std::make_unique<Sphere>(
+            *this,
             *(m_mainWindow.m_pGraphics),
             Vector3(Randomizer::GetFloat(-5.0f, 5.0f), Randomizer::GetFloat(0.0f, 10.0f), Randomizer::GetFloat(-9.0f, 1.0f)),
             Vector3(Randomizer::GetFloat(static_cast<float>(kPI)), Randomizer::GetFloat(static_cast<float>(kPI)), 0.0f),
             Vector3(1.0f, 1.0f, 1.0f),
-            m_camera,
             false
         ));
     }
@@ -91,11 +92,11 @@ Game::Game() :
     for (int i = 0; i < 8; i++) {
         for (int j = 0; j < 8; j++) {
             m_renderList.push_back(std::make_unique<Plane>(
+                *this,
                 *(m_mainWindow.m_pGraphics),
                 Vector3(-14.0f + i*4, 0.0f, -14.0f + j*4),
                 Vector3(0.0f, 0.0f, 0.0f),
                 Vector3(4.0f, 1.0f, 4.0f),
-                m_camera,
                 L"Assets\\Texture\\wood.jpg",
                 true
             ));

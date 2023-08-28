@@ -17,9 +17,9 @@ std::vector<std::vector<VertexTexture>> Mesh::s_vertices;
 std::vector<std::vector<unsigned short>> Mesh::s_indices;
 std::wstring Mesh::s_path;
 
-Mesh::Mesh(const Graphics& graphics, const Vector3& translation, const Vector3& rotation, const Vector3& scale, 
-	const Camera& camera, bool isStatic, unsigned int meshIndex, const aiMesh* pMesh, const aiMaterial* const* ppMaterials)
-	: Entity(translation, rotation, scale, 0, camera, isStatic), m_meshIndex(meshIndex), m_attributes({ 0.0, true }) {
+Mesh::Mesh(const Game& game, const Graphics& graphics, const Vector3& translation, const Vector3& rotation, const Vector3& scale,
+	bool isStatic, unsigned int meshIndex, const aiMesh* pMesh, const aiMaterial* const* ppMaterials)
+	: Entity(game, translation, rotation, scale, 0, isStatic), m_meshIndex(meshIndex), m_attributes({ 0.0, true }) {
 
 	if (s_indices[meshIndex].empty()) {
 		LoadMesh(graphics, meshIndex, pMesh, ppMaterials);
@@ -157,8 +157,8 @@ void Node::ShowTreeWindow(int& selectIndex) {
 
 // ========================= Model =========================
 
-Model::Model(const Graphics& graphics, const Vector3& translation, const Vector3& rotation, const Vector3& scale,
-	const Camera& camera, bool isStatic, const std::string& path) : 
+Model::Model(const Game& game, const Graphics& graphics, const Vector3& translation, const Vector3& rotation, const Vector3& scale,
+	bool isStatic, const std::string& path) : 
 	m_modelName(path), m_selectIndex(-1) {
 
 	Assimp::Importer imp;
@@ -176,7 +176,7 @@ Model::Model(const Graphics& graphics, const Vector3& translation, const Vector3
 
 	for (size_t i = 0; i < numMeshes; i++) {
 		m_pAllMeshes.push_back(std::make_unique<Mesh>(
-			graphics, translation, rotation, scale, camera, isStatic, i, pModel->mMeshes[i], pModel->mMaterials
+			game, graphics, translation, rotation, scale, isStatic, i, pModel->mMeshes[i], pModel->mMaterials
 		));
 	}
 

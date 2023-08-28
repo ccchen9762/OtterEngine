@@ -6,18 +6,17 @@
 
 int PointLight::s_numLight = 0;
 
-PointLight::PointLight(const Graphics& graphics, const DirectX::XMFLOAT4& position, const Color4& color, float scale,
-	const Camera& camera) :
+PointLight::PointLight(const Game& game, const Graphics& graphics, const DirectX::XMFLOAT4& position, const Color4& color, float scale) :
 	m_lightBuffer({ position, color, {0.15f, 0.15f, 0.15f, 1.0f}, 1.0f, 1.0f, 0.30f, 0.0015f }),
 	m_scale(scale),
 	m_constantBufferVertex(graphics, m_lightBuffer, VertexConstantBufferType::Light, L"Light" + std::to_wstring(s_numLight)),
 	m_constantBufferPixel(graphics, m_lightBuffer, PixelConstantBufferType::Light, L"Light" + std::to_wstring(s_numLight)),
 	m_sphereMesh(DebugSphere{
+		game,
 		graphics,
 		Vector3(position.x, position.y, position.z),
 		Vector3(0.0f, 0.0f, 0.0f),
 		Vector3(0.2f, 0.2f, 0.2f),
-		camera,
 		true
 	}) {
 }

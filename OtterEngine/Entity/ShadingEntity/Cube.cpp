@@ -7,9 +7,9 @@
 std::vector<Vertex> Cube::s_vertices;
 std::vector<unsigned short> Cube::s_indices;
 
-Cube::Cube(const Graphics& graphics, const Vector3& translation, const Vector3& rotation, const Vector3& scale,
-	const Camera& camera, bool isStatic)
-	: Entity(translation, rotation, scale, s_indices.size(), camera, isStatic), m_attributes{ 5.0f, false } {
+Cube::Cube(const Game& game, const Graphics& graphics, const Vector3& translation, const Vector3& rotation, const Vector3& scale,
+	bool isStatic)
+	: Entity(game, translation, rotation, scale, s_indices.size(), isStatic), m_attributes{ 5.0f, false } {
 
 	if (s_indices.empty()) {
 		GenerateMesh(); // generate static vertices and indices

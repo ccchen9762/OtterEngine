@@ -11,9 +11,9 @@ const std::vector<unsigned short> DebugLine::s_indices = {
 	0,1
 };
 
-DebugLine::DebugLine(const Graphics& graphics, const Vector3& translation, const Vector3& rotation, const Vector3& scale,
-	const Camera& camera, const Color4& color, bool isStatic)
-	: Entity(translation, rotation, scale, s_indices.size(), camera, isStatic) {
+DebugLine::DebugLine(const Game& game, const Graphics& graphics, const Vector3& translation, const Vector3& rotation, const Vector3& scale,
+	const Color4& color, bool isStatic)
+	: Entity(game, translation, rotation, scale, s_indices.size(), isStatic) {
 
 	m_vertices = {
 		{DirectX::XMVectorSet(0.0f,  0.0f,  0.0f, 1.0f)},

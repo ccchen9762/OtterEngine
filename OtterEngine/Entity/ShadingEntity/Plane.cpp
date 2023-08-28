@@ -17,9 +17,9 @@ const std::vector<unsigned short> Plane::s_indices = {
 	0, 1, 2,  2, 3, 0
 };
 
-Plane::Plane(const Graphics& graphics, const Vector3& translation, const Vector3& rotation, const Vector3& scale,
-	const Camera& camera, const std::wstring& path, bool isStatic)
-	: Entity(translation, rotation, scale, s_indices.size(), camera, isStatic), m_attributes{5.0f, false} {
+Plane::Plane(const Game& game, const Graphics& graphics, const Vector3& translation, const Vector3& rotation, const Vector3& scale,
+	const std::wstring& path, bool isStatic)
+	: Entity(game, translation, rotation, scale, s_indices.size(), isStatic), m_attributes{5.0f, false} {
 
 	// buffers & textures
 	std::shared_ptr<GraphicsResource> pVertexBuffer = ResourcePool::GetResource<VertexBuffer>(

@@ -7,8 +7,8 @@ class Plane : public Entity
 	friend class Entity;
 
 public:
-	Plane(const Graphics& graphics, const Vector3& translation, const Vector3& rotation, const Vector3& scale,
-		const Camera& camera, const std::wstring& path, bool isStatic);
+	Plane(const Game& game, const Graphics& graphics, const Vector3& translation, const Vector3& rotation, const Vector3& scale,
+		const std::wstring& path, bool isStatic);
 	~Plane() = default;
 
 private:
