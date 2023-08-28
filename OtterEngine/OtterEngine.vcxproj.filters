@@ -27,13 +27,15 @@
     <ClCompile Include="Common\Math\Matrix3x3.cpp" />
     <ClCompile Include="Common\Math\MathUtils.cpp" />
     <ClCompile Include="Graphics\Resource\Texture.cpp" />
-    <ClCompile Include="Entity\Plane.cpp" />
     <ClCompile Include="Common\External\LoadImage.cpp" />
     <ClCompile Include="Common\Randomizer.cpp" />
     <ClCompile Include="Light\PointLight.cpp" />
-    <ClCompile Include="Entity\DebugSphere.cpp" />
-    <ClCompile Include="Entity\Model.cpp" />
-    <ClCompile Include="Entity\DebugLine.cpp" />
+    <ClCompile Include="Entity\DebugEntity\DebugLine.cpp" />
+    <ClCompile Include="Entity\DebugEntity\DebugSphere.cpp" />
+    <ClCompile Include="Entity\Model\Model.cpp" />
+    <ClCompile Include="Entity\ShadingEntity\Cube.cpp" />
+    <ClCompile Include="Entity\ShadingEntity\Plane.cpp" />
+    <ClCompile Include="Entity\ShadingEntity\Sphere.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="WindowClass\Window.h" />
@@ -67,7 +69,6 @@
     <ClInclude Include="Common\Math\Matrix3x3.h" />
     <ClInclude Include="Common\Math\MathUtils.h" />
     <ClInclude Include="Graphics\Resource\Texture.h" />
-    <ClInclude Include="Entity\Plane.h" />
     <ClInclude Include="Common\Vertex.h" />
     <ClInclude Include="Common\External\ReadData.h" />
     <ClInclude Include="Common\External\LoadImage.h" />
@@ -77,9 +78,12 @@
     <ClInclude Include="Light\PointLight.h" />
     <ClInclude Include="Graphics\ResourcePool.h" />
     <ClInclude Include="Common\Utils.h" />
-    <ClInclude Include="Entity\DebugSphere.h" />
-    <ClInclude Include="Entity\Model.h" />
-    <ClInclude Include="Entity\DebugLine.h" />
+    <ClInclude Include="Entity\DebugEntity\DebugLine.h" />
+    <ClInclude Include="Entity\DebugEntity\DebugSphere.h" />
+    <ClInclude Include="Entity\Model\Model.h" />
+    <ClInclude Include="Entity\ShadingEntity\Cube.h" />
+    <ClInclude Include="Entity\ShadingEntity\Plane.h" />
+    <ClInclude Include="Entity\ShadingEntity\Sphere.h" />
   </ItemGroup>
   <ItemGroup>
     <FxCompile Include="Shader\GouraudPS.hlsl" />
@@ -94,6 +98,8 @@
     <FxCompile Include="Shader\TexturePhongVS.hlsl" />
     <FxCompile Include="Shader\TextureGouraudPS.hlsl" />
     <FxCompile Include="Shader\TextureGouraudVS.hlsl" />
+    <FxCompile Include="Shader\TexturePhongSpecularPS.hlsl" />
+    <FxCompile Include="Shader\TextureGouraudSpecularPS.hlsl" />
   </ItemGroup>
   <ItemGroup>
     <None Include="imgui.ini" />

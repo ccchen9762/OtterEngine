@@ -19,7 +19,7 @@ std::wstring Mesh::s_path;
 
 Mesh::Mesh(const Game& game, const Graphics& graphics, const Vector3& translation, const Vector3& rotation, const Vector3& scale,
 	bool isStatic, unsigned int meshIndex, const aiMesh* pMesh, const aiMaterial* const* ppMaterials)
-	: Entity(game, translation, rotation, scale, 0, isStatic), m_meshIndex(meshIndex), m_attributes({ 0.0, true }) {
+	: Entity(game, translation, rotation, scale, 0, isStatic), m_meshIndex(meshIndex), m_attributes({ 0.0 }) {
 
 	if (s_indices[meshIndex].empty()) {
 		LoadMesh(graphics, meshIndex, pMesh, ppMaterials);
@@ -40,11 +40,7 @@ Mesh::Mesh(const Game& game, const Graphics& graphics, const Vector3& translatio
 		graphics, s_indices[meshIndex], L"#Mesh#" + s_path + meshName);
 	m_graphicsResources.push_back(std::move(pIndexBuffer));
 
-	std::shared_ptr<GraphicsResource> pConstantBufferTransformation = ResourcePool::GetResource<ConstantBufferTransformation>(
-		graphics, *this);
-	m_graphicsResources.push_back(std::move(pConstantBufferTransformation));
-
-	AddTextureShadingResource(graphics);
+	m_graphicsResources.push_back(std::make_shared<ConstantBufferTransformation>(graphics, *this));
 }
 
 void Mesh::LoadMesh(const Graphics& graphics, unsigned int meshIndex, const aiMesh* pMesh, const aiMaterial* const* ppMaterials) {
@@ -88,24 +84,23 @@ void Mesh::LoadMesh(const Graphics& graphics, unsigned int meshIndex, const aiMe
 		std::shared_ptr<GraphicsResource> pTexture = ResourcePool::GetResource<Texture>(
 			graphics, fileLocation, 1u);
 		m_graphicsResources.push_back(std::move(pTexture));
+
+		AddTextureShadingResource(graphics, true);
 	}
 	else {
 		pMaterial->Get(AI_MATKEY_SHININESS, m_attributes.shiness);
-		m_attributes.hasSpecularMap = false;
 		
 		std::shared_ptr<GraphicsResource> pTexture = ResourcePool::GetResource<Texture>(
 			graphics, L"", 1u);
 		m_graphicsResources.push_back(std::move(pTexture));
+
+		AddTextureShadingResource(graphics, false);
 	}
 
-	// setup constant buffers (specualr loading check)
-	std::shared_ptr<GraphicsResource> pConstantBufferVertex = ResourcePool::GetResource<ConstantBufferVertex<Attributes>>(
-		graphics, m_attributes, VertexConstantBufferType::Attributes, GetUID());
-	m_graphicsResources.push_back(std::move(pConstantBufferVertex));
-
-	std::shared_ptr<GraphicsResource> pConstantBufferPixel = ResourcePool::GetResource<ConstantBufferPixel<Attributes>>(
-		graphics, m_attributes, PixelConstantBufferType::Attributes, GetUID());
-	m_graphicsResources.push_back(std::move(pConstantBufferPixel));
+	m_graphicsResources.push_back(std::make_shared<ConstantBufferVertex<Attributes>>(
+		graphics, m_attributes, VertexConstantBufferType::Attributes, GetUID()));
+	m_graphicsResources.push_back(std::make_shared<ConstantBufferPixel<Attributes>>(
+		graphics, m_attributes, PixelConstantBufferType::Attributes, GetUID()));
 }
 
 // ========================= Node =========================

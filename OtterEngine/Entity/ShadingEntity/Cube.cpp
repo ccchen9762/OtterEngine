@@ -9,7 +9,7 @@ std::vector<unsigned short> Cube::s_indices;
 
 Cube::Cube(const Game& game, const Graphics& graphics, const Vector3& translation, const Vector3& rotation, const Vector3& scale,
 	bool isStatic)
-	: Entity(game, translation, rotation, scale, s_indices.size(), isStatic), m_attributes{ 5.0f, false } {
+	: Entity(game, translation, rotation, scale, s_indices.size(), isStatic), m_attributes{ 5.0f } {
 
 	if (s_indices.empty()) {
 		GenerateMesh(); // generate static vertices and indices
@@ -25,19 +25,13 @@ Cube::Cube(const Game& game, const Graphics& graphics, const Vector3& translatio
 		graphics, s_indices, L"Cube");
 	m_graphicsResources.push_back(std::move(pIndexBuffer));
 
-	std::shared_ptr<GraphicsResource> pConstantBufferTransformation = ResourcePool::GetResource<ConstantBufferTransformation>(
-		graphics, *this);
-	m_graphicsResources.push_back(std::move(pConstantBufferTransformation));
-
-	std::shared_ptr<GraphicsResource> pConstantBufferVertex = ResourcePool::GetResource<ConstantBufferVertex<Attributes>>(
-		graphics, m_attributes, VertexConstantBufferType::Attributes, GetUID());
-	m_graphicsResources.push_back(std::move(pConstantBufferVertex));
-
-	std::shared_ptr<GraphicsResource> pConstantBufferPixel = ResourcePool::GetResource<ConstantBufferPixel<Attributes>>(
-		graphics, m_attributes, PixelConstantBufferType::Attributes, GetUID());
-	m_graphicsResources.push_back(std::move(pConstantBufferPixel));
-
 	AddShadingResource(graphics);
+
+	m_graphicsResources.push_back(std::make_shared<ConstantBufferTransformation>(graphics, *this));
+	m_graphicsResources.push_back(std::make_shared<ConstantBufferVertex<Attributes>>(
+		graphics, m_attributes, VertexConstantBufferType::Attributes, GetUID()));
+	m_graphicsResources.push_back(std::make_shared<ConstantBufferPixel<Attributes>>(
+		graphics, m_attributes, PixelConstantBufferType::Attributes, GetUID()));
 }
 
 void Cube::GenerateMesh() {

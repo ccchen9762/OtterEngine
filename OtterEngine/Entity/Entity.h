@@ -28,7 +28,9 @@ public:
 
 protected:
 	void AddShadingResource(const Graphics& graphics);
-	void AddTextureShadingResource(const Graphics& graphics);
+	void AddTextureShadingResource(const Graphics& graphics, bool hasSpecularMap);
+	void AddBasicResource(const Graphics& graphics);
+	void AddTextureBasicResource(const Graphics& graphics);
 
 protected:
 	std::wstring m_UID;

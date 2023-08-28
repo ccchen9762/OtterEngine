@@ -20,13 +20,7 @@ Game::Game() :
     m_alive(true), 
     m_timer(Timer()),
     m_camera(*(m_mainWindow.m_pGraphics), Vector3(10.0f, 15.0f, 25.0f), Vector3(-0.5f, -0.33f, -1.0f), Vector3(0.0f, 1.0f, 0.0f)),
-    showDebug(true),
-    m_model(*this, *(m_mainWindow.m_pGraphics),
-        Vector3(8.0f, 0.0f, -4.0f),
-        Vector3(0.0f, 0.0f, 0.0f),
-        Vector3(1.0f, 1.0f, 1.0f),
-        false,
-        "Assets/Model/nanosuit/nanosuit.obj") { //"Assets/Model/nano_hierarchy.gltf"
+    showDebug(true) {
 
     Randomizer::Init();
 
@@ -87,6 +81,15 @@ Game::Game() :
             false
         ));
     }
+
+    m_modelList.push_back(std::make_unique<Model>(
+        *this, *(m_mainWindow.m_pGraphics),
+        Vector3(8.0f, 0.0f, -4.0f),
+        Vector3(0.0f, 0.0f, 0.0f),
+        Vector3(1.0f, 1.0f, 1.0f),
+        false,
+        "Assets/Model/nanosuit/nanosuit.obj")
+    );
 
     // floor
     for (int i = 0; i < 8; i++) {
@@ -235,7 +238,9 @@ void Game::Update(double deltaTime) {
         m_renderList[i]->Render(*(m_mainWindow.m_pGraphics));
     }
 
-    m_model.Render(*(m_mainWindow.m_pGraphics));
+    for (int i = 0; i < m_modelList.size(); i++) {
+        m_modelList[i]->Render(*(m_mainWindow.m_pGraphics));
+    }
 
     // Start the Dear ImGui frame
     ImGui_ImplDX11_NewFrame();
@@ -244,7 +249,9 @@ void Game::Update(double deltaTime) {
 
     m_imguiManager.Update(*this);
     m_lightList[0]->ShowControlWindow();
-    m_model.ShowControlWindow();
+    for (int i = 0; i < m_modelList.size(); i++) {
+        m_modelList[i]->ShowControlWindow();
+    }
 
     ImGui::Render();
     ImGui_ImplDX11_RenderDrawData(ImGui::GetDrawData());

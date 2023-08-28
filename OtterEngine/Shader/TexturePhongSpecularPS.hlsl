@@ -19,25 +19,24 @@ cbuffer attributes : register(b3) {
 }
 
 struct Interpolant {
-	float4 position	: SV_Position;
+    float4 position : SV_Position;
     float4 worldPosition : POSITION0;
-	float2 texcoord : TEXCOORD0;
+    float2 texcoord : TEXCOORD0;
     float3 normal : NORMAL0;
 };
 
 struct Pixel {
-	float4 color	: SV_Target;
+    float4 color : SV_Target;
 };
 
-Texture2D texDiffuse	: register(t0);
-SamplerState samDiffuse	: register(s0);
+Texture2D texDiffuse : register(t0);
+SamplerState samDiffuse : register(s0);
 
-Texture2D texSpecular    : register(t1);
+Texture2D texSpecular : register(t1);
 SamplerState samSpecular : register(s1);
 
-Pixel main(Interpolant input)
-{
-	Pixel output;
+Pixel main(Interpolant input) {
+    Pixel output;
      
     input.normal = normalize(input.normal);
     
@@ -53,12 +52,14 @@ Pixel main(Interpolant input)
     // 2 * l dot n * n - l
     const float3 reflection = 2 * dot(lightUnitVector, input.normal) * input.normal - lightUnitVector;
     // k_s * l_s * (r dot v)^shiness
-    const float3 specular = (lightColor.rgb * pow(max(0.0f, dot(normalize(cameraPosition - input.worldPosition), reflection)), shiness));
+    const float4 specularSample = texSpecular.Sample(samSpecular, input.texcoord);
+    const float sampleShiness = pow(2, specularSample.a * 13.0f);
+    const float3 specular = specularSample.rgb * lightColor.rgb * pow(max(0.0f, dot(normalize(cameraPosition - input.worldPosition), reflection)), sampleShiness);
      
     const float attenuation = 1.0f / (attenuationConst + attenuationLinear * distance + attenuationQuadratic * (distance * distance));
     output.color = float4(saturate(
         ambient.rgb * diffuseSample + attenuation * intensity * (diffuse + specular)),
         1.0f); // saturate: Clamps x to the range [0, 1]
         
-	return output;
+    return output;
 }

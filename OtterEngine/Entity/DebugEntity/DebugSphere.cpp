@@ -26,27 +26,11 @@ DebugSphere::DebugSphere(const Game& game, const Graphics& graphics, const Vecto
 		graphics, s_indices, L"DebugSphere");
 	m_graphicsResources.push_back(std::move(pIndexBuffer));
 
-	std::shared_ptr<GraphicsResource> pConstantBufferTransformation = ResourcePool::GetResource<ConstantBufferTransformation>(
-		graphics, *this);
-	m_graphicsResources.push_back(std::move(pConstantBufferTransformation));
+	AddBasicResource(graphics);
 
-	// shaders & layout
-	std::shared_ptr<GraphicsResource> pVertexShader = ResourcePool::GetResource<VertexShader>(
-		graphics, L"BasicVS.cso");
-	const std::vector<uint8_t> vertexShaderBlob = static_cast<VertexShader*>(pVertexShader.get())->GetVertexShaderBlob();
-	m_graphicsResources.push_back(std::move(pVertexShader));
-
-	std::shared_ptr<GraphicsResource> pPixelShader = ResourcePool::GetResource<PixelShader>(
-		graphics, L"BasicPS.cso");
-	m_graphicsResources.push_back(std::move(pPixelShader));
-
-	std::shared_ptr<GraphicsResource> pInputLayout = ResourcePool::GetResource<InputLayout>(
-		graphics, vertexShaderBlob, InputLayout::LayoutType::Basic);
-	m_graphicsResources.push_back(std::move(pInputLayout));
-
-	std::shared_ptr<GraphicsResource> pConstantBufferPixel = ResourcePool::GetResource<ConstantBufferPixel<Color4>>(
-		graphics, Color4{ 1.0f, 1.0f, 1.0f, 1.0f }, PixelConstantBufferType::Attributes, GetUID());
-	m_graphicsResources.push_back(std::move(pConstantBufferPixel));
+	m_graphicsResources.push_back(std::make_shared<ConstantBufferTransformation>(graphics, *this));
+	m_graphicsResources.push_back(std::make_shared<ConstantBufferPixel<Color4>>(
+		graphics, Color4{ 1.0f, 1.0f, 1.0f, 1.0f }, PixelConstantBufferType::Attributes, GetUID()));
 }
 
 void DebugSphere::GenerateMesh(int division) {

@@ -13,6 +13,8 @@ SamplerState sam	: register(s0);
 Pixel main(Interpolant input)
 {
 	Pixel output;
+
 	output.color = tex.Sample(sam, input.texcoord);
+	
 	return output;
 }

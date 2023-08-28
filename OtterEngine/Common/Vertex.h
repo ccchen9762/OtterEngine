@@ -27,8 +27,5 @@ struct VertexTextureBasic {
 };
 
 struct Attributes {
-	float shiness;
-	BOOL hasSpecularMap;
-	float padding;
-	float padding2;
+	alignas(16) float shiness;
 };

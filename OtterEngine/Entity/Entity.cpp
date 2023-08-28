@@ -82,7 +82,7 @@ void Entity::AddShadingResource(const Graphics& graphics) {
 	}
 }
 
-void Entity::AddTextureShadingResource(const Graphics& graphics) {
+void Entity::AddTextureShadingResource(const Graphics& graphics, bool hasSpecularMap) {
 	// shaders & layout
 	if (kRenderMethod == RenderMethod::Gouraud) {
 		std::shared_ptr<GraphicsResource> pVertexShader = ResourcePool::GetResource<VertexShader>(
@@ -90,9 +90,16 @@ void Entity::AddTextureShadingResource(const Graphics& graphics) {
 		const std::vector<uint8_t> vertexShaderBlob = static_cast<VertexShader*>(pVertexShader.get())->GetVertexShaderBlob();
 		m_graphicsResources.push_back(std::move(pVertexShader));
 
-		std::shared_ptr<GraphicsResource> pPixelShader = ResourcePool::GetResource<PixelShader>(
-			graphics, L"TextureGouraudPS.cso");
-		m_graphicsResources.push_back(std::move(pPixelShader));
+		if (hasSpecularMap) {
+			std::shared_ptr<GraphicsResource> pPixelShader = ResourcePool::GetResource<PixelShader>(
+				graphics, L"TextureGouraudSpecularPS.cso");
+			m_graphicsResources.push_back(std::move(pPixelShader));
+		}
+		else {
+			std::shared_ptr<GraphicsResource> pPixelShader = ResourcePool::GetResource<PixelShader>(
+				graphics, L"TextureGouraudPS.cso");
+			m_graphicsResources.push_back(std::move(pPixelShader));
+		}
 
 		std::shared_ptr<GraphicsResource> pInputLayout = ResourcePool::GetResource<InputLayout>(
 			graphics, vertexShaderBlob, InputLayout::LayoutType::TextureShading);
@@ -104,12 +111,51 @@ void Entity::AddTextureShadingResource(const Graphics& graphics) {
 		const std::vector<uint8_t> vertexShaderBlob = static_cast<VertexShader*>(pVertexShader.get())->GetVertexShaderBlob();
 		m_graphicsResources.push_back(std::move(pVertexShader));
 
-		std::shared_ptr<GraphicsResource> pPixelShader = ResourcePool::GetResource<PixelShader>(
-			graphics, L"TexturePhongPS.cso");
-		m_graphicsResources.push_back(std::move(pPixelShader));
+		if (hasSpecularMap) {
+			std::shared_ptr<GraphicsResource> pPixelShader = ResourcePool::GetResource<PixelShader>(
+				graphics, L"TexturePhongSpecularPS.cso");
+			m_graphicsResources.push_back(std::move(pPixelShader));
+		}
+		else {
+			std::shared_ptr<GraphicsResource> pPixelShader = ResourcePool::GetResource<PixelShader>(
+				graphics, L"TexturePhongPS.cso");
+			m_graphicsResources.push_back(std::move(pPixelShader));
+		}
 
 		std::shared_ptr<GraphicsResource> pInputLayout = ResourcePool::GetResource<InputLayout>(
 			graphics, vertexShaderBlob, InputLayout::LayoutType::TextureShading);
 		m_graphicsResources.push_back(std::move(pInputLayout));
 	}
+}
+
+void Entity::AddBasicResource(const Graphics& graphics) {
+	// shaders & layout
+	std::shared_ptr<GraphicsResource> pVertexShader = ResourcePool::GetResource<VertexShader>(
+		graphics, L"BasicVS.cso");
+	const std::vector<uint8_t> vertexShaderBlob = static_cast<VertexShader*>(pVertexShader.get())->GetVertexShaderBlob();
+	m_graphicsResources.push_back(std::move(pVertexShader));
+
+	std::shared_ptr<GraphicsResource> pPixelShader = ResourcePool::GetResource<PixelShader>(
+		graphics, L"BasicPS.cso");
+	m_graphicsResources.push_back(std::move(pPixelShader));
+
+	std::shared_ptr<GraphicsResource> pInputLayout = ResourcePool::GetResource<InputLayout>(
+		graphics, vertexShaderBlob, InputLayout::LayoutType::Basic);
+	m_graphicsResources.push_back(std::move(pInputLayout));
+}
+
+void Entity::AddTextureBasicResource(const Graphics& graphics) {
+	// shaders & layout
+	std::shared_ptr<GraphicsResource> pVertexShader = ResourcePool::GetResource<VertexShader>(
+		graphics, L"TextureVS.cso");
+	const std::vector<uint8_t> vertexShaderBlob = static_cast<VertexShader*>(pVertexShader.get())->GetVertexShaderBlob();
+	m_graphicsResources.push_back(std::move(pVertexShader));
+
+	std::shared_ptr<GraphicsResource> pPixelShader = ResourcePool::GetResource<PixelShader>(
+		graphics, L"TexturePS.cso");
+	m_graphicsResources.push_back(std::move(pPixelShader));
+
+	std::shared_ptr<GraphicsResource> pInputLayout = ResourcePool::GetResource<InputLayout>(
+		graphics, vertexShaderBlob, InputLayout::LayoutType::Texture);
+	m_graphicsResources.push_back(std::move(pInputLayout));
 }

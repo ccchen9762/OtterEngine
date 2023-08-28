@@ -19,7 +19,7 @@ const std::vector<unsigned short> Plane::s_indices = {
 
 Plane::Plane(const Game& game, const Graphics& graphics, const Vector3& translation, const Vector3& rotation, const Vector3& scale,
 	const std::wstring& path, bool isStatic)
-	: Entity(game, translation, rotation, scale, s_indices.size(), isStatic), m_attributes{5.0f, false} {
+	: Entity(game, translation, rotation, scale, s_indices.size(), isStatic), m_attributes{5.0f} {
 
 	// buffers & textures
 	std::shared_ptr<GraphicsResource> pVertexBuffer = ResourcePool::GetResource<VertexBuffer>(
@@ -34,17 +34,11 @@ Plane::Plane(const Game& game, const Graphics& graphics, const Vector3& translat
 		graphics, path, 0u);
 	m_graphicsResources.push_back(std::move(pTexture));
 
-	std::shared_ptr<GraphicsResource> pConstantBufferTransformation = ResourcePool::GetResource<ConstantBufferTransformation>(
-		graphics, *this);
-	m_graphicsResources.push_back(std::move(pConstantBufferTransformation));
+	AddTextureShadingResource(graphics, false);
 
-	std::shared_ptr<GraphicsResource> pConstantBufferVertex = ResourcePool::GetResource<ConstantBufferVertex<Attributes>>(
-		graphics, m_attributes, VertexConstantBufferType::Attributes, GetUID());
-	m_graphicsResources.push_back(std::move(pConstantBufferVertex));
-
-	std::shared_ptr<GraphicsResource> pConstantBufferPixel = ResourcePool::GetResource<ConstantBufferPixel<Attributes>>(
-		graphics, m_attributes, PixelConstantBufferType::Attributes, GetUID());
-	m_graphicsResources.push_back(std::move(pConstantBufferPixel));
-
-	AddTextureShadingResource(graphics);
+	m_graphicsResources.push_back(std::make_shared<ConstantBufferTransformation>(graphics, *this));
+	m_graphicsResources.push_back(std::make_shared<ConstantBufferVertex<Attributes>>(
+		graphics, m_attributes, VertexConstantBufferType::Attributes, GetUID()));
+	m_graphicsResources.push_back(std::make_shared<ConstantBufferPixel<Attributes>>(
+		graphics, m_attributes, PixelConstantBufferType::Attributes, GetUID()));
 }
