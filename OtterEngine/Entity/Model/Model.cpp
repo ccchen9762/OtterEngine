@@ -14,31 +14,31 @@
 #include "OtterEngine/Common/Utils.h"
 
 Mesh::Mesh(const Game& game, const Graphics& graphics, const Vector3& translation, const Vector3& rotation, const Vector3& scale,
-	bool isStatic, unsigned int meshIndex, const std::wstring& meshPath, const std::unique_ptr<MeshInformation>& meshInformation)
+	bool isStatic, unsigned int meshIndex, const std::wstring& meshPath, const MeshInformation& meshInformation)
 	: Entity(game, translation, rotation, scale, 0, isStatic), m_meshIndex(meshIndex), m_attributes({ 0.0 }) {
 
 	// remember to set indice size!!!!!!!!!!!!!!!!!!
-	m_indicesSize = meshInformation->indices[meshIndex].size();
+	m_indicesSize = meshInformation.indices[meshIndex].size();
 
 	// buffers & textures
 	std::shared_ptr<GraphicsResource> pVertexBuffer = ResourcePool::GetResource<VertexBuffer>(
-		graphics, meshInformation->vertices[meshIndex].data(), sizeof(VertexTexture), meshInformation->vertices[meshIndex].size(),
+		graphics, meshInformation.vertices[meshIndex].data(), sizeof(VertexTexture), meshInformation.vertices[meshIndex].size(),
 		VertexBuffer::Topology::Triangle, L"#Mesh#" + meshPath);
 	m_graphicsResources.push_back(std::move(pVertexBuffer));
 
 	std::shared_ptr<GraphicsResource> pIndexBuffer = ResourcePool::GetResource<IndexBuffer>(
-		graphics, meshInformation->indices[meshIndex], L"#Mesh#" + meshPath);
+		graphics, meshInformation.indices[meshIndex], L"#Mesh#" + meshPath);
 	m_graphicsResources.push_back(std::move(pIndexBuffer));
 
 	m_graphicsResources.push_back(std::make_shared<ConstantBufferTransformation>(graphics, *this));
 
 	std::shared_ptr<GraphicsResource> pDiffuse = ResourcePool::GetResource<Texture>(
-		graphics, meshInformation->diffuseLocation[meshIndex], 0u);
+		graphics, meshInformation.diffuseFile[meshIndex], 0u);
 	m_graphicsResources.push_back(std::move(pDiffuse));
 
-	if (meshInformation->hasSpecularMap[meshIndex]) {
+	if (meshInformation.hasSpecularMap[meshIndex]) {
 		std::shared_ptr<GraphicsResource> pSpecular = ResourcePool::GetResource<Texture>(
-			graphics, meshInformation->specularLocation[meshIndex], 1u);
+			graphics, meshInformation.specularFile[meshIndex], 1u);
 		m_graphicsResources.push_back(std::move(pSpecular));
 		AddTextureShadingResource(graphics, true);
 
@@ -50,7 +50,7 @@ Mesh::Mesh(const Game& game, const Graphics& graphics, const Vector3& translatio
 		AddTextureShadingResource(graphics, false);
 	}
 
-	m_attributes.shiness = meshInformation->shiness[meshIndex];
+	m_attributes.shiness = meshInformation.shiness[meshIndex];
 
 	m_graphicsResources.push_back(std::make_shared<ConstantBufferVertex<Attributes>>(
 		graphics, m_attributes, VertexConstantBufferType::Attributes, GetUID()));
@@ -118,62 +118,45 @@ void Model::Render(const Graphics& graphics) const {
 
 void Model::SetupMeshInformation(const aiScene* pModel,
 	const std::string& path,
-	std::vector<std::vector<VertexTexture>>& vertices, 
-	std::vector<std::vector<unsigned short>>& indices, 
-	std::vector<bool>& hasSpecularMap, 
-	std::vector<std::wstring>& diffuseLocation, 
-	std::vector<std::wstring>& specularLocation, 
-	std::vector<float>& shiness, 
-	std::wstring& directory) {
+	MeshInformation& s_meshInformation) {
 
 	size_t numMeshes = pModel->mNumMeshes;
-	vertices.resize(numMeshes);
-	indices.resize(numMeshes);
-	hasSpecularMap.resize(numMeshes);
-	diffuseLocation.resize(numMeshes);
-	specularLocation.resize(numMeshes);
-	shiness.resize(numMeshes);
+	s_meshInformation.vertices.resize(numMeshes);
+	s_meshInformation.indices.resize(numMeshes);
+	s_meshInformation.hasSpecularMap.resize(numMeshes);
+	s_meshInformation.diffuseFile.resize(numMeshes);
+	s_meshInformation.specularFile.resize(numMeshes);
+	s_meshInformation.shiness.resize(numMeshes);
 
-	StringToWString(path.c_str(), directory);
-	while (directory.back() != '\\' && directory.back() != '/')	// cut the last part of path
-		directory.pop_back();
+	StringToWString(path.c_str(), s_meshInformation.directory);
+	while (s_meshInformation.directory.back() != '\\' && s_meshInformation.directory.back() != '/')	// cut the last part of path
+		s_meshInformation.directory.pop_back();
 
 	for (size_t i = 0; i < numMeshes; i++) {
-		LoadMesh(i, pModel->mMeshes[i], pModel->mMaterials, 
-			vertices, indices, hasSpecularMap, diffuseLocation, specularLocation, shiness, directory);
+		LoadMesh(i, pModel->mMeshes[i], pModel->mMaterials, s_meshInformation);
 	}
-
-	m_pMeshInformation = std::make_unique<MeshInformation>(
-		vertices, indices, hasSpecularMap, diffuseLocation, specularLocation, shiness, directory
-	);
 }
 
 void Model::LoadMesh(unsigned int meshIndex, const aiMesh* pMesh, const aiMaterial* const* ppMaterials,
-	std::vector<std::vector<VertexTexture>>& vertices,
-	std::vector<std::vector<unsigned short>>& indices,
-	std::vector<bool>& hasSpecularMap,
-	std::vector<std::wstring>& diffuseLocation,
-	std::vector<std::wstring>& specularLocation,
-	std::vector<float>& shiness,
-	const std::wstring& directory) {
+	MeshInformation& s_meshInformation) {
 	
-	vertices[meshIndex].reserve(pMesh->mNumVertices);
+	s_meshInformation.vertices[meshIndex].reserve(pMesh->mNumVertices);
 	for (unsigned int i = 0; i < pMesh->mNumVertices; i++) {
-		vertices[meshIndex].emplace_back(
+		s_meshInformation.vertices[meshIndex].emplace_back(
 			DirectX::XMVECTOR{ pMesh->mVertices[i].x, pMesh->mVertices[i].y, pMesh->mVertices[i].z, 1.0f },
 			DirectX::XMFLOAT2{ pMesh->mTextureCoords[0][i].x, pMesh->mTextureCoords[0][i].y },
 			Normal{ pMesh->mNormals[i].x, pMesh->mNormals[i].y, pMesh->mNormals[i].z }
 		);
 	}
 
-	indices[meshIndex].reserve(pMesh->mNumFaces * 3);
+	s_meshInformation.indices[meshIndex].reserve(pMesh->mNumFaces * 3);
 	for (unsigned int i = 0; i < pMesh->mNumFaces; i++) {
 		const aiFace& face = pMesh->mFaces[i];
 		assert("Model face are not all triangles" && face.mNumIndices == 3);
 
-		indices[meshIndex].push_back(face.mIndices[0]);
-		indices[meshIndex].push_back(face.mIndices[1]);
-		indices[meshIndex].push_back(face.mIndices[2]);
+		s_meshInformation.indices[meshIndex].push_back(face.mIndices[0]);
+		s_meshInformation.indices[meshIndex].push_back(face.mIndices[1]);
+		s_meshInformation.indices[meshIndex].push_back(face.mIndices[2]);
 	}
 
 	const aiMaterial* pMaterial = ppMaterials[pMesh->mMaterialIndex];
@@ -182,24 +165,24 @@ void Model::LoadMesh(unsigned int meshIndex, const aiMesh* pMesh, const aiMateri
 	if (pMaterial->GetTexture(aiTextureType_DIFFUSE, 0, &textureName) == aiReturn_SUCCESS) {
 		std::wstring materialName;
 		StringToWString(textureName.C_Str(), materialName);
-		std::wstring fileLocation = directory + materialName;
+		std::wstring fileLocation = s_meshInformation.directory + materialName;
 
-		diffuseLocation[meshIndex] = fileLocation;
+		s_meshInformation.diffuseFile[meshIndex] = fileLocation;
 	}
 
 	// load specular map
 	if (pMaterial->GetTexture(aiTextureType_SPECULAR, 0, &textureName) == aiReturn_SUCCESS) {
 		std::wstring materialName;
 		StringToWString(textureName.C_Str(), materialName);
-		std::wstring fileLocation = directory + materialName;
+		std::wstring fileLocation = s_meshInformation.directory + materialName;
 
-		hasSpecularMap[meshIndex] = true;
-		specularLocation[meshIndex] = fileLocation;
+		s_meshInformation.hasSpecularMap[meshIndex] = true;
+		s_meshInformation.specularFile[meshIndex] = fileLocation;
 	}
 	else {
-		hasSpecularMap[meshIndex] = false;
+		s_meshInformation.hasSpecularMap[meshIndex] = false;
 
-		pMaterial->Get(AI_MATKEY_SHININESS, shiness[meshIndex]);
+		pMaterial->Get(AI_MATKEY_SHININESS, s_meshInformation.shiness[meshIndex]);
 	}
 }
 

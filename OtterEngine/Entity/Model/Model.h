@@ -4,13 +4,13 @@
 #include <assimp/scene.h>
 
 struct MeshInformation {
-	const std::vector<std::vector<VertexTexture>>& vertices;
-	const std::vector<std::vector<unsigned short>>& indices;
-	const std::vector<bool>& hasSpecularMap;
-	const std::vector<std::wstring>& diffuseLocation;
-	const std::vector<std::wstring>& specularLocation;
-	const std::vector<float>& shiness;
-	const std::wstring& path;
+	std::vector<std::vector<VertexTexture>> vertices;
+	std::vector<std::vector<unsigned short>> indices;
+	std::vector<bool> hasSpecularMap;
+	std::vector<std::wstring> diffuseFile;
+	std::vector<std::wstring> specularFile;
+	std::vector<float> shiness;
+	std::wstring directory;
 };
 
 class Mesh : public Entity
@@ -20,7 +20,7 @@ class Mesh : public Entity
 
 public:
 	Mesh(const Game& game, const Graphics& graphics, const Vector3& translation, const Vector3& rotation, const Vector3& scale,
-		bool isStatic, unsigned int meshIndex, const std::wstring& meshPath, const std::unique_ptr<MeshInformation>& meshInformation);
+		bool isStatic, unsigned int meshIndex, const std::wstring& meshPath, const MeshInformation& meshInformation);
 	~Mesh() = default;
 
 private:
@@ -67,28 +67,15 @@ public:
 protected:
 	void SetupMeshInformation(const aiScene* pModel,
 		const std::string& path,
-		std::vector<std::vector<VertexTexture>>& vertices,
-		std::vector<std::vector<unsigned short>>& indices,
-		std::vector<bool>& hasSpecularMap,
-		std::vector<std::wstring>& diffuseLocation,
-		std::vector<std::wstring>& specularLocation,
-		std::vector<float>& shiness,
-		std::wstring& directory);
+		MeshInformation& s_meshInformation);
 	void LoadMesh(unsigned int meshIndex, const aiMesh* pMesh, const aiMaterial* const* ppMaterials,
-		std::vector<std::vector<VertexTexture>>& vertices,
-		std::vector<std::vector<unsigned short>>& indices,
-		std::vector<bool>& hasSpecularMap,
-		std::vector<std::wstring>& diffuseLocation,
-		std::vector<std::wstring>& specularLocation,
-		std::vector<float>& shiness,
-		const std::wstring& directory);
+		MeshInformation& s_meshInformation);
 	std::unique_ptr<Node> ParseNode(int& nodeIndex, const aiNode* node);
 
 protected:
 	std::string m_modelName;
 	std::unique_ptr<Node> m_pRoot;
 	std::vector<std::shared_ptr<Mesh>> m_pAllMeshes;
-	std::unique_ptr<MeshInformation> m_pMeshInformation;
 
 	// for ImGui
 	int m_selectIndex;

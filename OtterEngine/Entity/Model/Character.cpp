@@ -6,13 +6,7 @@
 
 #include "OtterEngine/Common/Utils.h"
 
-std::vector<std::vector<VertexTexture>> Character::s_vertices;
-std::vector<std::vector<unsigned short>> Character::s_indices;
-std::vector<bool> Character::s_hasSpecularMap;
-std::vector<std::wstring> Character::s_diffuseLocation;
-std::vector<std::wstring> Character::s_specularLocation;
-std::vector<float> Character::s_shiness;
-std::wstring Character::s_path;
+MeshInformation Character::s_meshInformation;
 
 Character::Character(const Game& game, const Graphics& graphics, const Vector3& translation, const Vector3& rotation, const Vector3& scale, 
 	bool isStatic, const std::string& path) : Model(game, graphics, translation, rotation, scale, isStatic, path) {
@@ -26,14 +20,16 @@ Character::Character(const Game& game, const Graphics& graphics, const Vector3& 
 
 	assert("Model file not found" && pModel);
 
-	SetupMeshInformation(pModel, path, s_vertices, s_indices, s_hasSpecularMap, s_diffuseLocation, s_specularLocation, s_shiness, s_path);
+	if (s_meshInformation.indices.empty()) {
+		SetupMeshInformation(pModel, path, s_meshInformation);
+	}
 
 	for (size_t i = 0; i < pModel->mNumMeshes; i++) {
 		std::wstring meshName;
 		StringToWString(pModel->mMeshes[i]->mName.C_Str(), meshName);
 
 		m_pAllMeshes.push_back(std::make_unique<Mesh>(
-			game, graphics, translation, rotation, scale, isStatic, i, s_path + meshName, m_pMeshInformation
+			game, graphics, translation, rotation, scale, isStatic, i, s_meshInformation.directory + meshName, s_meshInformation
 		));
 	}
 
