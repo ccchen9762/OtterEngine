@@ -91,6 +91,15 @@ Game::Game() :
         "Assets/Model/nanosuit/nanosuit.obj")
     );
 
+    m_modelList.push_back(std::make_unique<Model>(
+        *this, *(m_mainWindow.m_pGraphics),
+        Vector3(-8.0f, 0.0f, -4.0f),
+        Vector3(0.0f, 0.0f, 0.0f),
+        Vector3(1.0f, 1.0f, 1.0f),
+        false,
+        "Assets/Model/nanosuit/nanosuit.obj")
+    );
+
     // floor
     for (int i = 0; i < 8; i++) {
         for (int j = 0; j < 8; j++) {

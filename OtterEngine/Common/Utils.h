@@ -2,7 +2,7 @@
 
 #include <string>
 
-void StringToWString(const char* str, std::wstring& wstr) {
+inline void StringToWString(const char* str, std::wstring& wstr) {
 	size_t size = strlen(str) + 1;
 	wchar_t* convert = new wchar_t[size];
 
@@ -13,7 +13,7 @@ void StringToWString(const char* str, std::wstring& wstr) {
 	delete[] convert;
 }
 
-void WStringToString(const wchar_t* wstr, std::string& str) {
+inline void WStringToString(const wchar_t* wstr, std::string& str) {
 	size_t size = wcslen(wstr) + 1;
 	char* convert = new char[size];
 

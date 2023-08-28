@@ -15,6 +15,10 @@
 
 std::vector<std::vector<VertexTexture>> Mesh::s_vertices;
 std::vector<std::vector<unsigned short>> Mesh::s_indices;
+std::vector<bool> Mesh::s_hasSpecularMap;
+std::vector<std::wstring> Mesh::s_diffuseLocation;
+std::vector<std::wstring> Mesh::s_specularLocation;
+std::vector<float> Mesh::s_shiness;
 std::wstring Mesh::s_path;
 
 Mesh::Mesh(const Game& game, const Graphics& graphics, const Vector3& translation, const Vector3& rotation, const Vector3& scale,
@@ -41,6 +45,31 @@ Mesh::Mesh(const Game& game, const Graphics& graphics, const Vector3& translatio
 	m_graphicsResources.push_back(std::move(pIndexBuffer));
 
 	m_graphicsResources.push_back(std::make_shared<ConstantBufferTransformation>(graphics, *this));
+
+	std::shared_ptr<GraphicsResource> pDiffuse = ResourcePool::GetResource<Texture>(
+		graphics, s_diffuseLocation[meshIndex], 0u);
+	m_graphicsResources.push_back(std::move(pDiffuse));
+
+	if (s_hasSpecularMap[meshIndex]) {
+		std::shared_ptr<GraphicsResource> pSpecular = ResourcePool::GetResource<Texture>(
+			graphics, s_specularLocation[meshIndex], 1u);
+		m_graphicsResources.push_back(std::move(pSpecular));
+		AddTextureShadingResource(graphics, true);
+
+	}
+	else {
+		std::shared_ptr<GraphicsResource> pSpecular = ResourcePool::GetResource<Texture>(
+			graphics, L"", 1u);
+		m_graphicsResources.push_back(std::move(pSpecular));
+		AddTextureShadingResource(graphics, false);
+	}
+
+	m_attributes.shiness = s_shiness[meshIndex];
+
+	m_graphicsResources.push_back(std::make_shared<ConstantBufferVertex<Attributes>>(
+		graphics, m_attributes, VertexConstantBufferType::Attributes, GetUID()));
+	m_graphicsResources.push_back(std::make_shared<ConstantBufferPixel<Attributes>>(
+		graphics, m_attributes, PixelConstantBufferType::Attributes, GetUID()));
 }
 
 void Mesh::LoadMesh(const Graphics& graphics, unsigned int meshIndex, const aiMesh* pMesh, const aiMaterial* const* ppMaterials) {
@@ -71,36 +100,23 @@ void Mesh::LoadMesh(const Graphics& graphics, unsigned int meshIndex, const aiMe
 		StringToWString(textureName.C_Str(), materialName);
 		std::wstring fileLocation = s_path + materialName;
 
-		std::shared_ptr<GraphicsResource> pTexture = ResourcePool::GetResource<Texture>(
-			graphics, fileLocation, 0u);
-		m_graphicsResources.push_back(std::move(pTexture));
+		s_diffuseLocation[meshIndex] = fileLocation;
 	}
+
 	// load specular map
 	if (pMaterial->GetTexture(aiTextureType_SPECULAR, 0, &textureName) == aiReturn_SUCCESS) {
 		std::wstring materialName;
 		StringToWString(textureName.C_Str(), materialName);
 		std::wstring fileLocation = s_path + materialName;
 
-		std::shared_ptr<GraphicsResource> pTexture = ResourcePool::GetResource<Texture>(
-			graphics, fileLocation, 1u);
-		m_graphicsResources.push_back(std::move(pTexture));
-
-		AddTextureShadingResource(graphics, true);
+		s_hasSpecularMap[meshIndex] = true;
+		s_specularLocation[meshIndex] = fileLocation;
 	}
 	else {
-		pMaterial->Get(AI_MATKEY_SHININESS, m_attributes.shiness);
-		
-		std::shared_ptr<GraphicsResource> pTexture = ResourcePool::GetResource<Texture>(
-			graphics, L"", 1u);
-		m_graphicsResources.push_back(std::move(pTexture));
+		s_hasSpecularMap[meshIndex] = false;
 
-		AddTextureShadingResource(graphics, false);
+		pMaterial->Get(AI_MATKEY_SHININESS, s_shiness[meshIndex]);
 	}
-
-	m_graphicsResources.push_back(std::make_shared<ConstantBufferVertex<Attributes>>(
-		graphics, m_attributes, VertexConstantBufferType::Attributes, GetUID()));
-	m_graphicsResources.push_back(std::make_shared<ConstantBufferPixel<Attributes>>(
-		graphics, m_attributes, PixelConstantBufferType::Attributes, GetUID()));
 }
 
 // ========================= Node =========================
@@ -156,6 +172,9 @@ Model::Model(const Game& game, const Graphics& graphics, const Vector3& translat
 	bool isStatic, const std::string& path) : 
 	m_modelName(path), m_selectIndex(-1) {
 
+	static int numModel = 0;
+	m_modelName += std::to_string(numModel++);
+
 	Assimp::Importer imp;
 	const aiScene* pModel = imp.ReadFile(path,
 		aiProcess_Triangulate | aiProcess_JoinIdenticalVertices | aiProcess_GenNormals | aiProcess_FlipWindingOrder);
@@ -165,6 +184,11 @@ Model::Model(const Game& game, const Graphics& graphics, const Vector3& translat
 	size_t numMeshes = pModel->mNumMeshes;
 	Mesh::s_vertices.resize(numMeshes);
 	Mesh::s_indices.resize(numMeshes);
+	Mesh::s_hasSpecularMap.resize(numMeshes);
+	Mesh::s_diffuseLocation.resize(numMeshes);
+	Mesh::s_specularLocation.resize(numMeshes);
+	Mesh::s_shiness.resize(numMeshes);
+
 	StringToWString(path.c_str(), Mesh::s_path);
 	while (Mesh::s_path.back() != '\\' && Mesh::s_path.back() != '/')	// cut the last part of path
 		Mesh::s_path.pop_back();

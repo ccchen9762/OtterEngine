@@ -36,6 +36,7 @@
     <ClCompile Include="Entity\ShadingEntity\Cube.cpp" />
     <ClCompile Include="Entity\ShadingEntity\Plane.cpp" />
     <ClCompile Include="Entity\ShadingEntity\Sphere.cpp" />
+    <ClCompile Include="Entity\Model\Character.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="WindowClass\Window.h" />
@@ -84,6 +85,7 @@
     <ClInclude Include="Entity\ShadingEntity\Cube.h" />
     <ClInclude Include="Entity\ShadingEntity\Plane.h" />
     <ClInclude Include="Entity\ShadingEntity\Sphere.h" />
+    <ClInclude Include="Entity\Model\Character.h" />
   </ItemGroup>
   <ItemGroup>
     <FxCompile Include="Shader\GouraudPS.hlsl" />

@@ -11,7 +11,7 @@ inline const wchar_t* kDefWndTitle = L"Otter Engine";
 inline const unsigned int kInputBufferLimit = 16u;
 
 // final render size
-inline const unsigned int kRenderWidth = 1366u, kRenderHeight = 768u;
+inline const unsigned int kRenderWidth = 1600u, kRenderHeight = 900u;
 constexpr float kRenderRatio = static_cast<float>(kRenderWidth) / static_cast<float>(kRenderHeight);
 
 const float kNearZ = 0.1f, kFarZ = 200.0f;

@@ -12,4 +12,5 @@ public:
 private:
 	static std::vector<std::vector<VertexTexture>> s_vertices;
 	static std::vector<std::vector<unsigned short>> s_indices;
+	static std::wstring s_path;
 };

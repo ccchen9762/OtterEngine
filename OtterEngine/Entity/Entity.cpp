@@ -43,6 +43,7 @@ void Entity::Render(const Graphics& graphics) const {
 		resource->Bind(graphics);
 	}
 
+	assert("Entity m_indicesSize not set" && m_indicesSize != 0);
 	graphics.RenderIndexed(m_indicesSize);
 }
 

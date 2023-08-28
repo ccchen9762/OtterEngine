@@ -6,14 +6,16 @@
 class Mesh : public Entity
 {
 	friend class Model;
+	friend class Node;
 
 public:
 	Mesh(const Game& game, const Graphics& graphics, const Vector3& translation, const Vector3& rotation, const Vector3& scale,
 		bool isStatic, unsigned int meshIndex, const aiMesh* mesh, const aiMaterial* const* materials);
 	~Mesh() = default;
 
-	void LoadMesh(const Graphics& graphics, unsigned int meshIndex, const aiMesh* mesh, const aiMaterial* const* materials);
+private:
 	void ApplyWorldTransformation(const DirectX::XMMATRIX& worldTransformation) { m_transformation = worldTransformation; }
+	void LoadMesh(const Graphics& graphics, unsigned int meshIndex, const aiMesh* mesh, const aiMaterial* const* materials);
 
 private:
 	unsigned int m_meshIndex;
@@ -21,6 +23,10 @@ private:
 
 	static std::vector<std::vector<VertexTexture>> s_vertices;
 	static std::vector<std::vector<unsigned short>> s_indices;
+	static std::vector<bool> s_hasSpecularMap;
+	static std::vector<std::wstring> s_diffuseLocation;
+	static std::vector<std::wstring> s_specularLocation;
+	static std::vector<float> s_shiness;
 	static std::wstring s_path;
 };
 
@@ -59,12 +65,12 @@ public:
 
 	void ShowControlWindow();
 
-private:
+protected:
 	std::string m_modelName;
 	std::unique_ptr<Node> m_pRoot;
 	std::vector<std::shared_ptr<Mesh>> m_pAllMeshes;
 
-	// for ImGui use
+	// for ImGui
 	int m_selectIndex;
 	int m_totalNodes;
 	std::vector<Vector3> m_translations;
