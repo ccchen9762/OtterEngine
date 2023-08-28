@@ -3,6 +3,16 @@
 #include "../Entity.h"
 #include <assimp/scene.h>
 
+struct MeshInformation {
+	const std::vector<std::vector<VertexTexture>>& vertices;
+	const std::vector<std::vector<unsigned short>>& indices;
+	const std::vector<bool>& hasSpecularMap;
+	const std::vector<std::wstring>& diffuseLocation;
+	const std::vector<std::wstring>& specularLocation;
+	const std::vector<float>& shiness;
+	const std::wstring& path;
+};
+
 class Mesh : public Entity
 {
 	friend class Model;
@@ -10,24 +20,15 @@ class Mesh : public Entity
 
 public:
 	Mesh(const Game& game, const Graphics& graphics, const Vector3& translation, const Vector3& rotation, const Vector3& scale,
-		bool isStatic, unsigned int meshIndex, const aiMesh* mesh, const aiMaterial* const* materials);
+		bool isStatic, unsigned int meshIndex, const std::wstring& meshPath, const std::unique_ptr<MeshInformation>& meshInformation);
 	~Mesh() = default;
 
 private:
 	void ApplyWorldTransformation(const DirectX::XMMATRIX& worldTransformation) { m_transformation = worldTransformation; }
-	void LoadMesh(const Graphics& graphics, unsigned int meshIndex, const aiMesh* mesh, const aiMaterial* const* materials);
 
 private:
 	unsigned int m_meshIndex;
 	Attributes m_attributes;
-
-	static std::vector<std::vector<VertexTexture>> s_vertices;
-	static std::vector<std::vector<unsigned short>> s_indices;
-	static std::vector<bool> s_hasSpecularMap;
-	static std::vector<std::wstring> s_diffuseLocation;
-	static std::vector<std::wstring> s_specularLocation;
-	static std::vector<float> s_shiness;
-	static std::wstring s_path;
 };
 
 class Node
@@ -58,17 +59,36 @@ class Model
 public:
 	Model(const Game& game, const Graphics& graphics, const Vector3& translation, const Vector3& rotation, const Vector3& scale,
 		bool isStatic, const std::string& path);
-	~Model()=default;
+	~Model() = default;
 
 	void Render(const Graphics& graphics) const;
-	std::unique_ptr<Node> ParseNode(int& nodeIndex, const aiNode* node);
-
 	void ShowControlWindow();
+
+protected:
+	void SetupMeshInformation(const aiScene* pModel,
+		const std::string& path,
+		std::vector<std::vector<VertexTexture>>& vertices,
+		std::vector<std::vector<unsigned short>>& indices,
+		std::vector<bool>& hasSpecularMap,
+		std::vector<std::wstring>& diffuseLocation,
+		std::vector<std::wstring>& specularLocation,
+		std::vector<float>& shiness,
+		std::wstring& directory);
+	void LoadMesh(unsigned int meshIndex, const aiMesh* pMesh, const aiMaterial* const* ppMaterials,
+		std::vector<std::vector<VertexTexture>>& vertices,
+		std::vector<std::vector<unsigned short>>& indices,
+		std::vector<bool>& hasSpecularMap,
+		std::vector<std::wstring>& diffuseLocation,
+		std::vector<std::wstring>& specularLocation,
+		std::vector<float>& shiness,
+		const std::wstring& directory);
+	std::unique_ptr<Node> ParseNode(int& nodeIndex, const aiNode* node);
 
 protected:
 	std::string m_modelName;
 	std::unique_ptr<Node> m_pRoot;
 	std::vector<std::shared_ptr<Mesh>> m_pAllMeshes;
+	std::unique_ptr<MeshInformation> m_pMeshInformation;
 
 	// for ImGui
 	int m_selectIndex;

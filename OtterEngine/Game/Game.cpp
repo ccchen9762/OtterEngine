@@ -10,6 +10,7 @@
 #include "OtterEngine/Entity/ShadingEntity/Plane.h"
 #include "OtterEngine/Entity/ShadingEntity/Cube.h"
 #include "OtterEngine/Entity/ShadingEntity/Sphere.h"
+#include "OtterEngine/Entity/Model/Character.h"
 
 #include "OtterEngine/Common/Randomizer.h"
 #include "OtterEngine/Common/constants.h"
@@ -82,7 +83,7 @@ Game::Game() :
         ));
     }
 
-    m_modelList.push_back(std::make_unique<Model>(
+    m_modelList.push_back(std::make_unique<Character>(
         *this, *(m_mainWindow.m_pGraphics),
         Vector3(8.0f, 0.0f, -4.0f),
         Vector3(0.0f, 0.0f, 0.0f),
@@ -91,7 +92,7 @@ Game::Game() :
         "Assets/Model/nanosuit/nanosuit.obj")
     );
 
-    m_modelList.push_back(std::make_unique<Model>(
+    m_modelList.push_back(std::make_unique<Character>(
         *this, *(m_mainWindow.m_pGraphics),
         Vector3(-8.0f, 0.0f, -4.0f),
         Vector3(0.0f, 0.0f, 0.0f),

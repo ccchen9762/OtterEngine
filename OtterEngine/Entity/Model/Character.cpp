@@ -8,12 +8,16 @@
 
 std::vector<std::vector<VertexTexture>> Character::s_vertices;
 std::vector<std::vector<unsigned short>> Character::s_indices;
+std::vector<bool> Character::s_hasSpecularMap;
+std::vector<std::wstring> Character::s_diffuseLocation;
+std::vector<std::wstring> Character::s_specularLocation;
+std::vector<float> Character::s_shiness;
 std::wstring Character::s_path;
 
 Character::Character(const Game& game, const Graphics& graphics, const Vector3& translation, const Vector3& rotation, const Vector3& scale, 
-	bool isStatic, const std::string& path) : Model(game, graphics, translation, rotation, scale, isStatic, path){
+	bool isStatic, const std::string& path) : Model(game, graphics, translation, rotation, scale, isStatic, path) {
 
-	/*static unsigned int numCharacter = 0;
+	static unsigned int numCharacter = 0;
 	m_modelName += std::to_string(numCharacter++);
 
 	Assimp::Importer imp;
@@ -22,16 +26,14 @@ Character::Character(const Game& game, const Graphics& graphics, const Vector3& 
 
 	assert("Model file not found" && pModel);
 
-	size_t numMeshes = pModel->mNumMeshes;
-	Character::s_vertices.resize(numMeshes);
-	Character::s_indices.resize(numMeshes);
-	StringToWString(path.c_str(), Character::s_path);
-	while (Character::s_path.back() != '\\' && Character::s_path.back() != '/')	// cut the last part of path
-		Character::s_path.pop_back();
-	
-	for (size_t i = 0; i < numMeshes; i++) {
+	SetupMeshInformation(pModel, path, s_vertices, s_indices, s_hasSpecularMap, s_diffuseLocation, s_specularLocation, s_shiness, s_path);
+
+	for (size_t i = 0; i < pModel->mNumMeshes; i++) {
+		std::wstring meshName;
+		StringToWString(pModel->mMeshes[i]->mName.C_Str(), meshName);
+
 		m_pAllMeshes.push_back(std::make_unique<Mesh>(
-			game, graphics, translation, rotation, scale, isStatic, i, pModel->mMeshes[i], pModel->mMaterials
+			game, graphics, translation, rotation, scale, isStatic, i, s_path + meshName, m_pMeshInformation
 		));
 	}
 
@@ -42,5 +44,5 @@ Character::Character(const Game& game, const Graphics& graphics, const Vector3& 
 	m_rotations.resize(m_totalNodes);
 
 	m_translations[0] = translation;
-	m_rotations[0] = rotation;*/
+	m_rotations[0] = rotation;
 }

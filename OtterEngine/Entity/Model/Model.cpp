@@ -13,46 +13,32 @@
 #include "OtterEngine/Common/constants.h"
 #include "OtterEngine/Common/Utils.h"
 
-std::vector<std::vector<VertexTexture>> Mesh::s_vertices;
-std::vector<std::vector<unsigned short>> Mesh::s_indices;
-std::vector<bool> Mesh::s_hasSpecularMap;
-std::vector<std::wstring> Mesh::s_diffuseLocation;
-std::vector<std::wstring> Mesh::s_specularLocation;
-std::vector<float> Mesh::s_shiness;
-std::wstring Mesh::s_path;
-
 Mesh::Mesh(const Game& game, const Graphics& graphics, const Vector3& translation, const Vector3& rotation, const Vector3& scale,
-	bool isStatic, unsigned int meshIndex, const aiMesh* pMesh, const aiMaterial* const* ppMaterials)
+	bool isStatic, unsigned int meshIndex, const std::wstring& meshPath, const std::unique_ptr<MeshInformation>& meshInformation)
 	: Entity(game, translation, rotation, scale, 0, isStatic), m_meshIndex(meshIndex), m_attributes({ 0.0 }) {
 
-	if (s_indices[meshIndex].empty()) {
-		LoadMesh(graphics, meshIndex, pMesh, ppMaterials);
-	}
 	// remember to set indice size!!!!!!!!!!!!!!!!!!
-	m_indicesSize = s_indices[meshIndex].size();
-
-	std::wstring meshName;
-	StringToWString(pMesh->mName.C_Str(), meshName);
+	m_indicesSize = meshInformation->indices[meshIndex].size();
 
 	// buffers & textures
 	std::shared_ptr<GraphicsResource> pVertexBuffer = ResourcePool::GetResource<VertexBuffer>(
-		graphics, s_vertices[meshIndex].data(), sizeof(VertexTexture), s_vertices[meshIndex].size(),
-		VertexBuffer::Topology::Triangle, L"#Mesh#" + s_path + meshName);
+		graphics, meshInformation->vertices[meshIndex].data(), sizeof(VertexTexture), meshInformation->vertices[meshIndex].size(),
+		VertexBuffer::Topology::Triangle, L"#Mesh#" + meshPath);
 	m_graphicsResources.push_back(std::move(pVertexBuffer));
 
 	std::shared_ptr<GraphicsResource> pIndexBuffer = ResourcePool::GetResource<IndexBuffer>(
-		graphics, s_indices[meshIndex], L"#Mesh#" + s_path + meshName);
+		graphics, meshInformation->indices[meshIndex], L"#Mesh#" + meshPath);
 	m_graphicsResources.push_back(std::move(pIndexBuffer));
 
 	m_graphicsResources.push_back(std::make_shared<ConstantBufferTransformation>(graphics, *this));
 
 	std::shared_ptr<GraphicsResource> pDiffuse = ResourcePool::GetResource<Texture>(
-		graphics, s_diffuseLocation[meshIndex], 0u);
+		graphics, meshInformation->diffuseLocation[meshIndex], 0u);
 	m_graphicsResources.push_back(std::move(pDiffuse));
 
-	if (s_hasSpecularMap[meshIndex]) {
+	if (meshInformation->hasSpecularMap[meshIndex]) {
 		std::shared_ptr<GraphicsResource> pSpecular = ResourcePool::GetResource<Texture>(
-			graphics, s_specularLocation[meshIndex], 1u);
+			graphics, meshInformation->specularLocation[meshIndex], 1u);
 		m_graphicsResources.push_back(std::move(pSpecular));
 		AddTextureShadingResource(graphics, true);
 
@@ -64,59 +50,12 @@ Mesh::Mesh(const Game& game, const Graphics& graphics, const Vector3& translatio
 		AddTextureShadingResource(graphics, false);
 	}
 
-	m_attributes.shiness = s_shiness[meshIndex];
+	m_attributes.shiness = meshInformation->shiness[meshIndex];
 
 	m_graphicsResources.push_back(std::make_shared<ConstantBufferVertex<Attributes>>(
 		graphics, m_attributes, VertexConstantBufferType::Attributes, GetUID()));
 	m_graphicsResources.push_back(std::make_shared<ConstantBufferPixel<Attributes>>(
 		graphics, m_attributes, PixelConstantBufferType::Attributes, GetUID()));
-}
-
-void Mesh::LoadMesh(const Graphics& graphics, unsigned int meshIndex, const aiMesh* pMesh, const aiMaterial* const* ppMaterials) {
-	s_vertices[meshIndex].reserve(pMesh->mNumVertices);
-	for (unsigned int i = 0; i < pMesh->mNumVertices; i++) {
-		s_vertices[meshIndex].emplace_back(
-			DirectX::XMVECTOR{ pMesh->mVertices[i].x, pMesh->mVertices[i].y, pMesh->mVertices[i].z, 1.0f },
-			DirectX::XMFLOAT2{ pMesh->mTextureCoords[0][i].x, pMesh->mTextureCoords[0][i].y },
-			Normal{ pMesh->mNormals[i].x, pMesh->mNormals[i].y, pMesh->mNormals[i].z }
-		);
-	}
-
-	s_indices[meshIndex].reserve(pMesh->mNumFaces * 3);
-	for (unsigned int i = 0; i < pMesh->mNumFaces; i++) {
-		const aiFace& face = pMesh->mFaces[i];
-		assert("Model face are not all triangles" && face.mNumIndices == 3);
-
-		s_indices[meshIndex].push_back(face.mIndices[0]);
-		s_indices[meshIndex].push_back(face.mIndices[1]);
-		s_indices[meshIndex].push_back(face.mIndices[2]);
-	}
-
-	const aiMaterial* pMaterial = ppMaterials[pMesh->mMaterialIndex];
-	aiString textureName;
-	// load diffuse map
-	if (pMaterial->GetTexture(aiTextureType_DIFFUSE, 0, &textureName) == aiReturn_SUCCESS) {
-		std::wstring materialName;
-		StringToWString(textureName.C_Str(), materialName);
-		std::wstring fileLocation = s_path + materialName;
-
-		s_diffuseLocation[meshIndex] = fileLocation;
-	}
-
-	// load specular map
-	if (pMaterial->GetTexture(aiTextureType_SPECULAR, 0, &textureName) == aiReturn_SUCCESS) {
-		std::wstring materialName;
-		StringToWString(textureName.C_Str(), materialName);
-		std::wstring fileLocation = s_path + materialName;
-
-		s_hasSpecularMap[meshIndex] = true;
-		s_specularLocation[meshIndex] = fileLocation;
-	}
-	else {
-		s_hasSpecularMap[meshIndex] = false;
-
-		pMaterial->Get(AI_MATKEY_SHININESS, s_shiness[meshIndex]);
-	}
 }
 
 // ========================= Node =========================
@@ -170,47 +109,98 @@ void Node::ShowTreeWindow(int& selectIndex) {
 
 Model::Model(const Game& game, const Graphics& graphics, const Vector3& translation, const Vector3& rotation, const Vector3& scale,
 	bool isStatic, const std::string& path) : 
-	m_modelName(path), m_selectIndex(-1) {
-
-	static int numModel = 0;
-	m_modelName += std::to_string(numModel++);
-
-	Assimp::Importer imp;
-	const aiScene* pModel = imp.ReadFile(path,
-		aiProcess_Triangulate | aiProcess_JoinIdenticalVertices | aiProcess_GenNormals | aiProcess_FlipWindingOrder);
-
-	assert("Model file not found" && pModel);
-
-	size_t numMeshes = pModel->mNumMeshes;
-	Mesh::s_vertices.resize(numMeshes);
-	Mesh::s_indices.resize(numMeshes);
-	Mesh::s_hasSpecularMap.resize(numMeshes);
-	Mesh::s_diffuseLocation.resize(numMeshes);
-	Mesh::s_specularLocation.resize(numMeshes);
-	Mesh::s_shiness.resize(numMeshes);
-
-	StringToWString(path.c_str(), Mesh::s_path);
-	while (Mesh::s_path.back() != '\\' && Mesh::s_path.back() != '/')	// cut the last part of path
-		Mesh::s_path.pop_back();
-
-	for (size_t i = 0; i < numMeshes; i++) {
-		m_pAllMeshes.push_back(std::make_unique<Mesh>(
-			game, graphics, translation, rotation, scale, isStatic, i, pModel->mMeshes[i], pModel->mMaterials
-		));
-	}
-
-	int index = 0;
-	m_pRoot = ParseNode(index, pModel->mRootNode);
-
-	m_translations.resize(m_totalNodes);
-	m_rotations.resize(m_totalNodes);
-
-	m_translations[0] = translation;
-	m_rotations[0] = rotation;
+	m_modelName(path), m_selectIndex(-1), m_totalNodes(0) {
 }
 
 void Model::Render(const Graphics& graphics) const {
 	m_pRoot->UpdateTree(graphics, DirectX::XMMatrixIdentity(), m_translations, m_rotations);
+}
+
+void Model::SetupMeshInformation(const aiScene* pModel,
+	const std::string& path,
+	std::vector<std::vector<VertexTexture>>& vertices, 
+	std::vector<std::vector<unsigned short>>& indices, 
+	std::vector<bool>& hasSpecularMap, 
+	std::vector<std::wstring>& diffuseLocation, 
+	std::vector<std::wstring>& specularLocation, 
+	std::vector<float>& shiness, 
+	std::wstring& directory) {
+
+	size_t numMeshes = pModel->mNumMeshes;
+	vertices.resize(numMeshes);
+	indices.resize(numMeshes);
+	hasSpecularMap.resize(numMeshes);
+	diffuseLocation.resize(numMeshes);
+	specularLocation.resize(numMeshes);
+	shiness.resize(numMeshes);
+
+	StringToWString(path.c_str(), directory);
+	while (directory.back() != '\\' && directory.back() != '/')	// cut the last part of path
+		directory.pop_back();
+
+	for (size_t i = 0; i < numMeshes; i++) {
+		LoadMesh(i, pModel->mMeshes[i], pModel->mMaterials, 
+			vertices, indices, hasSpecularMap, diffuseLocation, specularLocation, shiness, directory);
+	}
+
+	m_pMeshInformation = std::make_unique<MeshInformation>(
+		vertices, indices, hasSpecularMap, diffuseLocation, specularLocation, shiness, directory
+	);
+}
+
+void Model::LoadMesh(unsigned int meshIndex, const aiMesh* pMesh, const aiMaterial* const* ppMaterials,
+	std::vector<std::vector<VertexTexture>>& vertices,
+	std::vector<std::vector<unsigned short>>& indices,
+	std::vector<bool>& hasSpecularMap,
+	std::vector<std::wstring>& diffuseLocation,
+	std::vector<std::wstring>& specularLocation,
+	std::vector<float>& shiness,
+	const std::wstring& directory) {
+	
+	vertices[meshIndex].reserve(pMesh->mNumVertices);
+	for (unsigned int i = 0; i < pMesh->mNumVertices; i++) {
+		vertices[meshIndex].emplace_back(
+			DirectX::XMVECTOR{ pMesh->mVertices[i].x, pMesh->mVertices[i].y, pMesh->mVertices[i].z, 1.0f },
+			DirectX::XMFLOAT2{ pMesh->mTextureCoords[0][i].x, pMesh->mTextureCoords[0][i].y },
+			Normal{ pMesh->mNormals[i].x, pMesh->mNormals[i].y, pMesh->mNormals[i].z }
+		);
+	}
+
+	indices[meshIndex].reserve(pMesh->mNumFaces * 3);
+	for (unsigned int i = 0; i < pMesh->mNumFaces; i++) {
+		const aiFace& face = pMesh->mFaces[i];
+		assert("Model face are not all triangles" && face.mNumIndices == 3);
+
+		indices[meshIndex].push_back(face.mIndices[0]);
+		indices[meshIndex].push_back(face.mIndices[1]);
+		indices[meshIndex].push_back(face.mIndices[2]);
+	}
+
+	const aiMaterial* pMaterial = ppMaterials[pMesh->mMaterialIndex];
+	aiString textureName;
+	// load diffuse map
+	if (pMaterial->GetTexture(aiTextureType_DIFFUSE, 0, &textureName) == aiReturn_SUCCESS) {
+		std::wstring materialName;
+		StringToWString(textureName.C_Str(), materialName);
+		std::wstring fileLocation = directory + materialName;
+
+		diffuseLocation[meshIndex] = fileLocation;
+	}
+
+	// load specular map
+	if (pMaterial->GetTexture(aiTextureType_SPECULAR, 0, &textureName) == aiReturn_SUCCESS) {
+		std::wstring materialName;
+		StringToWString(textureName.C_Str(), materialName);
+		std::wstring fileLocation = directory + materialName;
+
+		hasSpecularMap[meshIndex] = true;
+		specularLocation[meshIndex] = fileLocation;
+	}
+	else {
+		hasSpecularMap[meshIndex] = false;
+
+		pMaterial->Get(AI_MATKEY_SHININESS, shiness[meshIndex]);
+	}
 }
 
 std::unique_ptr<Node> Model::ParseNode(int& nodeIndex, const aiNode* node) {
@@ -225,7 +215,7 @@ std::unique_ptr<Node> Model::ParseNode(int& nodeIndex, const aiNode* node) {
 
 	const DirectX::XMMATRIX localTransformation = DirectX::XMMatrixTranspose(
 		DirectX::XMLoadFloat4x4(reinterpret_cast<const DirectX::XMFLOAT4X4*>(&node->mTransformation)));
-	std::unique_ptr<Node> pNode = std::make_unique<Node>(m_totalNodes-1, node->mName.C_Str(), pMeshes, localTransformation);
+	std::unique_ptr<Node> pNode = std::make_unique<Node>(m_totalNodes - 1, node->mName.C_Str(), pMeshes, localTransformation);
 	for (size_t i = 0; i < node->mNumChildren; i++) {
 		pNode->AppendChild(ParseNode(nodeIndex, node->mChildren[i]));
 	}

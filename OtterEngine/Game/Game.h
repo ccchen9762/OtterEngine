@@ -36,11 +36,11 @@ private:
 	Window m_mainWindow;
 	bool m_alive;
 	Timer m_timer;
+
 	std::vector<std::unique_ptr<PointLight>> m_lightList;
 	std::vector<std::unique_ptr<Entity>> m_debugList;
 	std::vector<std::unique_ptr<Entity>> m_renderList;
 	std::vector<std::unique_ptr<Model>> m_modelList;
-
 	Camera m_camera;
 	bool showDebug;
 };
