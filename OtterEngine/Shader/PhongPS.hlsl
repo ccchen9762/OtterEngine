@@ -32,9 +32,7 @@ struct Pixel {
 Pixel main(Interpolant input) {
     
     Pixel output;
-    
-    input.normal = normalize(input.normal);
-    
+        
     const float3 lightVector = (lightPosition - input.worldPosition).xyz;
     const float distance = length(lightVector);
     const float3 lightUnitVector = lightVector / distance;

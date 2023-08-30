@@ -15,6 +15,7 @@ cbuffer camera : register(b2) {
 cbuffer attributes : register(b3) {
     float shiness;
     bool hasSpecularMap;
+    bool hasNormalMap;
     float2 padding;
 }
 
@@ -35,12 +36,21 @@ SamplerState samDiffuse	: register(s0);
 Texture2D texSpecular    : register(t1);
 SamplerState samSpecular : register(s1);
 
+Texture2D texNormal : register(t2);
+SamplerState samNormal : register(s2);
+
 Pixel main(Interpolant input)
 {
 	Pixel output;
-     
-    input.normal = normalize(input.normal);
     
+    if (hasNormalMap) {
+        const float4 normalSample = texNormal.Sample(samNormal, input.texcoord);
+        input.normal.x = (normalSample.x * 2.0f - 1.0f);
+        input.normal.y = (-normalSample.y * 2.0f + 1.0f);
+        
+        input.normal = normalize(input.normal);
+    }
+         
     const float3 lightVector = (lightPosition - input.worldPosition).xyz;
     const float distance = length(lightVector);
     const float3 lightUnitVector = lightVector / distance;
@@ -53,8 +63,8 @@ Pixel main(Interpolant input)
     // 2 * l dot n * n - l
     const float3 reflection = 2 * dot(lightUnitVector, input.normal) * input.normal - lightUnitVector;
     // k_s * l_s * (r dot v)^shiness
-    const float3 specular = (lightColor.rgb * pow(max(0.0f, dot(normalize(cameraPosition - input.worldPosition), reflection)), shiness));
-     
+    float3 specular = lightColor.rgb * pow(max(0.0f, dot(normalize(cameraPosition - input.worldPosition), reflection)), shiness);
+    
     const float attenuation = 1.0f / (attenuationConst + attenuationLinear * distance + attenuationQuadratic * (distance * distance));
     output.color = float4(saturate(
         ambient.rgb * diffuseSample + attenuation * intensity * (diffuse + specular)),

@@ -31,6 +31,9 @@ SamplerState samDiffuse : register(s0);
 Texture2D texSpecular : register(t1);
 SamplerState samSpecular : register(s1);
 
+Texture2D texNormal : register(t2);
+SamplerState samNormal : register(s2);
+
 Pixel main(Interpolant input)
 {
 	Pixel output;

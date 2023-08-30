@@ -18,8 +18,8 @@ const std::vector<unsigned short> Plane::s_indices = {
 };
 
 Plane::Plane(const Game& game, const Graphics& graphics, const Vector3& translation, const Vector3& rotation, const Vector3& scale,
-	const std::wstring& path, bool isStatic)
-	: Entity(game, translation, rotation, scale, s_indices.size(), isStatic), m_attributes{5.0f} {
+	const std::wstring& path, const std::wstring& pathNormalMap, bool isStatic)
+	: Entity(game, translation, rotation, scale, s_indices.size(), isStatic), m_attributes{5.0f, false, !pathNormalMap.empty()} {
 
 	// buffers & textures
 	std::shared_ptr<GraphicsResource> pVertexBuffer = ResourcePool::GetResource<VertexBuffer>(
@@ -31,8 +31,14 @@ Plane::Plane(const Game& game, const Graphics& graphics, const Vector3& translat
 	m_graphicsResources.push_back(std::move(pIndexBuffer));
 
 	std::shared_ptr<GraphicsResource> pTexture = ResourcePool::GetResource<Texture>(
-		graphics, path, 0u);
+		graphics, path, Texture::Type::Diffuse);
 	m_graphicsResources.push_back(std::move(pTexture));
+
+	if (!pathNormalMap.empty()) {
+		std::shared_ptr<GraphicsResource> pNormalMap = ResourcePool::GetResource<Texture>(
+			graphics, pathNormalMap, Texture::Type::Normal);
+		m_graphicsResources.push_back(std::move(pNormalMap));
+	}
 
 	AddTextureShadingResource(graphics, false);
 

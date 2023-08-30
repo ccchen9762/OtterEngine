@@ -15,7 +15,8 @@ cbuffer camera : register(b2) {
 cbuffer attributes : register(b3) {
     float shiness;
     bool hasSpecularMap;
-    float2 padding;
+    bool hasNormalMap;
+    float padding;
 }
 
 struct Interpolant {
@@ -37,9 +38,7 @@ SamplerState samSpecular : register(s1);
 
 Pixel main(Interpolant input) {
     Pixel output;
-     
-    input.normal = normalize(input.normal);
-    
+         
     const float3 lightVector = (lightPosition - input.worldPosition).xyz;
     const float distance = length(lightVector);
     const float3 lightUnitVector = lightVector / distance;

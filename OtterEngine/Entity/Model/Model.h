@@ -24,7 +24,9 @@ public:
 	~Mesh() = default;
 
 private:
-	void ApplyWorldTransformation(const DirectX::XMMATRIX& worldTransformation) { m_transformation = worldTransformation; }
+	void ApplyWorldTransformation(const DirectX::XMMATRIX& worldTransformation) { 
+		m_transformation = DirectX::XMMatrixScaling(m_scale.x, m_scale.y, m_scale.z) * worldTransformation; 
+	}
 
 private:
 	unsigned int m_meshIndex;

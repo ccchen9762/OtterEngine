@@ -25,6 +25,12 @@ Game::Game() :
 
     Randomizer::Init();
 
+    m_lightList.push_back(std::make_unique<PointLight>(
+        *this,
+        *(m_mainWindow.m_pGraphics),
+        DirectX::XMFLOAT4{ 0.0f, 8.0f, 4.0f, 1.0f },
+        Color4{ 1.0f, 0.7f, 0.7f, 1.0f }));
+
     // render debug axis
     m_debugList.push_back(std::make_unique<DebugLine>(
         *this,
@@ -54,14 +60,7 @@ Game::Game() :
         true
     ));
 
-    m_lightList.push_back(std::make_unique<PointLight>(
-        *this,
-        *(m_mainWindow.m_pGraphics), 
-        DirectX::XMFLOAT4{ 0.0f, 8.0f, 4.0f, 1.0f }, 
-        Color4{ 1.0f, 0.7f, 0.7f, 1.0f }, 
-        1.0f));
-
-    for (int i = 0; i < 30; i++) {
+    /*for (int i = 0; i < 30; i++) {
         m_renderList.push_back(std::make_unique<Cube>(
             *this,
             *(m_mainWindow.m_pGraphics),
@@ -81,28 +80,19 @@ Game::Game() :
             Vector3(1.0f, 1.0f, 1.0f),
             false
         ));
-    }
+    }*/
 
-    m_modelList.push_back(std::make_unique<Character>(
+    /*m_modelList.push_back(std::make_unique<Character>(
         *this, *(m_mainWindow.m_pGraphics),
         Vector3(8.0f, 0.0f, -4.0f),
         Vector3(0.0f, 0.0f, 0.0f),
         Vector3(1.0f, 1.0f, 1.0f),
         false,
         "Assets/Model/nanosuit/nanosuit.obj")
-    );
-
-    m_modelList.push_back(std::make_unique<Character>(
-        *this, *(m_mainWindow.m_pGraphics),
-        Vector3(-8.0f, 0.0f, -4.0f),
-        Vector3(0.0f, 0.0f, 0.0f),
-        Vector3(1.0f, 1.0f, 1.0f),
-        false,
-        "Assets/Model/nanosuit/nanosuit.obj")
-    );
+    );*/
 
     // floor
-    for (int i = 0; i < 8; i++) {
+    /*for (int i = 0; i < 8; i++) {
         for (int j = 0; j < 8; j++) {
             m_renderList.push_back(std::make_unique<Plane>(
                 *this,
@@ -111,10 +101,31 @@ Game::Game() :
                 Vector3(0.0f, 0.0f, 0.0f),
                 Vector3(4.0f, 1.0f, 4.0f),
                 L"Assets\\Texture\\wood.jpg",
+                L"",
                 true
             ));
         }
-    }
+    }*/
+
+    /*m_renderList.push_back(std::make_unique<Plane>(
+        *this,
+        *(m_mainWindow.m_pGraphics),
+        Vector3(0.0f, 5.0f, -2.0f),
+        Vector3(kPI/2, 0.0f, 0.0f),
+        Vector3(10.0f, 1.0f, 10.0f),
+        L"Assets\\Texture\\brickwall\\brickwall.jpg",
+        L"Assets\\Texture\\brickwall\\brickwall_normal.jpg",
+        true
+    ));*/
+
+    m_modelList.push_back(std::make_unique<Character>(
+        *this, *(m_mainWindow.m_pGraphics),
+        Vector3(0.0f, 0.0f, 0.0f),
+        Vector3(0.0f, 0.0f, 0.0f),
+        Vector3(0.1f, 0.1f, 0.1f),
+        false,
+        "Assets/Model/sponza/sponza.obj")
+    );
 }
 
 int Game::Start() {
@@ -175,11 +186,20 @@ void Game::HandleInput(double deltaTime) {
     }
     // A
     if (m_mainWindow.m_keyboard.IsKeyPressed(0x41)) {
-        m_camera.TranslateCamera(-deltaTime * 1000.0f, 0.0f);
+        m_camera.TranslateCamera(-deltaTime * 3000.0f, 0.0f);
     }
     // D
     if (m_mainWindow.m_keyboard.IsKeyPressed(0x44)) {
-        m_camera.TranslateCamera(deltaTime * 1000.0f, 0.0f);
+        m_camera.TranslateCamera(deltaTime * 3000.0f, 0.0f);
+    }
+    // space
+    if (m_mainWindow.m_keyboard.IsKeyPressed(VK_SPACE)) {
+        // minus goes up
+        m_camera.TranslateCamera(0.0f, -deltaTime * 3000.0f);
+    }
+    // L Shift
+    if (m_mainWindow.m_keyboard.IsKeyPressed(VK_SHIFT)) {
+        m_camera.TranslateCamera(0.0f, deltaTime * 3000.0f);
     }
 
     while (!m_mainWindow.m_mouse.MouseEventBufferEmpty()) {

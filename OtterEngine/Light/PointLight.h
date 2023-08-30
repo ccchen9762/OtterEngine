@@ -1,21 +1,12 @@
 #pragma once
 
+#include "Light.h"
+
 #include "OtterEngine/Entity/DebugEntity/DebugSphere.h"
 
-class PointLight {
-private:
-	struct LightBuffer {
-		DirectX::XMFLOAT4 position;
-		Color4 lightColor;
-		Color4 ambient;
-		float diffuseIntensity;
-		float attenuationConst;
-		float attenuationLinear;
-		float attenuationQuadratic;
-	};
-
+class PointLight : Light {
 public:
-	PointLight(const Game& game, const Graphics& graphics, const DirectX::XMFLOAT4& position, const Color4& color, float scale);
+	PointLight(const Game& game, const Graphics& graphics, const DirectX::XMFLOAT4& position, const Color4& color);
 
 	void Update(const Graphics& graphics);
 	void Render(const Graphics& graphics) const;
@@ -23,7 +14,6 @@ public:
 
 private:
 	LightBuffer m_lightBuffer;
-	float m_scale;
 	ConstantBufferVertex<LightBuffer> m_constantBufferVertex;
 	ConstantBufferPixel<LightBuffer> m_constantBufferPixel;
 	DebugSphere m_sphereMesh;

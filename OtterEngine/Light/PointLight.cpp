@@ -6,11 +6,10 @@
 
 int PointLight::s_numLight = 0;
 
-PointLight::PointLight(const Game& game, const Graphics& graphics, const DirectX::XMFLOAT4& position, const Color4& color, float scale) :
-	m_lightBuffer({ position, color, {0.15f, 0.15f, 0.15f, 1.0f}, 1.0f, 1.0f, 0.30f, 0.0015f }),
-	m_scale(scale),
-	m_constantBufferVertex(graphics, m_lightBuffer, VertexConstantBufferType::Light, L"Light" + std::to_wstring(s_numLight)),
-	m_constantBufferPixel(graphics, m_lightBuffer, PixelConstantBufferType::Light, L"Light" + std::to_wstring(s_numLight)),
+PointLight::PointLight(const Game& game, const Graphics& graphics, const DirectX::XMFLOAT4& position, const Color4& color) :
+	m_lightBuffer({ position, color, {0.15f, 0.15f, 0.15f, 1.0f}, 1.0f, 1.0f, 0.007f, 0.0002f }),
+	m_constantBufferVertex(graphics, m_lightBuffer, VertexConstantBufferType::Light, L"PointLight" + std::to_wstring(s_numLight)),
+	m_constantBufferPixel(graphics, m_lightBuffer, PixelConstantBufferType::Light, L"PointLight" + std::to_wstring(s_numLight)),
 	m_sphereMesh(DebugSphere{
 		game,
 		graphics,
@@ -44,10 +43,10 @@ void PointLight::ShowControlWindow() {
 
 		ImGui::ColorEdit3("light color", &m_lightBuffer.lightColor.r);
 
-		ImGui::SliderFloat("intensity", &m_lightBuffer.diffuseIntensity, 0.0f, 1.0f, "%.1f");
-		ImGui::SliderFloat("attenuation^0", &m_lightBuffer.attenuationConst, 0.0f, 1.0f, "%.1f");
-		ImGui::SliderFloat("attenuation^1", &m_lightBuffer.attenuationLinear, 0.0f, 1.0f, "%.3f");
-		ImGui::SliderFloat("attenuation^2", &m_lightBuffer.attenuationQuadratic, 0.0f, 1.0f, "%.4f");
+		ImGui::SliderFloat("intensity", &m_lightBuffer.intensity, 0.0f, 1.0f, "%.1f");
+		ImGui::SliderFloat("attenuation^0", &m_lightBuffer.attenuationConst, 0.0f, 1.0f, "%.2f");
+		ImGui::SliderFloat("attenuation^1", &m_lightBuffer.attenuationLinear, 0.0f, 0.1f, "%.3f");
+		ImGui::SliderFloat("attenuation^2", &m_lightBuffer.attenuationQuadratic, 0.0f, 0.01f, "%.4f");
 	}
 	ImGui::End();
 }

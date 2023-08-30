@@ -15,7 +15,7 @@
 
 Mesh::Mesh(const Game& game, const Graphics& graphics, const Vector3& translation, const Vector3& rotation, const Vector3& scale,
 	bool isStatic, unsigned int meshIndex, const std::wstring& meshPath, const MeshInformation& meshInformation)
-	: Entity(game, translation, rotation, scale, 0, isStatic), m_meshIndex(meshIndex), m_attributes({ 0.0 }) {
+	: Entity(game, translation, rotation, scale, 0, isStatic), m_meshIndex(meshIndex), m_attributes({ 0.0, true }) {
 
 	// remember to set indice size!!!!!!!!!!!!!!!!!!
 	m_indicesSize = meshInformation.indices[meshIndex].size();
@@ -33,19 +33,20 @@ Mesh::Mesh(const Game& game, const Graphics& graphics, const Vector3& translatio
 	m_graphicsResources.push_back(std::make_shared<ConstantBufferTransformation>(graphics, *this));
 
 	std::shared_ptr<GraphicsResource> pDiffuse = ResourcePool::GetResource<Texture>(
-		graphics, meshInformation.diffuseFile[meshIndex], 0u);
+		graphics, meshInformation.diffuseFile[meshIndex], Texture::Type::Diffuse);
 	m_graphicsResources.push_back(std::move(pDiffuse));
 
 	if (meshInformation.hasSpecularMap[meshIndex]) {
 		std::shared_ptr<GraphicsResource> pSpecular = ResourcePool::GetResource<Texture>(
-			graphics, meshInformation.specularFile[meshIndex], 1u);
+			graphics, meshInformation.specularFile[meshIndex], Texture::Type::Specular);
 		m_graphicsResources.push_back(std::move(pSpecular));
 		AddTextureShadingResource(graphics, true);
-
 	}
 	else {
+		m_attributes.hasSpecularMap = false;
+
 		std::shared_ptr<GraphicsResource> pSpecular = ResourcePool::GetResource<Texture>(
-			graphics, L"", 1u);
+			graphics, L"", Texture::Type::Specular);
 		m_graphicsResources.push_back(std::move(pSpecular));
 		AddTextureShadingResource(graphics, false);
 	}
@@ -73,7 +74,7 @@ void Node::UpdateTree(const Graphics& graphics, const DirectX::XMMATRIX& parentT
 	const DirectX::XMMATRIX worldTransformation = controlTransformation * m_localTransformation * parentTransformation;
 
 	for (const std::shared_ptr<Mesh>& mesh : m_pMeshes) {
-		mesh->Update();
+		//mesh->Update();
 		
 		mesh->ApplyWorldTransformation(worldTransformation);
 		mesh->Render(graphics);
@@ -155,8 +156,8 @@ void Model::LoadMesh(unsigned int meshIndex, const aiMesh* pMesh, const aiMateri
 		assert("Model face are not all triangles" && face.mNumIndices == 3);
 
 		s_meshInformation.indices[meshIndex].push_back(face.mIndices[0]);
-		s_meshInformation.indices[meshIndex].push_back(face.mIndices[1]);
 		s_meshInformation.indices[meshIndex].push_back(face.mIndices[2]);
+		s_meshInformation.indices[meshIndex].push_back(face.mIndices[1]);
 	}
 
 	const aiMaterial* pMaterial = ppMaterials[pMesh->mMaterialIndex];

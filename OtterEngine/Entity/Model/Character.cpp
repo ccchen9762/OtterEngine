@@ -16,7 +16,7 @@ Character::Character(const Game& game, const Graphics& graphics, const Vector3& 
 
 	Assimp::Importer imp;
 	const aiScene* pModel = imp.ReadFile(path,
-		aiProcess_Triangulate | aiProcess_JoinIdenticalVertices | aiProcess_GenNormals | aiProcess_FlipWindingOrder);
+		aiProcess_Triangulate | aiProcess_JoinIdenticalVertices | aiProcess_GenNormals | aiProcess_CalcTangentSpace);
 
 	assert("Model file not found" && pModel);
 

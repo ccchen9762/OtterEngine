@@ -191,6 +191,7 @@
     <ClCompile Include="Imgui\imgui_widgets.cpp" />
     <ClCompile Include="Input\Keyboard.cpp" />
     <ClCompile Include="Input\Mouse.cpp" />
+    <ClCompile Include="Light\DirectionalLight.cpp" />
     <ClCompile Include="Light\PointLight.cpp" />
     <ClCompile Include="Main.cpp" />
     <ClCompile Include="Common\Math\Vector3.cpp" />
@@ -241,6 +242,7 @@
     <ClInclude Include="Input\Mouse.h" />
     <ClInclude Include="Common\Math\Vector3.h" />
     <ClInclude Include="Entity\Entity.h" />
+    <ClInclude Include="Light\DirectionalLight.h" />
     <ClInclude Include="Light\PointLight.h" />
     <ClInclude Include="Timer\Timer.h" />
     <ClInclude Include="WindowClass\Window.h" />

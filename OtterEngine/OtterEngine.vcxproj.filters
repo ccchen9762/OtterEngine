@@ -37,6 +37,7 @@
     <ClCompile Include="Entity\ShadingEntity\Plane.cpp" />
     <ClCompile Include="Entity\ShadingEntity\Sphere.cpp" />
     <ClCompile Include="Entity\Model\Character.cpp" />
+    <ClCompile Include="Light\DirectionalLight.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="WindowClass\Window.h" />
@@ -86,6 +87,7 @@
     <ClInclude Include="Entity\ShadingEntity\Plane.h" />
     <ClInclude Include="Entity\ShadingEntity\Sphere.h" />
     <ClInclude Include="Entity\Model\Character.h" />
+    <ClInclude Include="Light\DirectionalLight.h" />
   </ItemGroup>
   <ItemGroup>
     <FxCompile Include="Shader\GouraudPS.hlsl" />

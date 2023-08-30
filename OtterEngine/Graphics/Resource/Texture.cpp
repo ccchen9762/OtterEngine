@@ -3,8 +3,8 @@
 #include "OtterEngine/Common/External/FindMedia.h"
 #include "OtterEngine/Common/External/LoadImage.h"
 
-Texture::Texture(const Graphics& graphics, const std::wstring& path, unsigned int slot) : 
-	GraphicsResource(GenerateUID(path, slot)), m_slot(slot) {
+Texture::Texture(const Graphics& graphics, const std::wstring& path, Texture::Type slot) :
+	GraphicsResource(GenerateUID(path,slot)), m_slot(static_cast<unsigned int>(slot)) {
 
 	if (!path.empty()) {
 		D3D11_SAMPLER_DESC samplerDesc = {};
