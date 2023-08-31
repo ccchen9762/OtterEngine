@@ -7,7 +7,7 @@
 std::vector<Vertex> Cube::s_vertices;
 std::vector<unsigned short> Cube::s_indices;
 
-Cube::Cube(const Game& game, const Graphics& graphics, const Vector3& translation, const Vector3& rotation, const Vector3& scale,
+Cube::Cube(const Game* game, const Graphics& graphics, const Vector3& translation, const Vector3& rotation, const Vector3& scale,
 	bool isStatic)
 	: Entity(game, translation, rotation, scale, s_indices.size(), isStatic), m_attributes{ 5.0f } {
 

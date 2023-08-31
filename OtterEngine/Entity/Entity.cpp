@@ -11,7 +11,7 @@
 #include "OtterEngine/Common/constants.h"
 #include "OtterEngine/Common/Randomizer.h"
 
-Entity::Entity(const Game& game, const Vector3& translation, const Vector3& rotation, const Vector3& scale, 
+Entity::Entity(const Game* game, const Vector3& translation, const Vector3& rotation, const Vector3& scale, 
 	size_t indicesSize, bool isStatic) :
 	m_translation(translation), m_rotation(rotation), m_scale(scale),
 	m_indicesSize(indicesSize),
@@ -48,7 +48,7 @@ void Entity::Render(const Graphics& graphics) const {
 }
 
 const DirectX::XMMATRIX& Entity::GetViewProjectionMatrix() const {
-	return m_parentGame.GetCurrentCamera().GetViewProjectionMatrix();
+	return m_parentGame->GetCurrentCamera().GetViewProjectionMatrix();
 }
 
 void Entity::AddShadingResource(const Graphics& graphics) {

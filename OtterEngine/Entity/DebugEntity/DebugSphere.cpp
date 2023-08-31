@@ -11,7 +11,7 @@
 std::vector<VertexBasic> DebugSphere::s_vertices;
 std::vector<unsigned short> DebugSphere::s_indices;
 
-DebugSphere::DebugSphere(const Game& game, const Graphics& graphics, const Vector3& translation, const Vector3& rotation, const Vector3& scale,
+DebugSphere::DebugSphere(const Game* game, const Graphics& graphics, const Vector3& translation, const Vector3& rotation, const Vector3& scale,
 	bool isStatic)
 	: Entity(game, translation, rotation, scale, s_indices.size(), isStatic) {
 

@@ -6,6 +6,7 @@
 #include "OtterEngine/WindowClass/Window.h"
 #include "OtterEngine/Camera/Camera.h"
 #include "OtterEngine/Light/PointLight.h"
+#include "OtterEngine/Light/DirectionalLight.h"
 #include "OtterEngine/Entity/Entity.h"
 #include "OtterEngine/Entity/Model/Model.h"
 #include "OtterEngine/Common/Timer.h"
@@ -37,10 +38,12 @@ private:
 	bool m_alive;
 	Timer m_timer;
 
-	std::vector<std::unique_ptr<PointLight>> m_lightList;
+	// camera -> lights -> objects
+	Camera m_camera;
+	DirectionalLight m_directionalLights;
+	PointLight m_pointLights;
 	std::vector<std::unique_ptr<Entity>> m_debugList;
 	std::vector<std::unique_ptr<Entity>> m_renderList;
 	std::vector<std::unique_ptr<Model>> m_modelList;
-	Camera m_camera;
 	bool showDebug;
 };

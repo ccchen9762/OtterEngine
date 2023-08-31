@@ -19,7 +19,7 @@ class Mesh : public Entity
 	friend class Node;
 
 public:
-	Mesh(const Game& game, const Graphics& graphics, const Vector3& translation, const Vector3& rotation, const Vector3& scale,
+	Mesh(const Game* game, const Graphics& graphics, const Vector3& translation, const Vector3& rotation, const Vector3& scale,
 		bool isStatic, unsigned int meshIndex, const std::wstring& meshPath, const MeshInformation& meshInformation);
 	~Mesh() = default;
 
@@ -59,7 +59,7 @@ private:
 class Model
 {
 public:
-	Model(const Game& game, const Graphics& graphics, const Vector3& translation, const Vector3& rotation, const Vector3& scale,
+	Model(const Game* game, const Graphics& graphics, const Vector3& translation, const Vector3& rotation, const Vector3& scale,
 		bool isStatic, const std::string& path);
 	~Model() = default;
 

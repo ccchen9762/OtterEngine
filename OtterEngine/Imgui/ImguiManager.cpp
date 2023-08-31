@@ -29,7 +29,6 @@ ImguiManager::~ImguiManager() {
 
 void ImguiManager::Update(Game& game) {
     
-
     if (kShowWindow) {
         ImGui::Begin("System Panel", &kShowWindow, ImGuiWindowFlags_NoMove | ImGuiWindowFlags_NoResize);
 
@@ -40,6 +39,4 @@ void ImguiManager::Update(Game& game) {
 
         ImGui::End();
     }
-
-    
 }

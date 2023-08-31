@@ -13,7 +13,7 @@
 #include "OtterEngine/Common/constants.h"
 #include "OtterEngine/Common/Utils.h"
 
-Mesh::Mesh(const Game& game, const Graphics& graphics, const Vector3& translation, const Vector3& rotation, const Vector3& scale,
+Mesh::Mesh(const Game* game, const Graphics& graphics, const Vector3& translation, const Vector3& rotation, const Vector3& scale,
 	bool isStatic, unsigned int meshIndex, const std::wstring& meshPath, const MeshInformation& meshInformation)
 	: Entity(game, translation, rotation, scale, 0, isStatic), m_meshIndex(meshIndex), m_attributes({ 0.0, true }) {
 
@@ -108,7 +108,7 @@ void Node::ShowTreeWindow(int& selectIndex) {
 
 // ========================= Model =========================
 
-Model::Model(const Game& game, const Graphics& graphics, const Vector3& translation, const Vector3& rotation, const Vector3& scale,
+Model::Model(const Game* game, const Graphics& graphics, const Vector3& translation, const Vector3& rotation, const Vector3& scale,
 	bool isStatic, const std::string& path) : 
 	m_modelName(path), m_selectIndex(-1), m_totalNodes(0) {
 }

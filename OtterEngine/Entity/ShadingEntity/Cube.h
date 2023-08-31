@@ -7,7 +7,7 @@ class Cube : public Entity
 	friend class Entity;
 
 public:
-	Cube(const Game& game, const Graphics& graphics, const Vector3& translation, const Vector3& rotation, const Vector3& scale,
+	Cube(const Game* game, const Graphics& graphics, const Vector3& translation, const Vector3& rotation, const Vector3& scale,
 		bool isStatic);
 	~Cube() = default;
 

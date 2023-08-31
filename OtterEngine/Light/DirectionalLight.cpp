@@ -4,31 +4,44 @@
 
 #include "OtterEngine/Imgui/imgui.h"
 
-int DirectionalLight::s_numLight = 0;
+DirectionalLight::DirectionalLight(const Graphics& graphics) : m_lightBuffer({}),
+	m_directionalBufferVertex(graphics, m_lightBuffer, VertexConstantBufferType::LightDirectional, L"DirectionalLight"),
+	m_directionalBufferPixel(graphics, m_lightBuffer, PixelConstantBufferType::LightDirectional, L"DirectionalLight") {
+}
 
-DirectionalLight::DirectionalLight(const Game& game, const Graphics& graphics, const DirectX::XMFLOAT4& direction, const Color4& color) :
-	m_lightBuffer({ direction, color, {0.15f, 0.15f, 0.15f, 1.0f}, 1.0f, 1.0f, 0.30f, 0.0015f }),
-	m_constantBufferVertex(graphics, m_lightBuffer, VertexConstantBufferType::Light, L"DirectionalLight" + std::to_wstring(s_numLight)),
-	m_constantBufferPixel(graphics, m_lightBuffer, PixelConstantBufferType::Light, L"DirectionalLight" + std::to_wstring(s_numLight)) {
+void DirectionalLight::AddLight(const Graphics& graphics, const DirectX::XMFLOAT4& direction, const Color4& color) {
+	assert("Directional light should have w=0" && direction.w == 0);
+	std::string warn = "Max" + std::to_string(kMaxLight) + " Light";
+	assert(warn.c_str() && m_lightBuffer.total < kMaxLight);
+
+	m_lightBuffer.directions[m_lightBuffer.total] = direction;
+	m_lightBuffer.colors[m_lightBuffer.total] = color;
+
+	++m_lightBuffer.total;
 }
 
 void DirectionalLight::Update(const Graphics& graphics) {
-	m_constantBufferVertex.Update(graphics, m_lightBuffer);
-	m_constantBufferPixel.Update(graphics, m_lightBuffer);
+	m_directionalBufferVertex.Update(graphics, m_lightBuffer);
+	m_directionalBufferPixel.Update(graphics, m_lightBuffer);
 
-	m_constantBufferVertex.Bind(graphics);
-	m_constantBufferPixel.Bind(graphics);
+	m_directionalBufferVertex.Bind(graphics);
+	m_directionalBufferPixel.Bind(graphics);
 }
 
 void DirectionalLight::ShowControlWindow() {
-	if (ImGui::Begin("Light control", 0, ImGuiWindowFlags_NoMove | ImGuiWindowFlags_NoResize)) {
+	// ImGuiWindowFlags_NoMove | ImGuiWindowFlags_NoResize
+	if (m_lightBuffer.total > 0) {
+		if (ImGui::Begin("Directional light control", 0)) {
 
-		ImGui::ColorEdit3("light color", &m_lightBuffer.lightColor.r);
+			for (int i = 0; i < m_lightBuffer.total; i++) {
+				ImGui::ColorEdit3("light color", &m_lightBuffer.colors[i].r);
+			}
 
-		ImGui::SliderFloat("intensity", &m_lightBuffer.intensity, 0.0f, 1.0f, "%.1f");
-		ImGui::SliderFloat("attenuation^0", &m_lightBuffer.attenuationConst, 0.0f, 1.0f, "%.1f");
-		ImGui::SliderFloat("attenuation^1", &m_lightBuffer.attenuationLinear, 0.0f, 1.0f, "%.3f");
-		ImGui::SliderFloat("attenuation^2", &m_lightBuffer.attenuationQuadratic, 0.0f, 1.0f, "%.4f");
+			ImGui::SliderFloat("intensity", &m_lightBuffer.intensity, 0.0f, 1.0f, "%.1f");
+			ImGui::SliderFloat("attenuation^0", &m_lightBuffer.attenuationConst, 0.0f, 1.0f, "%.1f");
+			ImGui::SliderFloat("attenuation^1", &m_lightBuffer.attenuationLinear, 0.0f, 1.0f, "%.3f");
+			ImGui::SliderFloat("attenuation^2", &m_lightBuffer.attenuationQuadratic, 0.0f, 1.0f, "%.4f");
+		}
+		ImGui::End();
 	}
-	ImGui::End();
 }

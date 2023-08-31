@@ -9,7 +9,7 @@ class Game;
 class Entity
 {
 public:
-	Entity(const Game& game, const Vector3& translation, const Vector3& rotation, const Vector3& scale, 
+	Entity(const Game* game, const Vector3& translation, const Vector3& rotation, const Vector3& scale, 
 		size_t indicesSize, bool isStatic);
 	virtual ~Entity() = default; // use virtual make sure derived class destructors are called properly
 
@@ -39,7 +39,7 @@ protected:
 	Vector3 m_scale;
 	size_t m_indicesSize;
 	bool m_isStatic;
-	const Game& m_parentGame;
+	const Game* m_parentGame;
 
 	DirectX::XMMATRIX m_transformation;
 	std::vector<std::shared_ptr<GraphicsResource>> m_graphicsResources;

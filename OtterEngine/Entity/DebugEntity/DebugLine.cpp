@@ -11,7 +11,7 @@ const std::vector<unsigned short> DebugLine::s_indices = {
 	0,1
 };
 
-DebugLine::DebugLine(const Game& game, const Graphics& graphics, const Vector3& translation, const Vector3& rotation, const Vector3& scale,
+DebugLine::DebugLine(const Game* game, const Graphics& graphics, const Vector3& translation, const Vector3& rotation, const Vector3& scale,
 	const Color4& color, bool isStatic)
 	: Entity(game, translation, rotation, scale, s_indices.size(), isStatic) {
 

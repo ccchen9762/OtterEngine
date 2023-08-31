@@ -7,11 +7,11 @@
 class Entity;
 
 enum class VertexConstantBufferType {
-	Transformation = 0, Light = 1, Camera = 2, Attributes = 3
+	Transformation = 0, Camera = 1, LightDirectional = 2, LightPoint = 3, Attributes = 4
 };
 
 enum class PixelConstantBufferType {
-	Transformation = 0, Light = 1, Camera = 2, Attributes = 3
+	Transformation = 0, Camera = 1, LightDirectional = 2, LightPoint = 3, Attributes = 4
 };
 
 class ConstantBufferTransformation : public GraphicsResource

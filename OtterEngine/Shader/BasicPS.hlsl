@@ -1,4 +1,4 @@
-cbuffer color : register(b3) {
+cbuffer attributes : register(b4) {
     float4 objectColor;
 };
 

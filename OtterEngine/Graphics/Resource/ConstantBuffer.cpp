@@ -42,8 +42,7 @@ void ConstantBufferTransformation::Update(const Graphics& graphics) const {
 	const CBuffer cBuffer = {
 		DirectX::XMMatrixTranspose(m_parentEntity.GetTransformMatrix()),
 		DirectX::XMMatrixTranspose(
-			m_parentEntity.GetTransformMatrix() *
-			m_parentEntity.GetViewProjectionMatrix()
+			m_parentEntity.GetTransformMatrix() * m_parentEntity.GetViewProjectionMatrix()
 		)
 	};
 

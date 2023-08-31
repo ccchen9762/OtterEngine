@@ -7,7 +7,7 @@ class DebugLine : public Entity
 	friend class Entity;
 
 public:
-	DebugLine(const Game& game, const Graphics& graphics, const Vector3& translation, const Vector3& rotation, const Vector3& scale,
+	DebugLine(const Game* game, const Graphics& graphics, const Vector3& translation, const Vector3& rotation, const Vector3& scale,
 		const Color4& color, bool isStatic);
 	~DebugLine() = default;
 

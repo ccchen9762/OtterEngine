@@ -14,7 +14,7 @@ inline const unsigned int kInputBufferLimit = 16u;
 inline const unsigned int kRenderWidth = 1600u, kRenderHeight = 900u;
 constexpr float kRenderRatio = static_cast<float>(kRenderWidth) / static_cast<float>(kRenderHeight);
 
-const float kNearZ = 0.1f, kFarZ = 300.0f;
+inline const float kNearZ = 0.1f, kFarZ = 300.0f;
 
 // imgui settings
 inline bool kShowWindow = true, kShowAnotherWindow = true;
@@ -23,9 +23,12 @@ inline bool kShowWindow = true, kShowAnotherWindow = true;
 inline const double kPI = 3.1415926;
 
 // rendering settings
-inline unsigned int kVSync = 0u;
+inline const unsigned int kVSync = 0u;
 
 enum class RenderMethod {
 	Gouraud = 0, Phong = 1
 };
-inline RenderMethod kRenderMethod = RenderMethod::Phong;
+inline const RenderMethod kRenderMethod = RenderMethod::Phong;
+
+// light settings ** related to constants.hlsli
+inline const int kMaxLight = 10;

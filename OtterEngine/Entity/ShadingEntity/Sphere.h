@@ -7,7 +7,7 @@ class Sphere : public Entity
 	friend class Entity;
 
 public:
-	Sphere(const Game& game, const Graphics& graphics, const Vector3& translation, const Vector3& rotation, const Vector3& scale,
+	Sphere(const Game* game, const Graphics& graphics, const Vector3& translation, const Vector3& rotation, const Vector3& scale,
 		bool isStatic);
 	~Sphere()=default;
 
