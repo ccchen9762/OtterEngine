@@ -14,7 +14,7 @@ private:
 		DirectX::XMFLOAT4 directions[kMaxLight];
 		Color4 colors[kMaxLight];
 		Color4 ambient = { 0.15f, 0.15f, 0.15f, 1.0f };
-		float intensity = 1.0f;
+		float intensity = 0.3f;
 		float attenuationConst = 1.0f;
 		float attenuationLinear = 0.007f;
 		float attenuationQuadratic = 0.0002f;

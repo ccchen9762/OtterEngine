@@ -53,14 +53,19 @@ void PointLight::ShowControlWindow() {
 	if (m_lightBuffer.total > 0) {
 		if (ImGui::Begin("Point Light control", 0)) {
 			for (int i = 0; i < m_lightBuffer.total; i++) {
+				std::string tag = "light" + std::to_string(i);
+				ImGui::Text(tag.c_str());
 				ImGui::SliderFloat("x", &m_lightBuffer.positions[i].x, -20.0f, 20.0f, "%.1f");
 				ImGui::SliderFloat("y", &m_lightBuffer.positions[i].y, -20.0f, 20.0f, "%.1f");
 				ImGui::SliderFloat("z", &m_lightBuffer.positions[i].z, -20.0f, 20.0f, "%.1f");
 
-				ImGui::ColorEdit3("light color", &m_lightBuffer.colors[i].r);
+				ImGui::ColorEdit3(" color", &m_lightBuffer.colors[i].r);
 			}
 
 			ImGui::SliderFloat("intensity", &m_lightBuffer.intensity, 0.0f, 1.0f, "%.1f");
+			ImGui::SliderFloat("attenuation^0", &m_lightBuffer.attenuationConst, 0.0f, 1.0f, "%.1f");
+			ImGui::SliderFloat("attenuation^1", &m_lightBuffer.attenuationLinear, 0.0f, 1.0f, "%.3f");
+			ImGui::SliderFloat("attenuation^2", &m_lightBuffer.attenuationQuadratic, 0.0f, 1.0f, "%.4f");
 		}
 		ImGui::End();
 	}

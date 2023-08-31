@@ -99,11 +99,6 @@
     <FxCompile Include="Shader\TexturePhongPS.hlsl" />
     <FxCompile Include="Shader\TexturePhongVS.hlsl" />
     <FxCompile Include="Shader\TexturePhongSpecularPS.hlsl" />
-    <FxCompile Include="Shader\GouraudPS.hlsl" />
-    <FxCompile Include="Shader\GouraudVS.hlsl" />
-    <FxCompile Include="Shader\TextureGouraudPS.hlsl" />
-    <FxCompile Include="Shader\TextureGouraudSpecularPS.hlsl" />
-    <FxCompile Include="Shader\TextureGouraudVS.hlsl" />
   </ItemGroup>
   <ItemGroup>
     <None Include="imgui.ini" />

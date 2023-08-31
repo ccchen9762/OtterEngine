@@ -34,13 +34,11 @@ void DirectionalLight::ShowControlWindow() {
 		if (ImGui::Begin("Directional light control", 0)) {
 
 			for (int i = 0; i < m_lightBuffer.total; i++) {
-				ImGui::ColorEdit3("light color", &m_lightBuffer.colors[i].r);
+				std::string tag = "light" + std::to_string(i) + " color";
+				ImGui::ColorEdit3(tag.c_str(), &m_lightBuffer.colors[i].r);
 			}
 
 			ImGui::SliderFloat("intensity", &m_lightBuffer.intensity, 0.0f, 1.0f, "%.1f");
-			ImGui::SliderFloat("attenuation^0", &m_lightBuffer.attenuationConst, 0.0f, 1.0f, "%.1f");
-			ImGui::SliderFloat("attenuation^1", &m_lightBuffer.attenuationLinear, 0.0f, 1.0f, "%.3f");
-			ImGui::SliderFloat("attenuation^2", &m_lightBuffer.attenuationQuadratic, 0.0f, 1.0f, "%.4f");
 		}
 		ImGui::End();
 	}

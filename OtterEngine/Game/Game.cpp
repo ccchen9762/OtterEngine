@@ -101,7 +101,7 @@ Game::Game() :
     );*/
 
     // floor
-    /*for (int i = 0; i < 8; i++) {
+    for (int i = 0; i < 8; i++) {
         for (int j = 0; j < 8; j++) {
             m_renderList.push_back(std::make_unique<Plane>(
                 this,
@@ -114,9 +114,9 @@ Game::Game() :
                 true
             ));
         }
-    }*/
+    }
 
-    /*m_renderList.push_back(std::make_unique<Plane>(
+    m_renderList.push_back(std::make_unique<Plane>(
         this,
         *(m_mainWindow.m_pGraphics),
         Vector3(0.0f, 5.0f, -2.0f),
@@ -125,7 +125,7 @@ Game::Game() :
         L"Assets\\Texture\\brickwall\\brickwall.jpg",
         L"Assets\\Texture\\brickwall\\brickwall_normal.jpg",
         true
-    ));*/
+    ));
 
     /*m_modelList.push_back(std::make_unique<Character>(
         this, *(m_mainWindow.m_pGraphics),
