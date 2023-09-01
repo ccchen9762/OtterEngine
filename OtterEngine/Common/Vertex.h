@@ -21,14 +21,20 @@ struct VertexBasic {
 
 struct VertexTextureBasic {
 	DirectX::XMVECTOR m_position;
-	struct {
-		float u, v;
-	} m_texcoord;
+	DirectX::XMFLOAT2 m_texcoord;
+};
+
+struct VertexNormalMap {
+	DirectX::XMVECTOR m_position;
+	DirectX::XMFLOAT2 m_texcoord;
+	Normal m_normal;
+	Normal m_tangent;
+	Normal m_bitangent;
 };
 
 struct Attributes {
 	float shiness;
-	BOOL hasDiffuseMap;
 	BOOL hasSpecularMap;
 	BOOL hasNormalMap;
+	BOOL hasDiffuseMap;
 };

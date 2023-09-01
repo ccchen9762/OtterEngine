@@ -4,11 +4,15 @@
 #include <assimp/scene.h>
 
 struct MeshInformation {
-	std::vector<std::vector<VertexTexture>> vertices;
+	std::vector<std::vector<VertexTexture>> verticesTexture;
+	std::vector<std::vector<VertexNormalMap>> verticesNormalMap;
 	std::vector<std::vector<unsigned short>> indices;
+	std::vector<bool> hasDiffuseMap;
 	std::vector<bool> hasSpecularMap;
+	std::vector<bool> hasNormalMap;
 	std::vector<std::wstring> diffuseFile;
 	std::vector<std::wstring> specularFile;
+	std::vector<std::wstring> normalFile;
 	std::vector<float> shiness;
 	std::wstring directory;
 };

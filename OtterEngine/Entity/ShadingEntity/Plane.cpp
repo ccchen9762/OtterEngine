@@ -40,7 +40,7 @@ Plane::Plane(const Game* game, const Graphics& graphics, const Vector3& translat
 		m_graphicsResources.push_back(std::move(pNormalMap));
 	}
 
-	AddTextureShadingResource(graphics, false);
+	AddTextureShadingResource(graphics, false, false);
 
 	m_graphicsResources.push_back(std::make_shared<ConstantBufferTransformation>(graphics, *this));
 	m_graphicsResources.push_back(std::make_shared<ConstantBufferVertex<Attributes>>(

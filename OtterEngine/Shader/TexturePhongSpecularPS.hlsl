@@ -55,10 +55,10 @@ SamplerState samSpecular : register(s1);
 Texture2D texNormal : register(t2);
 SamplerState samNormal : register(s2);
 
-float3 CalculateLight(int i, Interpolant input, float3 lightUnitVector, float4 diffuseSample) {
+float3 CalculateLight(int i, Interpolant input, float3 lightUnitVector, float4 diffuseSample, float3 lightColor) {
     // diffuse
     // k_d * l_d * (l dot n)
-    const float3 diffuse = diffuseSample.rgb * lightColorsPoint[i].rgb * max(0.0f, dot(lightUnitVector, input.normal));
+    const float3 diffuse = diffuseSample.rgb * lightColor * max(0.0f, dot(lightUnitVector, input.normal));
         
     // specular
     // 2 * l dot n * n - l
@@ -66,7 +66,7 @@ float3 CalculateLight(int i, Interpolant input, float3 lightUnitVector, float4 d
     const float3 reflection = 2 * dot(lightUnitVector, input.normal) * input.normal - lightUnitVector;
     const float4 specularSample = texSpecular.Sample(samSpecular, input.texcoord);
     const float sampleShiness = pow(2, specularSample.a * 13.0f);
-    const float3 specular = specularSample.rgb * lightColorsDir[i].rgb *
+    const float3 specular = specularSample.rgb * lightColor *
         pow(max(0.0f, dot(normalize(cameraPosition - input.worldPosition), reflection)), sampleShiness);
     
     return diffuse + specular;
@@ -80,9 +80,9 @@ Pixel main(Interpolant input) {
         const float4 normalSample = texNormal.Sample(samNormal, input.texcoord);
         input.normal.x = (normalSample.x * 2.0f - 1.0f);
         input.normal.y = (-normalSample.y * 2.0f + 1.0f);
-        
-        input.normal = normalize(input.normal);
+        input.normal.z = (normalSample.z * 2.0f - 1.0f);    
     }
+    input.normal = normalize(input.normal);
     
     const float4 diffuseSample = texDiffuse.Sample(samDiffuse, input.texcoord);
 
@@ -90,7 +90,7 @@ Pixel main(Interpolant input) {
     output.color.rgb = float3(0.0f, 0.0f, 0.0f);
     for (int i = 0; i < totalDir; i++) {
         const float3 lightUnitVector = normalize(-lightDirectionsDir[i]);
-        output.color.rgb += CalculateLight(i, input, lightUnitVector, diffuseSample);
+        output.color.rgb += CalculateLight(i, input, lightUnitVector, diffuseSample, lightColorsDir[i].rgb);
     }
     const float3 dirLights = intensityDir * (output.color.rgb + ambientDir.rgb * diffuseSample.rgb);
     
@@ -101,7 +101,7 @@ Pixel main(Interpolant input) {
         const float distance = length(lightVector);
         const float3 lightUnitVector = lightVector / distance;
         const float attenuation = 1.0f / (attenuationCPoint + attenuationLPoint * distance + attenuationQPoint * (distance * distance));
-        output.color.rgb += CalculateLight(i, input, lightUnitVector, diffuseSample) * attenuation;
+        output.color.rgb += CalculateLight(i, input, lightUnitVector, diffuseSample, lightColorsPoint[i].rgb) * attenuation;
     }
     const float3 pointLights = intensityPoint * (output.color.rgb + ambientPoint.rgb * diffuseSample.rgb);
    

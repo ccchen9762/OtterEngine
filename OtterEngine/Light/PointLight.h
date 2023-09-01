@@ -10,7 +10,7 @@ private:
 		int padding[3];
 		DirectX::XMFLOAT4 positions[kMaxLight];
 		Color4 colors[kMaxLight];
-		Color4 ambient = { 0.15f, 0.15f, 0.15f, 1.0f };
+		Color4 ambient = { 0.10f, 0.10f, 0.10f, 1.0f };
 		float intensity = 1.0f;
 		float attenuationConst = 1.0f;
 		float attenuationLinear = 0.007f;

@@ -23,7 +23,7 @@ Interpolant main(Vertex input) {
     output.position = mul(input.position, modelViewProjection);
     output.worldPosition = mul(input.position, model);
     output.texcoord = input.texcoord;
-    output.normal = mul(input.normal, (float3x3) model);
+    output.normal = normalize(mul(input.normal, (float3x3) model));
     
 	return output;
 }

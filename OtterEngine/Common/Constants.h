@@ -11,7 +11,7 @@ inline const wchar_t* kDefWndTitle = L"Otter Engine";
 inline const unsigned int kInputBufferLimit = 16u;
 
 // final render size
-inline const unsigned int kRenderWidth = 1600u, kRenderHeight = 900u;
+inline const unsigned int kRenderWidth = 1366u, kRenderHeight = 768u;
 constexpr float kRenderRatio = static_cast<float>(kRenderWidth) / static_cast<float>(kRenderHeight);
 
 inline const float kNearZ = 0.1f, kFarZ = 300.0f;
@@ -31,4 +31,4 @@ enum class RenderMethod {
 inline const RenderMethod kRenderMethod = RenderMethod::Phong;
 
 // light settings ** related to constants.hlsli
-inline const int kMaxLight = 10;
+inline const int kMaxLight = 3;

@@ -83,7 +83,7 @@ void Entity::AddShadingResource(const Graphics& graphics) {
 	}
 }
 
-void Entity::AddTextureShadingResource(const Graphics& graphics, bool hasSpecularMap) {
+void Entity::AddTextureShadingResource(const Graphics& graphics, bool hasSpecularMap, bool hasNormalMap) {
 	// shaders & layout
 	if (kRenderMethod == RenderMethod::Gouraud) {
 		std::shared_ptr<GraphicsResource> pVertexShader = ResourcePool::GetResource<VertexShader>(
@@ -102,29 +102,40 @@ void Entity::AddTextureShadingResource(const Graphics& graphics, bool hasSpecula
 			m_graphicsResources.push_back(std::move(pPixelShader));
 		}
 
-		std::shared_ptr<GraphicsResource> pInputLayout = ResourcePool::GetResource<InputLayout>(
-			graphics, vertexShaderBlob, InputLayout::LayoutType::TextureShading);
-		m_graphicsResources.push_back(std::move(pInputLayout));
+		if (hasNormalMap) {
+			std::shared_ptr<GraphicsResource> pInputLayout = ResourcePool::GetResource<InputLayout>(
+				graphics, vertexShaderBlob, InputLayout::LayoutType::TextureNormalMap);
+			m_graphicsResources.push_back(std::move(pInputLayout));
+		}
+		else {
+			std::shared_ptr<GraphicsResource> pInputLayout = ResourcePool::GetResource<InputLayout>(
+				graphics, vertexShaderBlob, InputLayout::LayoutType::TextureShading);
+			m_graphicsResources.push_back(std::move(pInputLayout));
+		}
 	}
 	else if (kRenderMethod == RenderMethod::Phong) {
-		std::shared_ptr<GraphicsResource> pVertexShader = ResourcePool::GetResource<VertexShader>(
-			graphics, L"TexturePhongVS.cso");
+		std::shared_ptr<GraphicsResource> pVertexShader = hasNormalMap ?
+			ResourcePool::GetResource<VertexShader>(graphics, L"TexturePhongNormalVS.cso") :
+			ResourcePool::GetResource<VertexShader>(graphics, L"TexturePhongVS.cso");
 		const std::vector<uint8_t> vertexShaderBlob = static_cast<VertexShader*>(pVertexShader.get())->GetVertexShaderBlob();
 		m_graphicsResources.push_back(std::move(pVertexShader));
-
+		
 		if (hasSpecularMap) {
-			std::shared_ptr<GraphicsResource> pPixelShader = ResourcePool::GetResource<PixelShader>(
-				graphics, L"TexturePhongSpecularPS.cso");
+			std::shared_ptr<GraphicsResource> pPixelShader = hasNormalMap ?
+				ResourcePool::GetResource<PixelShader>(graphics, L"TexturePhongNormalSpecularPS.cso") :
+				ResourcePool::GetResource<PixelShader>(graphics, L"TexturePhongSpecularPS.cso");
 			m_graphicsResources.push_back(std::move(pPixelShader));
 		}
 		else {
-			std::shared_ptr<GraphicsResource> pPixelShader = ResourcePool::GetResource<PixelShader>(
-				graphics, L"TexturePhongPS.cso");
+			std::shared_ptr<GraphicsResource> pPixelShader = hasNormalMap ?
+				ResourcePool::GetResource<PixelShader>(graphics, L"TexturePhongNormalPS.cso") :
+				ResourcePool::GetResource<PixelShader>(graphics, L"TexturePhongPS.cso");
 			m_graphicsResources.push_back(std::move(pPixelShader));
 		}
 
-		std::shared_ptr<GraphicsResource> pInputLayout = ResourcePool::GetResource<InputLayout>(
-			graphics, vertexShaderBlob, InputLayout::LayoutType::TextureShading);
+		std::shared_ptr<GraphicsResource> pInputLayout = hasNormalMap ? 
+			ResourcePool::GetResource<InputLayout>(graphics, vertexShaderBlob, InputLayout::LayoutType::TextureNormalMap) :
+			ResourcePool::GetResource<InputLayout>(graphics, vertexShaderBlob, InputLayout::LayoutType::TextureShading);
 		m_graphicsResources.push_back(std::move(pInputLayout));
 	}
 }

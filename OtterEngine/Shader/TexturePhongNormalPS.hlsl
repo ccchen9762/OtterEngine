@@ -31,25 +31,40 @@ cbuffer LightPoint : register(b3) {
 cbuffer attributes : register(b4) {
     float shiness;
     bool hasSpecularMap;
+    bool hasNormalMap;
     float2 padding;
 }
 
 struct Interpolant {
     float4 position : SV_Position;
     float4 worldPosition : POSITION0;
-    float4 color : COLOR0;
+    float2 texcoord : TEXCOORD0;
     float3 normal : NORMAL0;
+    float3 tangent : NORMAL1;
+    float3 bitangent : NORMAL2;
 };
 
 struct Pixel {
     float4 color : SV_Target;
 };
 
-float3 CalculateLight(int i, Interpolant input, float3 lightUnitVector, float3 lightColor) {
+Texture2D texDiffuse : register(t0);
+SamplerState samDiffuse : register(s0);
+
+Texture2D texSpecular : register(t1);
+SamplerState samSpecular : register(s1);
+
+Texture2D texNormal : register(t2);
+SamplerState samNormal : register(s2);
+
+float3 CalculateLight(int i, Interpolant input, float3 lightUnitVector, float4 diffuseSample, float3 lightColor) {
     // diffuse
-    const float3 diffuse = input.color.rgb * lightColor * max(0.0f, dot(lightUnitVector, input.normal));
-    
+    // k_d * l_d * (l dot n)
+    const float3 diffuse = diffuseSample.rgb * lightColor * max(0.0f, dot(lightUnitVector, input.normal));
+        
     // specular
+    // 2 * l dot n * n - l
+    // k_s * l_s * (r dot v)^shiness
     const float3 reflection = 2 * dot(lightUnitVector, input.normal) * input.normal - lightUnitVector;
     const float3 specular = lightColor * pow(max(0.0f, dot(normalize(cameraPosition - input.worldPosition), reflection)), shiness);
         
@@ -60,15 +75,30 @@ Pixel main(Interpolant input) {
     
     Pixel output;
     
+    if (hasNormalMap) {
+        const float3x3 tangentMatrix = {
+            input.tangent,
+            input.bitangent,
+            input.normal
+        };
+        const float4 normalSample = texNormal.Sample(samNormal, input.texcoord);
+        input.normal.x = (normalSample.x * 2.0f - 1.0f);
+        input.normal.y = -(normalSample.y * 2.0f - 1.0f);
+        input.normal.z = (normalSample.z * 2.0f - 1.0f);
+        
+        input.normal = mul(input.normal, tangentMatrix);
+    }
     input.normal = normalize(input.normal);
-
+    
+    const float4 diffuseSample = texDiffuse.Sample(samDiffuse, input.texcoord);
+    
     // directional lights
     output.color.rgb = float3(0.0f, 0.0f, 0.0f);
     for (int i = 0; i < totalDir; i++) {
         const float3 lightUnitVector = normalize(-lightDirectionsDir[i]);
-        output.color.rgb += CalculateLight(i, input, lightUnitVector, lightDirectionsDir[i].rgb);
+        output.color.rgb += CalculateLight(i, input, lightUnitVector, diffuseSample, lightColorsDir[i].rgb);
     }
-    const float3 dirLights = intensityDir * (output.color.rgb + ambientDir.rgb * input.color);
+    const float3 dirLights = intensityDir * (output.color.rgb + ambientDir.rgb * diffuseSample.rgb);
     
     // point lights
     output.color.rgb = float3(0.0f, 0.0f, 0.0f);
@@ -77,11 +107,11 @@ Pixel main(Interpolant input) {
         const float distance = length(lightVector);
         const float3 lightUnitVector = lightVector / distance;
         const float attenuation = 1.0f / (attenuationCPoint + attenuationLPoint * distance + attenuationQPoint * (distance * distance));
-        output.color.rgb += CalculateLight(i, input, lightUnitVector, lightColorsPoint[i].rgb) * attenuation;
+        output.color.rgb += CalculateLight(i, input, lightUnitVector, diffuseSample, lightColorsPoint[i].rgb) * attenuation;
     }
-    const float3 pointLights = intensityPoint * (output.color.rgb + ambientPoint.rgb * input.color);
+    const float3 pointLights = intensityPoint * (output.color.rgb + ambientPoint.rgb * diffuseSample.rgb);
     
     output.color = saturate(float4(dirLights + pointLights, 1.0f));
-    
+        
     return output;
 }

@@ -23,6 +23,13 @@ const D3D11_INPUT_ELEMENT_DESC InputLayout::s_inputElementDescTexturedShading[] 
 	{ "NORMAL",		 0, DXGI_FORMAT_R32G32B32_FLOAT,	0, 24u, D3D11_INPUT_PER_VERTEX_DATA, 0 },
 };
 
+const D3D11_INPUT_ELEMENT_DESC InputLayout::s_inputElementDescTextureNormalMap[] = {
+	{ "SV_Position", 0, DXGI_FORMAT_R32G32B32A32_FLOAT, 0, 0,   D3D11_INPUT_PER_VERTEX_DATA, 0 },
+	{ "TEXCOORD",	 0, DXGI_FORMAT_R32G32_FLOAT,		0, 16u, D3D11_INPUT_PER_VERTEX_DATA, 0 },
+	{ "NORMAL",		 0, DXGI_FORMAT_R32G32B32_FLOAT,	0, 24u, D3D11_INPUT_PER_VERTEX_DATA, 0 },
+	{ "NORMAL",		 1, DXGI_FORMAT_R32G32B32_FLOAT,	0, 36u, D3D11_INPUT_PER_VERTEX_DATA, 0 },
+	{ "NORMAL",		 2, DXGI_FORMAT_R32G32B32_FLOAT,	0, 48u, D3D11_INPUT_PER_VERTEX_DATA, 0 },
+};
 
 InputLayout::InputLayout(const Graphics& graphics, const std::vector<uint8_t>& vertexShaderBlob, LayoutType type) :
 	GraphicsResource(GenerateUID(vertexShaderBlob, type)) {
@@ -30,22 +37,32 @@ InputLayout::InputLayout(const Graphics& graphics, const std::vector<uint8_t>& v
 	switch (type)
 	{
 	case InputLayout::LayoutType::Basic: {
-		DX::ThrowIfFailed(GetDevice(graphics)->CreateInputLayout(s_inputElementDesc, sizeof(s_inputElementDesc) / sizeof(D3D11_INPUT_ELEMENT_DESC),
+		DX::ThrowIfFailed(GetDevice(graphics)->CreateInputLayout(s_inputElementDesc, 
+			sizeof(s_inputElementDesc) / sizeof(D3D11_INPUT_ELEMENT_DESC),
 			vertexShaderBlob.data(), vertexShaderBlob.size(), &m_pInputLayout));
 		break;
 	}
 	case InputLayout::LayoutType::Texture: {
-		DX::ThrowIfFailed(GetDevice(graphics)->CreateInputLayout(s_inputElementDescTextured, sizeof(s_inputElementDescTextured) / sizeof(D3D11_INPUT_ELEMENT_DESC),
+		DX::ThrowIfFailed(GetDevice(graphics)->CreateInputLayout(s_inputElementDescTextured, 
+			sizeof(s_inputElementDescTextured) / sizeof(D3D11_INPUT_ELEMENT_DESC),
 			vertexShaderBlob.data(), vertexShaderBlob.size(), &m_pInputLayout));
 		break;
 	}
 	case InputLayout::LayoutType::Shading: {
-		DX::ThrowIfFailed(GetDevice(graphics)->CreateInputLayout(s_inputElementDescShading, sizeof(s_inputElementDescShading) / sizeof(D3D11_INPUT_ELEMENT_DESC),
+		DX::ThrowIfFailed(GetDevice(graphics)->CreateInputLayout(s_inputElementDescShading, 
+			sizeof(s_inputElementDescShading) / sizeof(D3D11_INPUT_ELEMENT_DESC),
 			vertexShaderBlob.data(), vertexShaderBlob.size(), &m_pInputLayout));
 		break;
 	}
 	case InputLayout::LayoutType::TextureShading: {
-		DX::ThrowIfFailed(GetDevice(graphics)->CreateInputLayout(s_inputElementDescTexturedShading, sizeof(s_inputElementDescTexturedShading) / sizeof(D3D11_INPUT_ELEMENT_DESC),
+		DX::ThrowIfFailed(GetDevice(graphics)->CreateInputLayout(s_inputElementDescTexturedShading,
+			sizeof(s_inputElementDescTexturedShading) / sizeof(D3D11_INPUT_ELEMENT_DESC),
+			vertexShaderBlob.data(), vertexShaderBlob.size(), &m_pInputLayout));
+		break;
+	}
+	case InputLayout::LayoutType::TextureNormalMap: {
+		DX::ThrowIfFailed(GetDevice(graphics)->CreateInputLayout(s_inputElementDescTextureNormalMap,
+			sizeof(s_inputElementDescTextureNormalMap) / sizeof(D3D11_INPUT_ELEMENT_DESC),
 			vertexShaderBlob.data(), vertexShaderBlob.size(), &m_pInputLayout));
 		break;
 	}

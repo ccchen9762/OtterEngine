@@ -38,6 +38,7 @@
     <ClCompile Include="Entity\ShadingEntity\Sphere.cpp" />
     <ClCompile Include="Entity\Model\Character.cpp" />
     <ClCompile Include="Light\DirectionalLight.cpp" />
+    <ClCompile Include="Entity\Model\Sponza.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="WindowClass\Window.h" />
@@ -88,6 +89,7 @@
     <ClInclude Include="Entity\ShadingEntity\Sphere.h" />
     <ClInclude Include="Entity\Model\Character.h" />
     <ClInclude Include="Light\DirectionalLight.h" />
+    <ClInclude Include="Entity\Model\Sponza.h" />
   </ItemGroup>
   <ItemGroup>
     <FxCompile Include="Shader\TextureVS.hlsl" />
@@ -99,6 +101,9 @@
     <FxCompile Include="Shader\TexturePhongPS.hlsl" />
     <FxCompile Include="Shader\TexturePhongVS.hlsl" />
     <FxCompile Include="Shader\TexturePhongSpecularPS.hlsl" />
+    <FxCompile Include="Shader\TexturePhongNormalVS.hlsl" />
+    <FxCompile Include="Shader\TexturePhongNormalPS.hlsl" />
+    <FxCompile Include="Shader\TexturePhongNormalSpecularPS.hlsl" />
   </ItemGroup>
   <ItemGroup>
     <None Include="imgui.ini" />

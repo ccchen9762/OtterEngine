@@ -15,16 +15,24 @@
 
 Mesh::Mesh(const Game* game, const Graphics& graphics, const Vector3& translation, const Vector3& rotation, const Vector3& scale,
 	bool isStatic, unsigned int meshIndex, const std::wstring& meshPath, const MeshInformation& meshInformation)
-	: Entity(game, translation, rotation, scale, 0, isStatic), m_meshIndex(meshIndex), m_attributes({ 0.0, true }) {
+	: Entity(game, translation, rotation, scale, 0, isStatic), m_meshIndex(meshIndex), m_attributes({ 10.0, true }) {
 
 	// remember to set indice size!!!!!!!!!!!!!!!!!!
 	m_indicesSize = meshInformation.indices[meshIndex].size();
 
 	// buffers & textures
-	std::shared_ptr<GraphicsResource> pVertexBuffer = ResourcePool::GetResource<VertexBuffer>(
-		graphics, meshInformation.vertices[meshIndex].data(), sizeof(VertexTexture), meshInformation.vertices[meshIndex].size(),
-		VertexBuffer::Topology::Triangle, L"#Mesh#" + meshPath);
-	m_graphicsResources.push_back(std::move(pVertexBuffer));
+	if (meshInformation.hasNormalMap[meshIndex]) {
+		std::shared_ptr<GraphicsResource> pVertexBuffer = ResourcePool::GetResource<VertexBuffer>(
+			graphics, meshInformation.verticesNormalMap[meshIndex].data(), sizeof(VertexNormalMap), meshInformation.verticesNormalMap[meshIndex].size(),
+			VertexBuffer::Topology::Triangle, L"#Mesh#" + meshPath);
+		m_graphicsResources.push_back(std::move(pVertexBuffer));
+	}
+	else {
+		std::shared_ptr<GraphicsResource> pVertexBuffer = ResourcePool::GetResource<VertexBuffer>(
+			graphics, meshInformation.verticesTexture[meshIndex].data(), sizeof(VertexTexture), meshInformation.verticesTexture[meshIndex].size(),
+			VertexBuffer::Topology::Triangle, L"#Mesh#" + meshPath);
+		m_graphicsResources.push_back(std::move(pVertexBuffer));
+	}
 
 	std::shared_ptr<GraphicsResource> pIndexBuffer = ResourcePool::GetResource<IndexBuffer>(
 		graphics, meshInformation.indices[meshIndex], L"#Mesh#" + meshPath);
@@ -36,20 +44,22 @@ Mesh::Mesh(const Game* game, const Graphics& graphics, const Vector3& translatio
 		graphics, meshInformation.diffuseFile[meshIndex], Texture::Type::Diffuse);
 	m_graphicsResources.push_back(std::move(pDiffuse));
 
-	if (meshInformation.hasSpecularMap[meshIndex]) {
-		std::shared_ptr<GraphicsResource> pSpecular = ResourcePool::GetResource<Texture>(
-			graphics, meshInformation.specularFile[meshIndex], Texture::Type::Specular);
-		m_graphicsResources.push_back(std::move(pSpecular));
-		AddTextureShadingResource(graphics, true);
-	}
-	else {
-		m_attributes.hasSpecularMap = false;
+	// choose shaders based on properties
+	std::shared_ptr<GraphicsResource> pSpecular = ResourcePool::GetResource<Texture>(
+		graphics, meshInformation.specularFile[meshIndex], Texture::Type::Specular);
+	m_graphicsResources.push_back(std::move(pSpecular));
+	m_attributes.hasSpecularMap = meshInformation.hasSpecularMap[meshIndex];
+	AddTextureShadingResource(graphics, meshInformation.hasSpecularMap[meshIndex], meshInformation.hasNormalMap[meshIndex]);
 
-		std::shared_ptr<GraphicsResource> pSpecular = ResourcePool::GetResource<Texture>(
-			graphics, L"", Texture::Type::Specular);
-		m_graphicsResources.push_back(std::move(pSpecular));
-		AddTextureShadingResource(graphics, false);
+	if (meshInformation.hasNormalMap[meshIndex]) {
+		m_attributes.hasNormalMap = true;
+
+		std::shared_ptr<GraphicsResource> pNormalMap = ResourcePool::GetResource<Texture>(
+			graphics, meshInformation.normalFile[meshIndex], Texture::Type::Normal);
+		m_graphicsResources.push_back(std::move(pNormalMap));
 	}
+	else
+		m_attributes.hasNormalMap = false;
 
 	m_attributes.shiness = meshInformation.shiness[meshIndex];
 
@@ -122,11 +132,15 @@ void Model::SetupMeshInformation(const aiScene* pModel,
 	MeshInformation& s_meshInformation) {
 
 	size_t numMeshes = pModel->mNumMeshes;
-	s_meshInformation.vertices.resize(numMeshes);
+	s_meshInformation.verticesTexture.resize(numMeshes);
+	s_meshInformation.verticesNormalMap.resize(numMeshes);
 	s_meshInformation.indices.resize(numMeshes);
+	s_meshInformation.hasDiffuseMap.resize(numMeshes);
 	s_meshInformation.hasSpecularMap.resize(numMeshes);
+	s_meshInformation.hasNormalMap.resize(numMeshes);
 	s_meshInformation.diffuseFile.resize(numMeshes);
 	s_meshInformation.specularFile.resize(numMeshes);
+	s_meshInformation.normalFile.resize(numMeshes);
 	s_meshInformation.shiness.resize(numMeshes);
 
 	StringToWString(path.c_str(), s_meshInformation.directory);
@@ -141,25 +155,6 @@ void Model::SetupMeshInformation(const aiScene* pModel,
 void Model::LoadMesh(unsigned int meshIndex, const aiMesh* pMesh, const aiMaterial* const* ppMaterials,
 	MeshInformation& s_meshInformation) {
 	
-	s_meshInformation.vertices[meshIndex].reserve(pMesh->mNumVertices);
-	for (unsigned int i = 0; i < pMesh->mNumVertices; i++) {
-		s_meshInformation.vertices[meshIndex].emplace_back(
-			DirectX::XMVECTOR{ pMesh->mVertices[i].x, pMesh->mVertices[i].y, pMesh->mVertices[i].z, 1.0f },
-			DirectX::XMFLOAT2{ pMesh->mTextureCoords[0][i].x, pMesh->mTextureCoords[0][i].y },
-			Normal{ pMesh->mNormals[i].x, pMesh->mNormals[i].y, pMesh->mNormals[i].z }
-		);
-	}
-
-	s_meshInformation.indices[meshIndex].reserve(pMesh->mNumFaces * 3);
-	for (unsigned int i = 0; i < pMesh->mNumFaces; i++) {
-		const aiFace& face = pMesh->mFaces[i];
-		assert("Model face are not all triangles" && face.mNumIndices == 3);
-
-		s_meshInformation.indices[meshIndex].push_back(face.mIndices[0]);
-		s_meshInformation.indices[meshIndex].push_back(face.mIndices[2]);
-		s_meshInformation.indices[meshIndex].push_back(face.mIndices[1]);
-	}
-
 	const aiMaterial* pMaterial = ppMaterials[pMesh->mMaterialIndex];
 	aiString textureName;
 	// load diffuse map
@@ -168,8 +163,11 @@ void Model::LoadMesh(unsigned int meshIndex, const aiMesh* pMesh, const aiMateri
 		StringToWString(textureName.C_Str(), materialName);
 		std::wstring fileLocation = s_meshInformation.directory + materialName;
 
+		s_meshInformation.hasDiffuseMap[meshIndex] = true;
 		s_meshInformation.diffuseFile[meshIndex] = fileLocation;
 	}
+	else
+		s_meshInformation.hasDiffuseMap[meshIndex] = false;
 
 	// load specular map
 	if (pMaterial->GetTexture(aiTextureType_SPECULAR, 0, &textureName) == aiReturn_SUCCESS) {
@@ -181,9 +179,60 @@ void Model::LoadMesh(unsigned int meshIndex, const aiMesh* pMesh, const aiMateri
 		s_meshInformation.specularFile[meshIndex] = fileLocation;
 	}
 	else {
-		s_meshInformation.hasSpecularMap[meshIndex] = false;
+		s_meshInformation.hasNormalMap[meshIndex] = false;
 
 		pMaterial->Get(AI_MATKEY_SHININESS, s_meshInformation.shiness[meshIndex]);
+	}
+
+	if (pMaterial->GetTexture(aiTextureType_NORMALS, 0, &textureName) == aiReturn_SUCCESS) {
+		std::wstring materialName;
+		StringToWString(textureName.C_Str(), materialName);
+		std::wstring fileLocation = s_meshInformation.directory + materialName;
+
+		s_meshInformation.hasNormalMap[meshIndex] = true;
+		s_meshInformation.normalFile[meshIndex] = fileLocation;
+	}
+	else
+		s_meshInformation.hasDiffuseMap[meshIndex] = false;
+
+	pMesh->mNormals->Normalize();
+	pMesh->mTangents->Normalize();
+	pMesh->mBitangents->Normalize();
+	if (s_meshInformation.hasNormalMap[meshIndex]) {
+		for (unsigned int i = 0; i < pMesh->mNumVertices; i++) {
+			s_meshInformation.verticesNormalMap[meshIndex].emplace_back(
+				DirectX::XMVECTOR{ pMesh->mVertices[i].x, pMesh->mVertices[i].y, pMesh->mVertices[i].z, 1.0f },
+				DirectX::XMFLOAT2{ pMesh->mTextureCoords[0][i].x, pMesh->mTextureCoords[0][i].y },
+				Normal{ pMesh->mNormals[i].x, pMesh->mNormals[i].y, pMesh->mNormals[i].z },
+				Normal{ pMesh->mTangents[i].x, pMesh->mTangents[i].y, pMesh->mTangents[i].z },
+				Normal{ pMesh->mBitangents[i].x, pMesh->mBitangents[i].y, pMesh->mBitangents[i].z }
+			);
+
+			VertexNormalMap(DirectX::XMVECTOR{ pMesh->mVertices[i].x, pMesh->mVertices[i].y, pMesh->mVertices[i].z, 1.0f },
+				DirectX::XMFLOAT2{ pMesh->mTextureCoords[0][i].x, pMesh->mTextureCoords[0][i].y },
+				Normal{ pMesh->mNormals[i].x, pMesh->mNormals[i].y, pMesh->mNormals[i].z },
+				Normal{ pMesh->mTangents[i].x, pMesh->mTangents[i].y, pMesh->mTangents[i].z },
+				Normal{ pMesh->mBitangents[i].x, pMesh->mBitangents[i].y, pMesh->mBitangents[i].z });
+		}
+	}
+	else {
+		for (unsigned int i = 0; i < pMesh->mNumVertices; i++) {
+			s_meshInformation.verticesTexture[meshIndex].emplace_back(
+				DirectX::XMVECTOR{ pMesh->mVertices[i].x, pMesh->mVertices[i].y, pMesh->mVertices[i].z, 1.0f },
+				DirectX::XMFLOAT2{ pMesh->mTextureCoords[0][i].x, pMesh->mTextureCoords[0][i].y },
+				Normal{ pMesh->mNormals[i].x, pMesh->mNormals[i].y, pMesh->mNormals[i].z }
+			);
+		}
+	}
+
+	s_meshInformation.indices[meshIndex].reserve(pMesh->mNumFaces * 3);
+	for (unsigned int i = 0; i < pMesh->mNumFaces; i++) {
+		const aiFace& face = pMesh->mFaces[i];
+		assert("Model face are not all triangles" && face.mNumIndices == 3);
+
+		s_meshInformation.indices[meshIndex].push_back(face.mIndices[0]);
+		s_meshInformation.indices[meshIndex].push_back(face.mIndices[2]);
+		s_meshInformation.indices[meshIndex].push_back(face.mIndices[1]);
 	}
 }
 

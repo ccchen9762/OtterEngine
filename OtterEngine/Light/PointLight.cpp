@@ -55,9 +55,9 @@ void PointLight::ShowControlWindow() {
 			for (int i = 0; i < m_lightBuffer.total; i++) {
 				std::string tag = "light" + std::to_string(i);
 				ImGui::Text(tag.c_str());
-				ImGui::SliderFloat("x", &m_lightBuffer.positions[i].x, -20.0f, 20.0f, "%.1f");
-				ImGui::SliderFloat("y", &m_lightBuffer.positions[i].y, -20.0f, 20.0f, "%.1f");
-				ImGui::SliderFloat("z", &m_lightBuffer.positions[i].z, -20.0f, 20.0f, "%.1f");
+				ImGui::SliderFloat("x", &m_lightBuffer.positions[i].x, -100.0f, 100.0f, "%.1f");
+				ImGui::SliderFloat("y", &m_lightBuffer.positions[i].y, -50.0f, 100.0f, "%.1f");
+				ImGui::SliderFloat("z", &m_lightBuffer.positions[i].z, -100.0f, 100.0f, "%.1f");
 
 				ImGui::ColorEdit3(" color", &m_lightBuffer.colors[i].r);
 			}

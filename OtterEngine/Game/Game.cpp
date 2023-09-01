@@ -11,6 +11,7 @@
 #include "OtterEngine/Entity/ShadingEntity/Cube.h"
 #include "OtterEngine/Entity/ShadingEntity/Sphere.h"
 #include "OtterEngine/Entity/Model/Character.h"
+#include "OtterEngine/Entity/Model/Sponza.h"
 
 #include "OtterEngine/Common/Randomizer.h"
 #include "OtterEngine/Common/constants.h"
@@ -20,7 +21,7 @@ Game::Game() :
     m_mainWindow(Window(kDefWndTitle, kRenderWidth, kRenderHeight)), 
     m_alive(true), 
     m_timer(Timer()),
-    m_camera(*(m_mainWindow.m_pGraphics), Vector3(10.0f, 15.0f, 25.0f), Vector3(-0.5f, -0.33f, -1.0f), Vector3(0.0f, 1.0f, 0.0f)),
+    m_camera(*(m_mainWindow.m_pGraphics), Vector3(10.0f, 15.0f, 0.0f), Vector3(-0.5f, 0.0f, 0.0f), Vector3(0.0f, 1.0f, 0.0f)),
     m_directionalLights(*(m_mainWindow.m_pGraphics)),
     m_pointLights(*(m_mainWindow.m_pGraphics)),
     showDebug(true) {
@@ -69,7 +70,7 @@ Game::Game() :
         true
     ));
 
-    for (int i = 0; i < 30; i++) {
+    /*for (int i = 0; i < 30; i++) {
         m_renderList.push_back(std::make_unique<Cube>(
             this,
             *(m_mainWindow.m_pGraphics),
@@ -89,19 +90,10 @@ Game::Game() :
             Vector3(1.0f, 1.0f, 1.0f),
             false
         ));
-    }
-
-    /*m_modelList.push_back(std::make_unique<Character>(
-        this, *(m_mainWindow.m_pGraphics),
-        Vector3(8.0f, 0.0f, -4.0f),
-        Vector3(0.0f, 0.0f, 0.0f),
-        Vector3(1.0f, 1.0f, 1.0f),
-        false,
-        "Assets/Model/nanosuit/nanosuit.obj")
-    );*/
+    }*/
 
     // floor
-    for (int i = 0; i < 8; i++) {
+    /*for (int i = 0; i < 8; i++) {
         for (int j = 0; j < 8; j++) {
             m_renderList.push_back(std::make_unique<Plane>(
                 this,
@@ -125,16 +117,25 @@ Game::Game() :
         L"Assets\\Texture\\brickwall\\brickwall.jpg",
         L"Assets\\Texture\\brickwall\\brickwall_normal.jpg",
         true
-    ));
+    ));*/
 
     /*m_modelList.push_back(std::make_unique<Character>(
+        this, *(m_mainWindow.m_pGraphics),
+        Vector3(8.0f, 0.0f, -4.0f),
+        Vector3(0.0f, 0.0f, 0.0f),
+        Vector3(1.0f, 1.0f, 1.0f),
+        false,
+        "Assets/Model/nanosuit/nanosuit.obj")
+    );*/
+
+    m_modelList.push_back(std::make_unique<Sponza>(
         this, *(m_mainWindow.m_pGraphics),
         Vector3(0.0f, 0.0f, 0.0f),
         Vector3(0.0f, 0.0f, 0.0f),
         Vector3(0.1f, 0.1f, 0.1f),
         false,
         "Assets/Model/sponza/sponza.obj")
-    );*/
+    );
 }
 
 int Game::Start() {
@@ -258,7 +259,7 @@ void Game::HandleInput(double deltaTime) {
 
 void Game::Update(double deltaTime) {
 
-    m_mainWindow.m_pGraphics->ClearBuffer(0.1f, 0.1f, 0.1f);
+    m_mainWindow.m_pGraphics->ClearBuffer(0.15f, 0.15f, 0.15f);
     
     m_camera.Update(*(m_mainWindow.m_pGraphics));
 

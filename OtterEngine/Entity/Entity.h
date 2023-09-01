@@ -28,7 +28,7 @@ public:
 
 protected:
 	void AddShadingResource(const Graphics& graphics);
-	void AddTextureShadingResource(const Graphics& graphics, bool hasSpecularMap);
+	void AddTextureShadingResource(const Graphics& graphics, bool hasSpecularMap, bool hasNormalMap);
 	void AddBasicResource(const Graphics& graphics);
 	void AddTextureBasicResource(const Graphics& graphics);
 

@@ -6,14 +6,14 @@ class InputLayout : public GraphicsResource
 {
 public:
 	enum class LayoutType {
-		Basic, Texture, Shading, TextureShading
+		Basic, Texture, Shading, TextureShading, TextureNormalMap
 	};
 
 public:
-	InputLayout(const Graphics& graphics, const std::vector<uint8_t>& vertexShaderBlob, LayoutType type = LayoutType::Basic);
+	InputLayout(const Graphics& graphics, const std::vector<uint8_t>& vertexShaderBlob, LayoutType type);
 	~InputLayout() = default;
 
-	static std::wstring GenerateUID(const std::vector<uint8_t>& vertexShaderBlob, LayoutType type = LayoutType::Basic) { 
+	static std::wstring GenerateUID(const std::vector<uint8_t>& vertexShaderBlob, LayoutType type) { 
 		return L"InputLayout#" + std::to_wstring(static_cast<int>(type)); 
 	}
 
@@ -25,4 +25,5 @@ private:
 	static const D3D11_INPUT_ELEMENT_DESC s_inputElementDescTextured[];
 	static const D3D11_INPUT_ELEMENT_DESC s_inputElementDescShading[];
 	static const D3D11_INPUT_ELEMENT_DESC s_inputElementDescTexturedShading[];
+	static const D3D11_INPUT_ELEMENT_DESC s_inputElementDescTextureNormalMap[];
 };
