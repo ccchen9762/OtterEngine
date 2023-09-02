@@ -188,28 +188,28 @@ void Game::HandleInput(double deltaTime) {
 
     // W
     if (m_mainWindow.m_keyboard.IsKeyPressed(0x57)) {
-        m_camera.TranslateCameraZ(deltaTime * 3000.0f);
+        m_camera.TranslateCameraZ(deltaTime * 5000.0f);
     }
     // S
     if (m_mainWindow.m_keyboard.IsKeyPressed(0x53)) {
-        m_camera.TranslateCameraZ(-deltaTime * 3000.0f);
+        m_camera.TranslateCameraZ(-deltaTime * 5000.0f);
     }
     // A
     if (m_mainWindow.m_keyboard.IsKeyPressed(0x41)) {
-        m_camera.TranslateCamera(-deltaTime * 2000.0f, 0.0f);
+        m_camera.TranslateCamera(-deltaTime * 4000.0f, 0.0f);
     }
     // D
     if (m_mainWindow.m_keyboard.IsKeyPressed(0x44)) {
-        m_camera.TranslateCamera(deltaTime * 2000.0f, 0.0f);
+        m_camera.TranslateCamera(deltaTime * 4000.0f, 0.0f);
     }
     // space
     if (m_mainWindow.m_keyboard.IsKeyPressed(VK_SPACE)) {
         // minus goes up
-        m_camera.TranslateCamera(0.0f, -deltaTime * 2000.0f);
+        m_camera.TranslateCamera(0.0f, -deltaTime * 4000.0f);
     }
     // L Shift
     if (m_mainWindow.m_keyboard.IsKeyPressed(VK_SHIFT)) {
-        m_camera.TranslateCamera(0.0f, deltaTime * 2000.0f);
+        m_camera.TranslateCamera(0.0f, deltaTime * 4000.0f);
     }
 
     while (!m_mainWindow.m_mouse.MouseEventBufferEmpty()) {
@@ -225,14 +225,14 @@ void Game::HandleInput(double deltaTime) {
                 --test;
                 const std::wstring title = std::to_wstring(test);
                 m_mainWindow.setTitle(title);
-                m_camera.TranslateCameraZ(deltaTime * -200000.0f);
+                m_camera.TranslateCameraZ(deltaTime * -100000.0f);
                 break;
             }
             case Mouse::MouseEvent::Type::WheelUp: {
                 ++test;
                 const std::wstring title = std::to_wstring(test);
                 m_mainWindow.setTitle(title);
-                m_camera.TranslateCameraZ(deltaTime * 200000.0f);
+                m_camera.TranslateCameraZ(deltaTime * 100000.0f);
                 break;
             }
             case Mouse::MouseEvent::Type::Move: {
