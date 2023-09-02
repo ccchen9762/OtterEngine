@@ -10,6 +10,7 @@ struct MeshInformation {
 	std::vector<bool> hasDiffuseMap;
 	std::vector<bool> hasSpecularMap;
 	std::vector<bool> hasNormalMap;
+	std::vector<bool> hasAlpha;
 	std::vector<std::wstring> diffuseFile;
 	std::vector<std::wstring> specularFile;
 	std::vector<std::wstring> normalFile;

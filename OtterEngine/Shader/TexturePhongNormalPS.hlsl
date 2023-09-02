@@ -71,9 +71,12 @@ float3 CalculateLight(int i, Interpolant input, float3 lightUnitVector, float4 d
     return diffuse + specular;
 }
 
-Pixel main(Interpolant input) {
+Pixel main(Interpolant input, bool isFrontFace : SV_IsFrontFace) {
     
     Pixel output;
+    
+    const float4 diffuseSample = texDiffuse.Sample(samDiffuse, input.texcoord);
+    clip(diffuseSample.a < 0.01f ? -1 : 1); // discard if transparent
     
     if (hasNormalMap) {
         const float3x3 tangentMatrix = {
@@ -90,7 +93,9 @@ Pixel main(Interpolant input) {
     }
     input.normal = normalize(input.normal);
     
-    const float4 diffuseSample = texDiffuse.Sample(samDiffuse, input.texcoord);
+    if (!isFrontFace) {
+        input.normal *= -1;
+    }
     
     // directional lights
     output.color.rgb = float3(0.0f, 0.0f, 0.0f);

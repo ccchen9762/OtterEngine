@@ -39,6 +39,8 @@
     <ClCompile Include="Entity\Model\Character.cpp" />
     <ClCompile Include="Light\DirectionalLight.cpp" />
     <ClCompile Include="Entity\Model\Sponza.cpp" />
+    <ClCompile Include="Graphics\Resource\AlphaBlender.cpp" />
+    <ClCompile Include="Graphics\Resource\Rasterizer.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="WindowClass\Window.h" />
@@ -90,6 +92,16 @@
     <ClInclude Include="Entity\Model\Character.h" />
     <ClInclude Include="Light\DirectionalLight.h" />
     <ClInclude Include="Entity\Model\Sponza.h" />
+    <ClInclude Include="Graphics\Resource\AlphaBlender.h" />
+    <ClInclude Include="Graphics\Resource\Rasterizer.h" />
+    <ClInclude Include="Common\External\DirectXTex\BC.h" />
+    <ClInclude Include="Common\External\DirectXTex\BCDirectCompute.h" />
+    <ClInclude Include="Common\External\DirectXTex\d3dx12.h" />
+    <ClInclude Include="Common\External\DirectXTex\DDS.h" />
+    <ClInclude Include="Common\External\DirectXTex\DirectXTex.h" />
+    <ClInclude Include="Common\External\DirectXTex\DirectXTexP.h" />
+    <ClInclude Include="Common\External\DirectXTex\filters.h" />
+    <ClInclude Include="Common\External\DirectXTex\scoped.h" />
   </ItemGroup>
   <ItemGroup>
     <FxCompile Include="Shader\TextureVS.hlsl" />
@@ -108,5 +120,6 @@
   <ItemGroup>
     <None Include="imgui.ini" />
     <None Include="Shader\constants.hlsli" />
+    <None Include="Common\External\DirectXTex\DirectXTex.inl" />
   </ItemGroup>
 </Project>

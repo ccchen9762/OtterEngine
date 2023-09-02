@@ -105,7 +105,7 @@ Pixel main(Interpolant input) {
     }
     const float3 pointLights = intensityPoint * (output.color.rgb + ambientPoint.rgb * diffuseSample.rgb);
    
-    output.color = saturate(float4(dirLights + pointLights, 1.0f));
+    output.color = saturate(float4(dirLights + pointLights, diffuseSample.a));
         
     return output;
 }

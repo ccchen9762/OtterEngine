@@ -1,25 +1,15 @@
 #include "Texture.h"
 
+#include <directxtk/WICTextureLoader.h>
+
 #include "OtterEngine/Common/External/FindMedia.h"
-#include "OtterEngine/Common/External/LoadImage.h"
+//#include "OtterEngine/Common/External/LoadImage.h"
 
 Texture::Texture(const Graphics& graphics, const std::wstring& path, Texture::Type slot) :
 	GraphicsResource(GenerateUID(path,slot)), m_slot(static_cast<unsigned int>(slot)) {
 
 	if (!path.empty()) {
-		D3D11_SAMPLER_DESC samplerDesc = {};
-		//samplerDesc.Filter = D3D11_FILTER_MIN_MAG_MIP_LINEAR;
-		samplerDesc.Filter = D3D11_FILTER_ANISOTROPIC;
-		samplerDesc.MaxAnisotropy = D3D11_MAX_MAXANISOTROPY; // max level, cost more GPU resource
-		samplerDesc.AddressU = D3D11_TEXTURE_ADDRESS_WRAP;
-		samplerDesc.AddressV = D3D11_TEXTURE_ADDRESS_WRAP;
-		samplerDesc.AddressW = D3D11_TEXTURE_ADDRESS_WRAP;
-		samplerDesc.MipLODBias = 0.0f;
-		samplerDesc.MinLOD = 0.0f;
-		samplerDesc.MaxLOD = D3D11_FLOAT32_MAX;
-		DX::ThrowIfFailed(GetDevice(graphics)->CreateSamplerState(&samplerDesc, &m_pSampler));
-
-		wchar_t buff[MAX_PATH];
+		/*wchar_t buff[MAX_PATH];
 		DX::FindMediaFile(buff, MAX_PATH, path.c_str());
 		m_textureBuffer = LoadBGRAImage(buff, m_textureWidth, m_textureHeight);
 
@@ -32,8 +22,8 @@ Texture::Texture(const Graphics& graphics, const std::wstring& path, Texture::Ty
 		textureDesc.SampleDesc.Count = 1;
 		textureDesc.SampleDesc.Quality = 0;
 		textureDesc.Usage = D3D11_USAGE_DEFAULT;
-		textureDesc.BindFlags = D3D11_BIND_SHADER_RESOURCE | 
-								D3D11_BIND_RENDER_TARGET; // for GPU to write back to it
+		textureDesc.BindFlags = D3D11_BIND_SHADER_RESOURCE |
+			D3D11_BIND_RENDER_TARGET; // for GPU to write back to it
 		textureDesc.CPUAccessFlags = 0;
 		textureDesc.MiscFlags = D3D11_RESOURCE_MISC_GENERATE_MIPS;
 
@@ -52,9 +42,24 @@ Texture::Texture(const Graphics& graphics, const std::wstring& path, Texture::Ty
 		shaderResourceViewDesc.Texture2D.MipLevels = -1; // let system figure out
 		DX::ThrowIfFailed(GetDevice(graphics)->CreateShaderResourceView(pTexture.Get(), &shaderResourceViewDesc, &m_pTextureView));
 
-		GetDeviceContext(graphics)->GenerateMips(m_pTextureView.Get());
+		GetDeviceContext(graphics)->GenerateMips(m_pTextureView.Get());*/
+
+		DX::ThrowIfFailed(DirectX::CreateWICTextureFromFile(
+			GetDevice(graphics).Get(), GetDeviceContext(graphics).Get(), path.c_str(), nullptr, &m_pTextureView));
+
+		D3D11_SAMPLER_DESC samplerDesc = {};
+		//samplerDesc.Filter = D3D11_FILTER_MIN_MAG_MIP_LINEAR;
+		samplerDesc.Filter = D3D11_FILTER_ANISOTROPIC;
+		samplerDesc.MaxAnisotropy = D3D11_MAX_MAXANISOTROPY; // max level, cost more GPU resource
+		samplerDesc.AddressU = D3D11_TEXTURE_ADDRESS_WRAP;
+		samplerDesc.AddressV = D3D11_TEXTURE_ADDRESS_WRAP;
+		samplerDesc.AddressW = D3D11_TEXTURE_ADDRESS_WRAP;
+		samplerDesc.MipLODBias = 0.0f;
+		samplerDesc.MinLOD = 0.0f;
+		samplerDesc.MaxLOD = D3D11_FLOAT32_MAX;
+		DX::ThrowIfFailed(GetDevice(graphics)->CreateSamplerState(&samplerDesc, &m_pSampler));
 	}
-	else { // for model parts that don't have specific texture
+	else { // for model parts that don't have a specific texture
 		m_pSampler = { nullptr };
 		m_pTextureView = { nullptr };
 	}

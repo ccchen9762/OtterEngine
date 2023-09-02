@@ -10,6 +10,8 @@
 #include "OtterEngine/Graphics/Resource/VertexBuffer.h"
 #include "OtterEngine/Graphics/Resource/IndexBuffer.h"
 #include "OtterEngine/Graphics/Resource/Texture.h"
+#include "OtterEngine/Graphics/Resource/AlphaBlender.h"
+#include "OtterEngine/Graphics/Resource/Rasterizer.h"
 #include "OtterEngine/Common/constants.h"
 #include "OtterEngine/Common/Utils.h"
 
@@ -67,6 +69,11 @@ Mesh::Mesh(const Game* game, const Graphics& graphics, const Vector3& translatio
 		graphics, m_attributes, VertexConstantBufferType::Attributes, GetUID()));
 	m_graphicsResources.push_back(std::make_shared<ConstantBufferPixel<Attributes>>(
 		graphics, m_attributes, PixelConstantBufferType::Attributes, GetUID()));
+
+	// temp use alpha test instead of alpha blend
+	//m_graphicsResources.push_back(std::make_shared<AlphaBlender>(graphics, false));
+
+	m_graphicsResources.push_back(std::make_shared<Rasterizer>(graphics, (meshInformation.hasAlpha[meshIndex])));
 }
 
 // ========================= Node =========================
@@ -138,6 +145,7 @@ void Model::SetupMeshInformation(const aiScene* pModel,
 	s_meshInformation.hasDiffuseMap.resize(numMeshes);
 	s_meshInformation.hasSpecularMap.resize(numMeshes);
 	s_meshInformation.hasNormalMap.resize(numMeshes);
+	s_meshInformation.hasAlpha.resize(numMeshes);
 	s_meshInformation.diffuseFile.resize(numMeshes);
 	s_meshInformation.specularFile.resize(numMeshes);
 	s_meshInformation.normalFile.resize(numMeshes);
@@ -194,6 +202,11 @@ void Model::LoadMesh(unsigned int meshIndex, const aiMesh* pMesh, const aiMateri
 	}
 	else
 		s_meshInformation.hasDiffuseMap[meshIndex] = false;
+
+	if (pMaterial->GetTexture(aiTextureType_OPACITY, 0, &textureName) == aiReturn_SUCCESS)
+		s_meshInformation.hasAlpha[meshIndex] = true;
+	else
+		s_meshInformation.hasAlpha[meshIndex] = false;
 
 	pMesh->mNormals->Normalize();
 	pMesh->mTangents->Normalize();

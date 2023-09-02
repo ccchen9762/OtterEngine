@@ -8,6 +8,7 @@
 #include "OtterEngine/Graphics/Resource/VertexShader.h"
 #include "OtterEngine/Graphics/Resource/PixelShader.h"
 #include "OtterEngine/Graphics/Resource/InputLayout.h"
+#include "OtterEngine/Graphics/Resource/AlphaBlender.h"
 #include "OtterEngine/Common/constants.h"
 #include "OtterEngine/Common/Randomizer.h"
 
@@ -119,7 +120,7 @@ void Entity::AddTextureShadingResource(const Graphics& graphics, bool hasSpecula
 			ResourcePool::GetResource<VertexShader>(graphics, L"TexturePhongVS.cso");
 		const std::vector<uint8_t> vertexShaderBlob = static_cast<VertexShader*>(pVertexShader.get())->GetVertexShaderBlob();
 		m_graphicsResources.push_back(std::move(pVertexShader));
-		
+
 		if (hasSpecularMap) {
 			std::shared_ptr<GraphicsResource> pPixelShader = hasNormalMap ?
 				ResourcePool::GetResource<PixelShader>(graphics, L"TexturePhongNormalSpecularPS.cso") :
@@ -133,11 +134,14 @@ void Entity::AddTextureShadingResource(const Graphics& graphics, bool hasSpecula
 			m_graphicsResources.push_back(std::move(pPixelShader));
 		}
 
-		std::shared_ptr<GraphicsResource> pInputLayout = hasNormalMap ? 
+		std::shared_ptr<GraphicsResource> pInputLayout = hasNormalMap ?
 			ResourcePool::GetResource<InputLayout>(graphics, vertexShaderBlob, InputLayout::LayoutType::TextureNormalMap) :
 			ResourcePool::GetResource<InputLayout>(graphics, vertexShaderBlob, InputLayout::LayoutType::TextureShading);
 		m_graphicsResources.push_back(std::move(pInputLayout));
 	}
+
+	//std::shared_ptr<GraphicsResource> pAlphaBlender = ResourcePool::GetResource<AlphaBlender>(graphics);
+	//m_graphicsResources.push_back(std::move(pAlphaBlender));
 }
 
 void Entity::AddBasicResource(const Graphics& graphics) {

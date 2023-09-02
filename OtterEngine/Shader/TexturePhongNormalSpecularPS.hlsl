@@ -60,7 +60,7 @@ SamplerState samNormal : register(s2);
 float3 CalculateLight(int i, Interpolant input, float3 lightUnitVector, float4 diffuseSample, float3 lightColor) {
     // diffuse
     // k_d * l_d * (l dot n)
-    const float3 diffuse = diffuseSample.rgb * lightColor * max(0.0f, dot(lightUnitVector, input.normal));
+    const float3 diffuse = 2*diffuseSample.rgb * lightColor * max(0.0f, dot(lightUnitVector, input.normal));
         
     // specular
     // 2 * l dot n * n - l
@@ -68,15 +68,18 @@ float3 CalculateLight(int i, Interpolant input, float3 lightUnitVector, float4 d
     const float3 reflection = 2 * dot(lightUnitVector, input.normal) * input.normal - lightUnitVector;
     const float4 specularSample = texSpecular.Sample(samSpecular, input.texcoord);
     const float sampleShiness = pow(2, specularSample.a * 4.0f);
-    const float3 specular = specularSample.rgb * lightColor *
+    const float3 specular = float3(specularSample.r, specularSample.r, specularSample.r) * lightColor *
         pow(max(0.0f, dot(normalize(cameraPosition - input.worldPosition), reflection)), sampleShiness);
     
     return diffuse + specular;
 }
 
-Pixel main(Interpolant input) {
+Pixel main(Interpolant input, bool isFrontFace: SV_IsFrontFace) {
     
     Pixel output;
+    
+    const float4 diffuseSample = texDiffuse.Sample(samDiffuse, input.texcoord);
+    clip(diffuseSample.a < 0.01f ? -1 : 1); // discard if transparent
     
     if (hasNormalMap) {
         const float3x3 tangentMatrix = {
@@ -94,8 +97,10 @@ Pixel main(Interpolant input) {
     }
     input.normal = normalize(input.normal);
     
-    const float4 diffuseSample = texDiffuse.Sample(samDiffuse, input.texcoord);
-
+    if (!isFrontFace) {
+        input.normal *= -1;
+    }
+    
     // directional lights
     output.color.rgb = float3(0.0f, 0.0f, 0.0f);
     for (int i = 0; i < totalDir; i++) {
