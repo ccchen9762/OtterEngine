@@ -7,7 +7,6 @@
 PointLight::PointLight(const Graphics& graphics) : m_lightBuffer({}),
 	m_pointBufferVertex(graphics, m_lightBuffer, VertexConstantBufferType::LightPoint, L"PointLight"),
 	m_pointBufferPixel(graphics, m_lightBuffer, PixelConstantBufferType::LightPoint, L"PointLight") {
-	m_sphereMeshs.clear();
 }
 
 void PointLight::AddLight(const Game* game, const Graphics& graphics, const DirectX::XMFLOAT4& position, const Color4& color) {
@@ -19,7 +18,7 @@ void PointLight::AddLight(const Game* game, const Graphics& graphics, const Dire
 
 	++m_lightBuffer.total;
 
-	// OMG
+	// OMG use emplace back so reference to game will not be released
 	m_sphereMeshs.emplace_back(
 		game,
 		graphics,
@@ -27,6 +26,12 @@ void PointLight::AddLight(const Game* game, const Graphics& graphics, const Dire
 		Vector3(0.0f, 0.0f, 0.0f),
 		Vector3(0.2f, 0.2f, 0.2f),
 		true);
+
+	/*m_cameras.emplace_back(
+		graphics,
+		Vector3(position.x, position.y, position.z),
+		Vector3(0.0f, 0.0f, 0.0f),
+		Vector3(0.0f, 1.0f, 0.0f));*/
 }
 
 void PointLight::Update(const Graphics& graphics) {

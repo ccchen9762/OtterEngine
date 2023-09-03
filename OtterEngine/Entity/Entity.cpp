@@ -9,6 +9,7 @@
 #include "OtterEngine/Graphics/Resource/PixelShader.h"
 #include "OtterEngine/Graphics/Resource/InputLayout.h"
 #include "OtterEngine/Graphics/Resource/AlphaBlender.h"
+#include "OtterEngine/Graphics/Resource/DepthStencil.h"
 #include "OtterEngine/Common/constants.h"
 #include "OtterEngine/Common/Randomizer.h"
 
@@ -82,6 +83,8 @@ void Entity::AddShadingResource(const Graphics& graphics) {
 			graphics, vertexShaderBlob, InputLayout::LayoutType::Shading);
 		m_graphicsResources.push_back(std::move(pInputLayout));
 	}
+
+	//m_graphicsResources.push_back(std::make_shared<DepthStencil>(graphics, DepthStencil::Mode::Off));
 }
 
 void Entity::AddTextureShadingResource(const Graphics& graphics, bool hasSpecularMap, bool hasNormalMap) {
@@ -142,6 +145,8 @@ void Entity::AddTextureShadingResource(const Graphics& graphics, bool hasSpecula
 
 	//std::shared_ptr<GraphicsResource> pAlphaBlender = ResourcePool::GetResource<AlphaBlender>(graphics);
 	//m_graphicsResources.push_back(std::move(pAlphaBlender));
+	m_graphicsResources.push_back(std::make_shared<DepthStencil>(graphics, DepthStencil::Mode::Off));
+
 }
 
 void Entity::AddBasicResource(const Graphics& graphics) {
@@ -158,6 +163,8 @@ void Entity::AddBasicResource(const Graphics& graphics) {
 	std::shared_ptr<GraphicsResource> pInputLayout = ResourcePool::GetResource<InputLayout>(
 		graphics, vertexShaderBlob, InputLayout::LayoutType::Basic);
 	m_graphicsResources.push_back(std::move(pInputLayout));
+	
+	m_graphicsResources.push_back(std::make_shared<DepthStencil>(graphics, DepthStencil::Mode::Off));
 }
 
 void Entity::AddTextureBasicResource(const Graphics& graphics) {
@@ -174,4 +181,7 @@ void Entity::AddTextureBasicResource(const Graphics& graphics) {
 	std::shared_ptr<GraphicsResource> pInputLayout = ResourcePool::GetResource<InputLayout>(
 		graphics, vertexShaderBlob, InputLayout::LayoutType::Texture);
 	m_graphicsResources.push_back(std::move(pInputLayout));
+
+	m_graphicsResources.push_back(std::make_shared<DepthStencil>(graphics, DepthStencil::Mode::Off));
+
 }

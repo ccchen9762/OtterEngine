@@ -9,6 +9,7 @@
 #include "OtterEngine/Light/DirectionalLight.h"
 #include "OtterEngine/Entity/Entity.h"
 #include "OtterEngine/Entity/Model/Model.h"
+#include "OtterEngine/Entity/ShadingEntity/Cube.h"
 #include "OtterEngine/Common/Timer.h"
 
 class Game {
@@ -45,5 +46,6 @@ private:
 	std::vector<std::unique_ptr<Entity>> m_debugList;
 	std::vector<std::unique_ptr<Entity>> m_renderList;
 	std::vector<std::unique_ptr<Model>> m_modelList;
+	std::vector<std::unique_ptr<Cube>> m_cubes;
 	bool showDebug;
 };

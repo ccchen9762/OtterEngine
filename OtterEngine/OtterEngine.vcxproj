@@ -183,6 +183,7 @@
     <ClCompile Include="Graphics\Resource\InputLayout.cpp" />
     <ClCompile Include="Graphics\Resource\PixelShader.cpp" />
     <ClCompile Include="Graphics\Resource\Rasterizer.cpp" />
+    <ClCompile Include="Graphics\Resource\DepthStencil.cpp" />
     <ClCompile Include="Graphics\Resource\Texture.cpp" />
     <ClCompile Include="Graphics\Resource\VertexBuffer.cpp" />
     <ClCompile Include="Graphics\Resource\VertexShader.cpp" />
@@ -242,6 +243,7 @@
     <ClInclude Include="Graphics\Resource\PixelShader.h" />
     <ClInclude Include="Graphics\ResourcePool.h" />
     <ClInclude Include="Graphics\Resource\Rasterizer.h" />
+    <ClInclude Include="Graphics\Resource\DepthStencil.h" />
     <ClInclude Include="Graphics\Resource\Texture.h" />
     <ClInclude Include="Graphics\Resource\VertexBuffer.h" />
     <ClInclude Include="Graphics\Resource\VertexShader.h" />

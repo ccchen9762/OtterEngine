@@ -21,7 +21,7 @@ Game::Game() :
     m_mainWindow(Window(kDefWndTitle, kRenderWidth, kRenderHeight)), 
     m_alive(true), 
     m_timer(Timer()),
-    m_camera(*(m_mainWindow.m_pGraphics), Vector3(10.0f, 15.0f, 0.0f), Vector3(-0.5f, 0.0f, 0.0f), Vector3(0.0f, 1.0f, 0.0f)),
+    m_camera(*(m_mainWindow.m_pGraphics), Vector3(10.0f, 0.0f, 0.0f), Vector3(-1.0f, 0.0f, 0.0f), Vector3(0.0f, 1.0f, 0.0f)),
     m_directionalLights(*(m_mainWindow.m_pGraphics)),
     m_pointLights(*(m_mainWindow.m_pGraphics)),
     showDebug(true) {
@@ -70,6 +70,22 @@ Game::Game() :
         true
     ));
 
+    m_cubes.push_back(std::make_unique<Cube>(
+        this,
+        *(m_mainWindow.m_pGraphics),
+        Vector3(0.0f, 0.0f, 0.0f),
+        Vector3(0.0f, 0.0f, 0.0f),
+        Vector3(1.0f, 1.0f, 1.0f),
+        false
+    ));
+    m_cubes.push_back(std::make_unique<Cube>(
+        this,
+        *(m_mainWindow.m_pGraphics),
+        Vector3(2.0f, 2.0f, 0.0f),
+        Vector3(0.0f, 0.0f, 0.0f),
+        Vector3(1.0f, 1.0f, 1.0f),
+        false
+    ));
     /*for (int i = 0; i < 30; i++) {
         m_renderList.push_back(std::make_unique<Cube>(
             this,
@@ -128,14 +144,14 @@ Game::Game() :
         "Assets/Model/nanosuit/nanosuit.obj")
     );*/
 
-    m_modelList.push_back(std::make_unique<Sponza>(
+    /*m_modelList.push_back(std::make_unique<Sponza>(
         this, *(m_mainWindow.m_pGraphics),
         Vector3(0.0f, 0.0f, 0.0f),
         Vector3(0.0f, 0.0f, 0.0f),
         Vector3(0.1f, 0.1f, 0.1f),
         false,
         "Assets/Model/sponza/sponza.obj")
-    );
+    );*/
 }
 
 int Game::Start() {
@@ -278,6 +294,12 @@ void Game::Update(double deltaTime) {
     for (int i = 0; i < m_renderList.size(); i++) {
         m_renderList[i]->Update();
         m_renderList[i]->Render(*(m_mainWindow.m_pGraphics));
+    }
+
+    for (int i = 0; i < m_cubes.size(); i++) {
+        m_cubes[i]->Update();
+        m_cubes[i]->Render(*(m_mainWindow.m_pGraphics));
+        m_cubes[i]->DrawOutLine(*(m_mainWindow.m_pGraphics));
     }
 
     for (int i = 0; i < m_modelList.size(); i++) {

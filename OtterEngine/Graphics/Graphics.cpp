@@ -72,7 +72,7 @@ Graphics::Graphics(HWND hWnd, unsigned int viewportWidth, unsigned int viewportH
 	m_pDeviceContext->RSSetViewports(1u, &m_viewport);
 
 	// z-buffer need to be created manually
-	D3D11_DEPTH_STENCIL_DESC depthStencilDesc = {};
+	/*D3D11_DEPTH_STENCIL_DESC depthStencilDesc = {};
 	depthStencilDesc.DepthEnable = true;
 	depthStencilDesc.DepthWriteMask = D3D11_DEPTH_WRITE_MASK_ALL;
 	depthStencilDesc.DepthFunc = D3D11_COMPARISON_LESS;
@@ -81,7 +81,7 @@ Graphics::Graphics(HWND hWnd, unsigned int viewportWidth, unsigned int viewportH
 	Microsoft::WRL::ComPtr<ID3D11DepthStencilState> pDepthStencilState;
 	m_pDevice->CreateDepthStencilState(&depthStencilDesc, &pDepthStencilState);
 
-	m_pDeviceContext->OMSetDepthStencilState(pDepthStencilState.Get(), 1u);
+	m_pDeviceContext->OMSetDepthStencilState(pDepthStencilState.Get(), 1u);*/
 
 	Microsoft::WRL::ComPtr<ID3D11Texture2D> pDepthStencil;
 	D3D11_TEXTURE2D_DESC depthDesc = {};
@@ -89,7 +89,7 @@ Graphics::Graphics(HWND hWnd, unsigned int viewportWidth, unsigned int viewportH
 	depthDesc.Height = kRenderHeight;	// should match with swap chain
 	depthDesc.MipLevels = 1u;			// mip mapping 
 	depthDesc.ArraySize = 1u;
-	depthDesc.Format = DXGI_FORMAT_D32_FLOAT;
+	depthDesc.Format = DXGI_FORMAT_D24_UNORM_S8_UINT; // DXGI_FORMAT_D32_FLOAT
 	depthDesc.SampleDesc.Count = 1u;	// for anti-aliasing
 	depthDesc.SampleDesc.Quality = 0u;	// for anti-aliasing
 	depthDesc.Usage = D3D11_USAGE_DEFAULT;
@@ -99,7 +99,7 @@ Graphics::Graphics(HWND hWnd, unsigned int viewportWidth, unsigned int viewportH
 	m_pDevice->CreateTexture2D(&depthDesc, nullptr, &pDepthStencil);
 
 	D3D11_DEPTH_STENCIL_VIEW_DESC depthStencilViewDesc= {};
-	depthStencilViewDesc.Format = DXGI_FORMAT_D32_FLOAT;
+	depthStencilViewDesc.Format = DXGI_FORMAT_D24_UNORM_S8_UINT; // DXGI_FORMAT_D32_FLOAT
 	depthStencilViewDesc.ViewDimension = D3D11_DSV_DIMENSION_TEXTURE2D;
 	depthStencilViewDesc.Texture2D.MipSlice = 0u;
 	m_pDevice->CreateDepthStencilView(pDepthStencil.Get(), &depthStencilViewDesc, &m_pDepthStencilView);
@@ -114,7 +114,7 @@ void Graphics::ClearBuffer(float red, float green, float blue) {
 	const float color[4] = {red, green, blue, 1.0f};
 
 	m_pDeviceContext->ClearRenderTargetView(m_pRenderTargetView.Get(), color);
-	m_pDeviceContext->ClearDepthStencilView(m_pDepthStencilView.Get(), D3D11_CLEAR_DEPTH, 1.0, 0u);
+	m_pDeviceContext->ClearDepthStencilView(m_pDepthStencilView.Get(), D3D11_CLEAR_DEPTH | D3D11_CLEAR_STENCIL, 1.0, 0u);
 }
 
 void Graphics::RenderIndexed(size_t indicesSize) const {

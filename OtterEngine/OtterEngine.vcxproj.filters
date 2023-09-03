@@ -41,6 +41,7 @@
     <ClCompile Include="Entity\Model\Sponza.cpp" />
     <ClCompile Include="Graphics\Resource\AlphaBlender.cpp" />
     <ClCompile Include="Graphics\Resource\Rasterizer.cpp" />
+    <ClCompile Include="Graphics\Resource\DepthStencil.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="WindowClass\Window.h" />
@@ -102,6 +103,7 @@
     <ClInclude Include="Common\External\DirectXTex\DirectXTexP.h" />
     <ClInclude Include="Common\External\DirectXTex\filters.h" />
     <ClInclude Include="Common\External\DirectXTex\scoped.h" />
+    <ClInclude Include="Graphics\Resource\DepthStencil.h" />
   </ItemGroup>
   <ItemGroup>
     <FxCompile Include="Shader\TextureVS.hlsl" />

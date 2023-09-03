@@ -30,4 +30,5 @@ private:
 	ConstantBufferVertex<LightBuffer> m_pointBufferVertex;
 	ConstantBufferPixel<LightBuffer> m_pointBufferPixel;
 	std::vector<DebugSphere> m_sphereMeshs;
+	std::vector<Camera> m_cameras;
 };
