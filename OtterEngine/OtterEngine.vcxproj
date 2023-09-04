@@ -201,6 +201,8 @@
     <ClCompile Include="Light\PointLight.cpp" />
     <ClCompile Include="Main.cpp" />
     <ClCompile Include="Common\Math\Vector3.cpp" />
+    <ClCompile Include="RenderGraph\Pass.cpp" />
+    <ClCompile Include="RenderGraph\RenderGraph.cpp" />
     <ClCompile Include="WindowClass\Window.cpp" />
   </ItemGroup>
   <ItemGroup>
@@ -262,6 +264,8 @@
     <ClInclude Include="Entity\Entity.h" />
     <ClInclude Include="Light\DirectionalLight.h" />
     <ClInclude Include="Light\PointLight.h" />
+    <ClInclude Include="RenderGraph\Pass.h" />
+    <ClInclude Include="RenderGraph\RenderGraph.h" />
     <ClInclude Include="Timer\Timer.h" />
     <ClInclude Include="WindowClass\Window.h" />
   </ItemGroup>

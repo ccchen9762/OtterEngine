@@ -42,6 +42,8 @@
     <ClCompile Include="Graphics\Resource\AlphaBlender.cpp" />
     <ClCompile Include="Graphics\Resource\Rasterizer.cpp" />
     <ClCompile Include="Graphics\Resource\DepthStencil.cpp" />
+    <ClCompile Include="RenderGraph\Pass.cpp" />
+    <ClCompile Include="RenderGraph\RenderGraph.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="WindowClass\Window.h" />
@@ -104,6 +106,8 @@
     <ClInclude Include="Common\External\DirectXTex\filters.h" />
     <ClInclude Include="Common\External\DirectXTex\scoped.h" />
     <ClInclude Include="Graphics\Resource\DepthStencil.h" />
+    <ClInclude Include="RenderGraph\Pass.h" />
+    <ClInclude Include="RenderGraph\RenderGraph.h" />
   </ItemGroup>
   <ItemGroup>
     <FxCompile Include="Shader\TextureVS.hlsl" />

@@ -21,7 +21,7 @@ Game::Game() :
     m_mainWindow(Window(kDefWndTitle, kRenderWidth, kRenderHeight)), 
     m_alive(true), 
     m_timer(Timer()),
-    m_camera(*(m_mainWindow.m_pGraphics), Vector3(10.0f, 0.0f, 0.0f), Vector3(-1.0f, 0.0f, 0.0f), Vector3(0.0f, 1.0f, 0.0f)),
+    m_camera(*(m_mainWindow.m_pGraphics), Vector3(20.0f, 15.0f, 0.0f), Vector3(-1.0f, 0.0f, 0.0f), Vector3(0.0f, 1.0f, 0.0f)),
     m_directionalLights(*(m_mainWindow.m_pGraphics)),
     m_pointLights(*(m_mainWindow.m_pGraphics)),
     showDebug(true) {
@@ -73,17 +73,17 @@ Game::Game() :
     m_cubes.push_back(std::make_unique<Cube>(
         this,
         *(m_mainWindow.m_pGraphics),
+        Vector3(0.0f, 5.0f, 0.0f),
         Vector3(0.0f, 0.0f, 0.0f),
-        Vector3(0.0f, 0.0f, 0.0f),
-        Vector3(1.0f, 1.0f, 1.0f),
+        Vector3(10.0f, 10.0f, 10.0f),
         false
     ));
     m_cubes.push_back(std::make_unique<Cube>(
         this,
         *(m_mainWindow.m_pGraphics),
-        Vector3(2.0f, 2.0f, 0.0f),
+        Vector3(-12.0f, 17.0f, -12.0f),
         Vector3(0.0f, 0.0f, 0.0f),
-        Vector3(1.0f, 1.0f, 1.0f),
+        Vector3(10.0f, 10.0f, 10.0f),
         false
     ));
     /*for (int i = 0; i < 30; i++) {
@@ -144,14 +144,16 @@ Game::Game() :
         "Assets/Model/nanosuit/nanosuit.obj")
     );*/
 
-    /*m_modelList.push_back(std::make_unique<Sponza>(
+    m_modelList.push_back(std::make_unique<Sponza>(
         this, *(m_mainWindow.m_pGraphics),
         Vector3(0.0f, 0.0f, 0.0f),
         Vector3(0.0f, 0.0f, 0.0f),
         Vector3(0.1f, 0.1f, 0.1f),
         false,
         "Assets/Model/sponza/sponza.obj")
-    );*/
+    );
+    //Assets/Model/sponza/sponza.obj
+    
 }
 
 int Game::Start() {
@@ -291,6 +293,10 @@ void Game::Update(double deltaTime) {
         }
     }
 
+    for (int i = 0; i < m_modelList.size(); i++) {
+        m_modelList[i]->Render(*(m_mainWindow.m_pGraphics));
+    }
+
     for (int i = 0; i < m_renderList.size(); i++) {
         m_renderList[i]->Update();
         m_renderList[i]->Render(*(m_mainWindow.m_pGraphics));
@@ -302,9 +308,7 @@ void Game::Update(double deltaTime) {
         m_cubes[i]->DrawOutLine(*(m_mainWindow.m_pGraphics));
     }
 
-    for (int i = 0; i < m_modelList.size(); i++) {
-        m_modelList[i]->Render(*(m_mainWindow.m_pGraphics));
-    }
+    
 
     // Start the Dear ImGui frame
     ImGui_ImplDX11_NewFrame();
