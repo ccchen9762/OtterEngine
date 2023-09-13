@@ -6,7 +6,7 @@ class Texture : public GraphicsResource
 {
 public:
 	enum class Type {
-		Diffuse = 0, Specular = 1, Normal = 2
+		Diffuse = 0, Specular = 1, Normal = 2, RenderTarget = 3
 	};
 
 public:

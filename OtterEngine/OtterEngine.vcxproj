@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup Label="ProjectConfigurations">
     <ProjectConfiguration Include="Debug|Win32">
@@ -179,11 +179,13 @@
     <ClCompile Include="Graphics\Graphics.cpp" />
     <ClCompile Include="Graphics\Resource\AlphaBlender.cpp" />
     <ClCompile Include="Graphics\Resource\ConstantBuffer.cpp" />
+    <ClCompile Include="Graphics\Resource\DepthStencil.cpp" />
     <ClCompile Include="Graphics\Resource\IndexBuffer.cpp" />
     <ClCompile Include="Graphics\Resource\InputLayout.cpp" />
     <ClCompile Include="Graphics\Resource\PixelShader.cpp" />
     <ClCompile Include="Graphics\Resource\Rasterizer.cpp" />
-    <ClCompile Include="Graphics\Resource\DepthStencil.cpp" />
+    <ClCompile Include="Graphics\Resource\Stencil.cpp" />
+    <ClCompile Include="Graphics\Resource\RenderTarget.cpp" />
     <ClCompile Include="Graphics\Resource\Texture.cpp" />
     <ClCompile Include="Graphics\Resource\VertexBuffer.cpp" />
     <ClCompile Include="Graphics\Resource\VertexShader.cpp" />
@@ -201,7 +203,13 @@
     <ClCompile Include="Light\PointLight.cpp" />
     <ClCompile Include="Main.cpp" />
     <ClCompile Include="Common\Math\Vector3.cpp" />
-    <ClCompile Include="RenderGraph\Pass.cpp" />
+    <ClCompile Include="RenderGraph\Job.cpp" />
+    <ClCompile Include="RenderGraph\Operation.cpp" />
+    <ClCompile Include="RenderGraph\Pass\ClearBufferPass.cpp" />
+    <ClCompile Include="RenderGraph\Pass\Pass.cpp" />
+    <ClCompile Include="RenderGraph\Pass\RenderOutlinePass.cpp" />
+    <ClCompile Include="RenderGraph\Pass\RenderPass.cpp" />
+    <ClCompile Include="RenderGraph\Pass\ShadingPass.cpp" />
     <ClCompile Include="RenderGraph\RenderGraph.cpp" />
     <ClCompile Include="WindowClass\Window.cpp" />
   </ItemGroup>
@@ -239,13 +247,15 @@
     <ClInclude Include="Graphics\Graphics.h" />
     <ClInclude Include="Graphics\Resource\AlphaBlender.h" />
     <ClInclude Include="Graphics\Resource\ConstantBuffer.h" />
+    <ClInclude Include="Graphics\Resource\DepthStencil.h" />
     <ClInclude Include="Graphics\Resource\GraphicsResource.h" />
     <ClInclude Include="Graphics\Resource\IndexBuffer.h" />
     <ClInclude Include="Graphics\Resource\InputLayout.h" />
     <ClInclude Include="Graphics\Resource\PixelShader.h" />
     <ClInclude Include="Graphics\ResourcePool.h" />
     <ClInclude Include="Graphics\Resource\Rasterizer.h" />
-    <ClInclude Include="Graphics\Resource\DepthStencil.h" />
+    <ClInclude Include="Graphics\Resource\Stencil.h" />
+    <ClInclude Include="Graphics\Resource\RenderTarget.h" />
     <ClInclude Include="Graphics\Resource\Texture.h" />
     <ClInclude Include="Graphics\Resource\VertexBuffer.h" />
     <ClInclude Include="Graphics\Resource\VertexShader.h" />
@@ -264,7 +274,13 @@
     <ClInclude Include="Entity\Entity.h" />
     <ClInclude Include="Light\DirectionalLight.h" />
     <ClInclude Include="Light\PointLight.h" />
-    <ClInclude Include="RenderGraph\Pass.h" />
+    <ClInclude Include="RenderGraph\Operation.h" />
+    <ClInclude Include="RenderGraph\Job.h" />
+    <ClInclude Include="RenderGraph\Pass\ClearBufferPass.h" />
+    <ClInclude Include="RenderGraph\Pass\Pass.h" />
+    <ClInclude Include="RenderGraph\Pass\RenderOutlinePass.h" />
+    <ClInclude Include="RenderGraph\Pass\RenderPass.h" />
+    <ClInclude Include="RenderGraph\Pass\ShadingPass.h" />
     <ClInclude Include="RenderGraph\RenderGraph.h" />
     <ClInclude Include="Timer\Timer.h" />
     <ClInclude Include="WindowClass\Window.h" />

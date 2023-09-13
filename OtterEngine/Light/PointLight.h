@@ -1,7 +1,20 @@
 #pragma once
 
-#include "OtterEngine/Entity/DebugEntity/DebugSphere.h"
+#include <DirectXMath.h>
+#include <vector>
+
+#include "OtterEngine/Graphics/Resource/ConstantBuffer.h"
 #include "OtterEngine/Common/constants.h"
+#include "OtterEngine/Common/Vertex.h"
+
+class Game;
+class Graphics;
+class Camera;
+class DebugSphere;
+
+namespace RG {
+	class RenderGraph;
+}
 
 class PointLight {
 private:
@@ -21,8 +34,9 @@ public:
 	PointLight(const Graphics& graphics);
 
 	void AddLight(const Game* game, const Graphics& graphics, const DirectX::XMFLOAT4& position, const Color4& color);
+	void Register(const RG::RenderGraph& renderGraph);
 	void Update(const Graphics& graphics);
-	void Render(const Graphics& graphics) const;
+	void AssignJob() const;
 	void ShowControlWindow();
 
 private:

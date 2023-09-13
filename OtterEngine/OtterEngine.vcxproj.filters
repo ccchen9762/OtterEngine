@@ -42,8 +42,16 @@
     <ClCompile Include="Graphics\Resource\AlphaBlender.cpp" />
     <ClCompile Include="Graphics\Resource\Rasterizer.cpp" />
     <ClCompile Include="Graphics\Resource\DepthStencil.cpp" />
-    <ClCompile Include="RenderGraph\Pass.cpp" />
     <ClCompile Include="RenderGraph\RenderGraph.cpp" />
+    <ClCompile Include="RenderGraph\Pass\ClearBufferPass.cpp" />
+    <ClCompile Include="Graphics\Resource\Stencil.cpp" />
+    <ClCompile Include="Graphics\Resource\RenderTarget.cpp" />
+    <ClCompile Include="RenderGraph\Pass\Pass.cpp" />
+    <ClCompile Include="RenderGraph\Pass\RenderOutlinePass.cpp" />
+    <ClCompile Include="RenderGraph\Pass\ShadingPass.cpp" />
+    <ClCompile Include="RenderGraph\Pass\RenderPass.cpp" />
+    <ClCompile Include="RenderGraph\Job.cpp" />
+    <ClCompile Include="RenderGraph\Operation.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="WindowClass\Window.h" />
@@ -106,8 +114,16 @@
     <ClInclude Include="Common\External\DirectXTex\filters.h" />
     <ClInclude Include="Common\External\DirectXTex\scoped.h" />
     <ClInclude Include="Graphics\Resource\DepthStencil.h" />
-    <ClInclude Include="RenderGraph\Pass.h" />
     <ClInclude Include="RenderGraph\RenderGraph.h" />
+    <ClInclude Include="RenderGraph\Pass\ClearBufferPass.h" />
+    <ClInclude Include="Graphics\Resource\Stencil.h" />
+    <ClInclude Include="Graphics\Resource\RenderTarget.h" />
+    <ClInclude Include="RenderGraph\Pass\Pass.h" />
+    <ClInclude Include="RenderGraph\Pass\RenderOutlinePass.h" />
+    <ClInclude Include="RenderGraph\Pass\ShadingPass.h" />
+    <ClInclude Include="RenderGraph\Pass\RenderPass.h" />
+    <ClInclude Include="RenderGraph\Job.h" />
+    <ClInclude Include="RenderGraph\Operation.h" />
   </ItemGroup>
   <ItemGroup>
     <FxCompile Include="Shader\TextureVS.hlsl" />

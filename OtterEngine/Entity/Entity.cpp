@@ -4,21 +4,23 @@
 
 #include "OtterEngine/Game/Game.h"
 
+#include "OtterEngine/RenderGraph/RenderGraph.h"
+#include "OtterEngine/RenderGraph/Operation.h"
+
 #include "OtterEngine/Graphics/ResourcePool.h"
 #include "OtterEngine/Graphics/Resource/VertexShader.h"
 #include "OtterEngine/Graphics/Resource/PixelShader.h"
 #include "OtterEngine/Graphics/Resource/InputLayout.h"
 #include "OtterEngine/Graphics/Resource/AlphaBlender.h"
-#include "OtterEngine/Graphics/Resource/DepthStencil.h"
+#include "OtterEngine/Graphics/Resource/Stencil.h"
 #include "OtterEngine/Common/constants.h"
 #include "OtterEngine/Common/Randomizer.h"
 
 Entity::Entity(const Game* game, const Vector3& translation, const Vector3& rotation, const Vector3& scale, 
-	size_t indicesSize, bool isStatic) :
+	size_t indicesSize) :
+	m_parentGame(game),
 	m_translation(translation), m_rotation(rotation), m_scale(scale),
 	m_indicesSize(indicesSize),
-	m_parentGame(game),
-	m_isStatic(isStatic),
 	m_speed(0.0f), //Randomizer::GetFloat(0.02f, 0.08f)
 	m_transformation(DirectX::XMMatrixIdentity()){ 
 
@@ -26,8 +28,14 @@ Entity::Entity(const Game* game, const Vector3& translation, const Vector3& rota
 	m_UID = L"Entity#" + std::to_wstring(numEntities++);
 }
 
+void Entity::Register(const RG::RenderGraph& renderGraph) {
+	for (RG::Operation& operation : m_operations) {
+		operation.Register(renderGraph);
+	}
+}
+
 void Entity::Update() {
-	if (!m_isStatic) {
+	if (m_speed > 0) {
 		m_rotation.x += m_speed;
 		m_rotation.y += m_speed;
 		m_rotation.z += m_speed;
@@ -39,21 +47,23 @@ void Entity::Update() {
 		DirectX::XMMatrixTranslation(m_translation.x, m_translation.y, m_translation.z);
 }
 
-void Entity::Render(const Graphics& graphics) const {
-	// use reference for unique pointer
-	for (const std::shared_ptr<GraphicsResource>& resource : m_graphicsResources) {
-		resource->Bind(graphics);
-	}
+void Entity::Bind(const Graphics& graphics) const {
+	m_pIndicesBuffer->Bind(graphics);
+	m_pVerticesBuffer->Bind(graphics);
+	m_pTransformationBuffer->Bind(graphics);
+}
 
-	assert("Entity m_indicesSize not set" && m_indicesSize != 0);
-	graphics.RenderIndexed(m_indicesSize);
+void Entity::AssignJob() const {
+	for (const RG::Operation& operation : m_operations) {
+		operation.AssignJob(*this);
+	}
 }
 
 const DirectX::XMMATRIX& Entity::GetViewProjectionMatrix() const {
 	return m_parentGame->GetCurrentCamera().GetViewProjectionMatrix();
 }
 
-void Entity::AddShadingResource(const Graphics& graphics) {
+/*void Entity::AddShadingResource(const Graphics& graphics) {
 	// shaders & layout
 	if (kRenderMethod == RenderMethod::Gouraud) {
 		std::shared_ptr<GraphicsResource> pVertexShader = ResourcePool::GetResource<VertexShader>(
@@ -145,7 +155,7 @@ void Entity::AddTextureShadingResource(const Graphics& graphics, bool hasSpecula
 
 	//std::shared_ptr<GraphicsResource> pAlphaBlender = ResourcePool::GetResource<AlphaBlender>(graphics);
 	//m_graphicsResources.push_back(std::move(pAlphaBlender));
-	m_graphicsResources.push_back(std::make_shared<DepthStencil>(graphics, DepthStencil::Mode::Off));
+	m_graphicsResources.push_back(std::make_shared<Stencil>(graphics, Stencil::Mode::Off));
 
 }
 
@@ -164,7 +174,7 @@ void Entity::AddBasicResource(const Graphics& graphics) {
 		graphics, vertexShaderBlob, InputLayout::LayoutType::Basic);
 	m_graphicsResources.push_back(std::move(pInputLayout));
 	
-	m_graphicsResources.push_back(std::make_shared<DepthStencil>(graphics, DepthStencil::Mode::Off));
+	m_graphicsResources.push_back(std::make_shared<Stencil>(graphics, Stencil::Mode::Off));
 }
 
 void Entity::AddTextureBasicResource(const Graphics& graphics) {
@@ -182,6 +192,6 @@ void Entity::AddTextureBasicResource(const Graphics& graphics) {
 		graphics, vertexShaderBlob, InputLayout::LayoutType::Texture);
 	m_graphicsResources.push_back(std::move(pInputLayout));
 
-	m_graphicsResources.push_back(std::make_shared<DepthStencil>(graphics, DepthStencil::Mode::Off));
+	m_graphicsResources.push_back(std::make_shared<Stencil>(graphics, Stencil::Mode::Off));
 
-}
+}*/

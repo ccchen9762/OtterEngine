@@ -2,6 +2,7 @@
 
 #include <string>
 
+#include "OtterEngine/Entity/DebugEntity/DebugSphere.h"
 #include "OtterEngine/Imgui/imgui.h"
 
 PointLight::PointLight(const Graphics& graphics) : m_lightBuffer({}),
@@ -34,6 +35,12 @@ void PointLight::AddLight(const Game* game, const Graphics& graphics, const Dire
 		Vector3(0.0f, 1.0f, 0.0f));*/
 }
 
+void PointLight::Register(const RG::RenderGraph& renderGraph) {
+	for (DebugSphere& sphere : m_sphereMeshs) {
+		sphere.Register(renderGraph);
+	}
+}
+
 void PointLight::Update(const Graphics& graphics) {
 	m_pointBufferVertex.Update(graphics, m_lightBuffer);
 	m_pointBufferPixel.Update(graphics, m_lightBuffer);
@@ -47,9 +54,9 @@ void PointLight::Update(const Graphics& graphics) {
 	}
 }
 
-void PointLight::Render(const Graphics& graphics) const {
-	for (int i = 0; i < m_sphereMeshs.size(); i++) {
-		m_sphereMeshs[i].Render(graphics);
+void PointLight::AssignJob() const {
+	for (const DebugSphere& sphere : m_sphereMeshs) {
+		sphere.AssignJob();
 	}
 }
 

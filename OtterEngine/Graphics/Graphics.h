@@ -4,6 +4,8 @@
 #include <d3d11.h> // only declarations, need definitions in dlls 
 #include <memory>
 
+class RenderTarget;
+
 class Graphics
 {
 	friend class Game;
@@ -16,6 +18,8 @@ public:
 	// prevent copying
 	Graphics(const Graphics&) = delete;
 	Graphics& operator= (const Graphics&) = delete;
+
+	std::shared_ptr<RenderTarget> GetRenderTarget() const { return m_pRenderTarget; }
 
 	void ClearBuffer(float red, float green, float blue);
 	void RenderIndexed(size_t indicesSize) const;
@@ -31,6 +35,8 @@ private:
 	Microsoft::WRL::ComPtr<ID3D11DeviceContext> m_pDeviceContext;
 	Microsoft::WRL::ComPtr<IDXGISwapChain> m_pSwapChain;
 	Microsoft::WRL::ComPtr<ID3D11RenderTargetView> m_pRenderTargetView;
-	Microsoft::WRL::ComPtr<ID3D11DepthStencilView> m_pDepthStencilView;	
+	Microsoft::WRL::ComPtr<ID3D11DepthStencilView> m_pDepthStencilView;
 	D3D11_VIEWPORT m_viewport;
+
+	std::shared_ptr<RenderTarget> m_pRenderTarget;
 };

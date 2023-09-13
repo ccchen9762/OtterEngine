@@ -1,24 +1,19 @@
 #pragma once
 
 #include "GraphicsResource.h"
+#include "RenderTarget.h"
 
 class DepthStencil : public GraphicsResource
 {
-public:
-	enum class Mode {
-		Off = 0, 
-		Write = 1,	// write information to stencil, but not mask out pixels
-		Mask = 2	// mask out pixels with stencil
-	};
+	friend class RenderTarget;
 
 public:
-	DepthStencil(const Graphics& graphics, Mode mode);
+	DepthStencil(const Graphics& graphics, unsigned int width, unsigned int height);
 	~DepthStencil() = default;
-	
-	static std::wstring GenerateUID(Mode mode) { return  L"Stencil#" + std::to_wstring(static_cast<int>(mode)); }
-	
+
 	void Bind(const Graphics& graphics) const override;
+	void Clear(const Graphics& graphics);
 
 private:
-	Microsoft::WRL::ComPtr<ID3D11DepthStencilState> m_pDepthStencilState;
+	Microsoft::WRL::ComPtr<ID3D11DepthStencilView> m_pDepthStencilView;
 };

@@ -10,6 +10,7 @@
 #include "Resource/VertexBuffer.h"
 #include "Resource/IndexBuffer.h"
 #include "Resource/ConstantBuffer.h"
+#include "Resource/RenderTarget.h"
 
 #include "OtterEngine/Common/Math/MathUtils.h"
 #include "OtterEngine/Common/External/ReadData.h"
@@ -59,7 +60,9 @@ Graphics::Graphics(HWND hWnd, unsigned int viewportWidth, unsigned int viewportH
 
 	Microsoft::WRL::ComPtr<ID3D11Texture2D> pBackBuffer;
 	DX::ThrowIfFailed(m_pSwapChain->GetBuffer(0, __uuidof(ID3D11Texture2D), (LPVOID*)&pBackBuffer));
-	if (pBackBuffer)
+
+	m_pRenderTarget = std::make_shared<RenderTarget>(*this, pBackBuffer.Get());
+	/*if (pBackBuffer)
 		DX::ThrowIfFailed(m_pDevice->CreateRenderTargetView(pBackBuffer.Get(), nullptr, &m_pRenderTargetView));
 
 	// Initialize viewport
@@ -69,7 +72,7 @@ Graphics::Graphics(HWND hWnd, unsigned int viewportWidth, unsigned int viewportH
 	m_viewport.MaxDepth = 1.0f;
 	m_viewport.TopLeftX = 0.0f;
 	m_viewport.TopLeftY = 0.0f;
-	m_pDeviceContext->RSSetViewports(1u, &m_viewport);
+	m_pDeviceContext->RSSetViewports(1u, &m_viewport);*/
 
 	// z-buffer need to be created manually
 	/*D3D11_DEPTH_STENCIL_DESC depthStencilDesc = {};
@@ -81,7 +84,7 @@ Graphics::Graphics(HWND hWnd, unsigned int viewportWidth, unsigned int viewportH
 	Microsoft::WRL::ComPtr<ID3D11DepthStencilState> pDepthStencilState;
 	m_pDevice->CreateDepthStencilState(&depthStencilDesc, &pDepthStencilState);
 
-	m_pDeviceContext->OMSetDepthStencilState(pDepthStencilState.Get(), 1u);*/
+	m_pDeviceContext->OMSetDepthStencilState(pDepthStencilState.Get(), 1u);
 
 	Microsoft::WRL::ComPtr<ID3D11Texture2D> pDepthStencil;
 	D3D11_TEXTURE2D_DESC depthDesc = {};
@@ -105,7 +108,7 @@ Graphics::Graphics(HWND hWnd, unsigned int viewportWidth, unsigned int viewportH
 	m_pDevice->CreateDepthStencilView(pDepthStencil.Get(), &depthStencilViewDesc, &m_pDepthStencilView);
 
 	// bind DepthStencilView to RenderTargetView only once
-	m_pDeviceContext->OMSetRenderTargets(1u, m_pRenderTargetView.GetAddressOf(), m_pDepthStencilView.Get());
+	m_pDeviceContext->OMSetRenderTargets(1u, m_pRenderTargetView.GetAddressOf(), m_pDepthStencilView.Get());*/
 
 	ImGui_ImplDX11_Init(m_pDevice.Get(), m_pDeviceContext.Get());
 }
@@ -113,8 +116,8 @@ Graphics::Graphics(HWND hWnd, unsigned int viewportWidth, unsigned int viewportH
 void Graphics::ClearBuffer(float red, float green, float blue) {
 	const float color[4] = {red, green, blue, 1.0f};
 
-	m_pDeviceContext->ClearRenderTargetView(m_pRenderTargetView.Get(), color);
-	m_pDeviceContext->ClearDepthStencilView(m_pDepthStencilView.Get(), D3D11_CLEAR_DEPTH | D3D11_CLEAR_STENCIL, 1.0, 0u);
+	//m_pDeviceContext->ClearRenderTargetView(m_pRenderTargetView.Get(), color);
+	//m_pDeviceContext->ClearDepthStencilView(m_pDepthStencilView.Get(), D3D11_CLEAR_DEPTH | D3D11_CLEAR_STENCIL, 1.0, 0u);
 }
 
 void Graphics::RenderIndexed(size_t indicesSize) const {
